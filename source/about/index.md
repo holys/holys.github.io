@@ -28,8 +28,9 @@ Open Source in GitHub:
 - [ledis-py](https://github.com/holys/ledis-py) ledisdb 的 python client
 - [ledisdb website](https://github.com/holys/ledis-website) ledisdb website source code.
 
-Contribution in GitHub:
+Contributions in GitHub:
 
 - [LedisDB](https://github.com/siddontang/ledisdb/commits?author=holys) A high performance NoSQL powered by Go.
 - [Kingshard](https://github.com/flike/kingshard/commits?author=holys) A high-performance MySQL proxy.
 - [goaccess](https://github.com/allinurl/goaccess/commits?author=holys) GoAccess is a real-time web log analyzer and interactive viewer that runs in a terminal in *nix systems.
+
