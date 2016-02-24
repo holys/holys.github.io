@@ -106,7 +106,7 @@ DOCKER_ARGS="-H unix:///var/run/docker.sock -H tcp://0.0.0.0:2375 -s btrfs --reg
 
 ## 更新
 2016.02.24 
-今天早上打开电脑，发现莫名奇妙关机了，得强制重启。联想起前几天也遇到这种问题，也是这么处理。怀疑是 Dlite 问题，去 Dlite 的 issues 搜索发现有[类似情况](https://github.com/nlf/dlite/issues/60), 但是作者说这是 xhyve 的问题，然后去 xhyve 的 issue 搜索，发现真有[这种问题](https://github.com/mist64/xhyve/issues/86)，而且不少人遇到。暂时没看到解决办法。自己决定用不用吧。个人觉得是电脑休眠才会遇到这种问题，但是 MacBook 不合上怎么带回家呀？
+今天早上打开电脑，发现莫名奇妙关机了，得强制重启。联想起前几天也遇到这种问题，也是这么处理。怀疑是 Dlite 问题，去 Dlite 的 issues 搜索发现有[类似情况](https://github.com/nlf/dlite/issues/60), 但是作者说这是 xhyve 的问题，然后去 xhyve 的 issue 搜索，发现真有[这种问题](https://github.com/mist64/xhyve/issues/86)，而且不少人遇到。暂时没看到解决办法。自己决定用不用吧。个人觉得是电脑休眠才会遇到这种问题，但是 MacBook 不合上怎么带回家呀？可能每天晚上睡觉前把 Dlite 进程关闭，不失为一个折中的办法 😄
 
 
 references:
