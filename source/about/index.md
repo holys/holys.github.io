@@ -4,18 +4,17 @@ date: 2015-11-23 14:56:30
 comments: false
 ---
 
-关于我。
+- graduated@GDUFS
+- worked@KINGSOFT 
+- working@XIAOMI
 
-陈大慧，男，91年生。英文名David Chen， 常用ID: holys (a.k.a chendahui007, formerly)。
-2014年毕业于 [某外语外贸大学](http://www.gdufs.edu.cn/) 软件工程专业，目前工作于[珠海](http://j.map.baidu.com/8efq7)，[金山办公软件](http://www.wps.cn)。
-主要使用 Go 语言（一年半以上）， 辅以 Python。 从事 Web 服务端开发，对数据库的设计与实现感兴趣。 给 [LedisDB](https://github.com/siddontang/ledisdb/graphs/contributors) 打过酱油。
-
-联系方式： 某同性交友网站上面有我的Email :)
+---
 
 - [GitHub](https://github.com/holys)
 - [Stack Overflow](http://stackoverflow.com/users/1297203/holys?tab=profile)
 - [LinkedIn](https://cn.linkedin.com/in/chendahui)
 - [Douban](http://www.douban.com/people/chendahui007/)
+- [开发者头条](http://toutiao.io/u/124098)
 
 
 Open Source in GitHub:
