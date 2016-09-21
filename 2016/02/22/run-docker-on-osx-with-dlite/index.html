@@ -1,0 +1,766 @@
+<!doctype html>
+<html class="theme-next   use-motion ">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="dlite,docker," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+
+
+
+
+<meta name="description" content="前方高能提醒：如果你的系统小于 OS X Yosemite (10.10.3)，且不准备升级到符合条件的版本，就不用往下看了。
+Dlite 是什么？早在2013年底，笔者实习的时候就开始玩 docker，只是那时 docker 还是 dotCloud(现已卖掉，改名为 Docker.Inc)员工的业余项目，还很不成熟。转眼间到了2016年，又准备重新捡起来。
+使用 Mac OSX 系统的同学应该都">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Simplifying Docker on OS X With Dlite">
+<meta property="og:url" content="http://holys.im/2016/02/22/run-docker-on-osx-with-dlite/index.html">
+<meta property="og:site_name" content="holys'">
+<meta property="og:description" content="前方高能提醒：如果你的系统小于 OS X Yosemite (10.10.3)，且不准备升级到符合条件的版本，就不用往下看了。
+Dlite 是什么？早在2013年底，笔者实习的时候就开始玩 docker，只是那时 docker 还是 dotCloud(现已卖掉，改名为 Docker.Inc)员工的业余项目，还很不成熟。转眼间到了2016年，又准备重新捡起来。
+使用 Mac OSX 系统的同学应该都">
+<meta property="og:updated_time" content="2016-02-24T01:53:44.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Simplifying Docker on OS X With Dlite">
+<meta name="twitter:description" content="前方高能提醒：如果你的系统小于 OS X Yosemite (10.10.3)，且不准备升级到符合条件的版本，就不用往下看了。
+Dlite 是什么？早在2013年底，笔者实习的时候就开始玩 docker，只是那时 docker 还是 dotCloud(现已卖掉，改名为 Docker.Inc)员工的业余项目，还很不成熟。转眼间到了2016年，又准备重新捡起来。
+使用 Mac OSX 系统的同学应该都">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post',
+    motion: true
+  };
+</script>
+
+  <title> Simplifying Docker on OS X With Dlite | holys' </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-45099047-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">holys'</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Simplifying Docker on OS X With Dlite
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2016-02-22T22:58:21+08:00" content="2016-02-22">
+              2016-02-22
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2016/02/22/run-docker-on-osx-with-dlite/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/02/22/run-docker-on-osx-with-dlite/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p><em>前方高能提醒</em>：如果你的系统小于 OS X Yosemite (10.10.3)，且不准备升级到符合条件的版本，就不用往下看了。</p>
+<h2 id="Dlite_是什么？">Dlite 是什么？</h2><p>早在2013年底，笔者实习的时候就开始玩 docker，只是那时 docker 还是 dotCloud(现已卖掉，改名为 Docker.Inc)员工的业余项目，还很不成熟。转眼间到了2016年，又准备重新捡起来。</p>
+<p>使用 Mac OSX 系统的同学应该都知道，docker 是没有原生支持 OS X 系统的，要么通过 <a href="https://github.com/boot2docker/boot2docker" target="_blank" rel="external">boot2docker</a>, 要么通过 <a href="https://docs.docker.com/machine/" target="_blank" rel="external">docker-machine</a>， 二者有个共同点：依赖 VM（如 virtualbox）来运行一个 linux 虚拟机， 然后虚拟机跑着 docker daemon。然而 virtualbox 并不是个轻量级的虚拟化方案，对于我这种使用乞丐版 MBP的人来说，不太方便。用着15寸高配 Macbook Pro 的土豪请随意 :)</p>
+<p>今天我们要介绍的主角是：<a href="https://github.com/nlf/dlite" target="_blank" rel="external">Dlite</a>。Dlite 是什么呢? 这里直接引用 Dlite 项目文档的介绍：</p>
+<blockquote>
+<p>DLite leverages xhyve through the libxhyve Go bindings for virtualization.</p>
+</blockquote>
+<p>大意是： 得益于 <a href="https://github.com/mist64/xhyve" target="_blank" rel="external">xhyve</a> 和基于go封装后的 <a href="https://github.com/TheNewNormal/libxhyve" target="_blank" rel="external">libxhyve</a> 两个项目才有了 Dlite 的诞生（妹子帮我译的 😄）。</p>
+<p>xhyve, 是 OSX 下一种轻量级的虚拟化解决方案，建立在 OSX 10.10 Yosemite 的 Hypervisor.framework 之上，完全运行在用户空间内，没有其他任何依赖。它可以运行 FreeBSD 系统和 使用 Linux 内核的发行版。其实 xhyve 是 bhyve 的 OS X 移植版本。而bhyve ，即 BSD hypervisor，是在 FreeBSD 上开发的虚拟机管理器（hypervisor/virtual machine manager）。</p>
+<p>那么 Dlite 是什么呢？ 聪明的读者应该想到：既然有了xhyve 这个虚拟化解决方案，肯定还得需要一个 linux 虚拟机来运行 docker。这个 linux 发行版是 DhyveOS, 是 Dlite 作者为了此项目创建的一个超轻量级 Linux OS：<a href="https://github.com/nlf/dhyve-os" target="_blank" rel="external">DhyveOS</a>。 </p>
+<p>即 <code>Dlite = xhyve + DhyveOS</code></p>
+<p>Dlite 通过 libxhyve 来调用xhyve，然后xhyve运行着 DhyveOS， DhyveOS 运行着 docker。 对于 Mac 用户来说，只需要安装 Dlite，就可以拥有 docker。</p>
+<h2 id="如何安装_Dlite">如何安装 Dlite</h2><p>有三种方式安装Dlite：</p>
+<ol>
+<li>在 Dlite 的 Release 页面直接下载可执行文件；</li>
+<li>通过 Homebrew 安装：brew install dlite3. </li>
+<li>因为 Dlite 是 Go 写的，可以直接 go get github.com/nlf/dlite， 然后 make dlite </li>
+</ol>
+<p>其作者推荐使用 homebrew 方式安装 Dlite。</p>
+<h2 id="如何使用_Dlite">如何使用 Dlite</h2><p>只需要运行 sudo dlite install， dlite 会自动帮你创建需要的文件，然后启动一个 agent 来管理这个进程。</p>
+<p>你可以通过 sudo dlite install –help 来查看其它选项，如指定CPU 的个数，磁盘大小，内存等等。</p>
+<p>其实 install 这个过程做了四件事情：</p>
+<ol>
+<li>创建一个固定大小的空文件 <code>disk.img</code>（默认是20GB）来作为DhyveOS虚拟机的磁盘空间；</li>
+<li>下载构建DhyveOS 所需的两个文件， <code>bzImage</code> 和 <code>rootfs.cpio.xz</code>（DhyveOS 的 release 页面提供了这两个文件）</li>
+<li><p>创建配置文件，如没有指定则使用默认配置，<br>样例：</p>
+ <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="string">"uuid"</span>:<span class="string">"d93a1a37-d47c-11e5-92af-60f81da97a72"</span>,<span class="string">"cpu_count"</span>:<span class="number">1</span>,<span class="string">"memory"</span>:<span class="number">2</span>,<span class="string">"hostname"</span>:<span class="string">"local.docker"</span>,<span class="string">"share"</span>:<span class="string">"/Users"</span>&#125;%</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建 launchd agent</p>
+</li>
+</ol>
+<p>上述操作创建的文件都可以在 <code>~/.dlite</code>目录找到。</p>
+<p>启动/关闭 DhyveOS（当然也包括启动/关闭了 docker 服务）只分别需要执行：</p>
+<pre><code>dlite <span class="literal">start</span> 
+dlite <span class="literal">stop</span>
+</code></pre><p>即可。</p>
+<p>启动 DhyveOS 后就可以使用 Docker 服务啦。如果需要 SSH 登录到虚拟机里面，可以 <code>ssh docker@local.docker</code> 。 Dlite 会自动添加 <code>local.docker</code> 到 OS X 的 hosts 文件内。如果没有找到该记录，应该通过 IP 方式来登录， 运行 dlite ip 可以获取虚拟机的 IP。</p>
+<p>关于DhyveOS 你需要知道的是：</p>
+<ol>
+<li>/Users 目录会自动挂载到虚拟机上</li>
+<li>root 用户的缺省密码是： dhyve</li>
+<li>docker 用户的缺省密码是： docker</li>
+<li>dlite 会默认将 $HOME/.ssh/id_rsa.pub 复制到DhyveOS，SSH 登录免密码。</li>
+</ol>
+<p>如果需要更新 VM, 只需要执行下述命令（不会重新构建系统）：</p>
+<pre><code>dlite <span class="operator"><span class="keyword">stop</span>
+dlite <span class="keyword">update</span>
+dlite <span class="keyword">start</span></span>
+</code></pre><p>由于docker 是个 C/S 模型的应用，可以直接在 OS X 这一层来使用 docker 客户端，就不用登录到 DhyveOS 里面再使用 docker 这么麻烦啦，前提是你已经在 OS X 系统安装了 docker 客户端（注: docker 的 client 和 server 都在同一个二进制文件内）。</p>
+<h2 id="Dlite_的不足">Dlite 的不足</h2><p>由于 Dlite 是建立在 xhyve 之上，其不足也会与 dlite 相随。<br>即 OS X系统版本需要在 <code>10.10.3</code> 以上，还需要比较新的配置（需要是近几年的 Mac 硬件，黑苹果估计不行吧）。可以通过 <code>sysctl kern.hv_support</code> 来确认是否满足要求。如果看到 <code>kern.hv_support: 1</code> 返回，那就是满足咯。</p>
+<h2 id="其他">其他</h2><p>如果你需要给 docker 配置加速器（赵国的网络你懂的），你需要知道 dlite 下的docker 服务是如何启动的。docker 启动参数位于 DhyveOS 虚拟机系统的 <code>/etc/default/docker</code></p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker<span class="variable">@dlite</span><span class="symbol">:~</span><span class="variable">$ </span>cat /etc/default/docker</span><br><span class="line"><span class="constant">DOCKER_ARGS=</span><span class="string">"-H unix:///var/run/docker.sock -H tcp://0.0.0.0:2375 -s btrfs --registry-mirror=http://yours.m.daocloud.io"</span></span><br></pre></td></tr></table></figure>
+<h2 id="总结">总结</h2><p>刚接触 dlite 不久，暂时还没遇到什么大坑，用起来还是蛮方便的，值得推荐！如果读者在使用过程遇到问题，欢迎留言探讨，共同学习提高 😄</p>
+<h2 id="更新">更新</h2><p>2016.02.24<br>今天早上打开电脑，发现莫名奇妙关机了，得强制重启。联想起前几天也遇到这种问题，也是这么处理。怀疑是 Dlite 问题，去 Dlite 的 issues 搜索发现有<a href="https://github.com/nlf/dlite/issues/60" target="_blank" rel="external">类似情况</a>, 但是作者说这是 xhyve 的问题，然后去 xhyve 的 issue 搜索，发现真有<a href="https://github.com/mist64/xhyve/issues/86" target="_blank" rel="external">这种问题</a>，而且不少人遇到。暂时没看到解决办法。自己决定用不用吧。个人觉得是电脑休眠才会遇到这种问题，但是 MacBook 不合上怎么带回家呀？可能每天晚上睡觉前把 Dlite 进程关闭，不失为一个折中的办法 😄</p>
+<p>references:</p>
+<ol>
+<li><a href="https://blog.andyet.com/2016/01/25/easy-docker-on-osx/" target="_blank" rel="external">Simplifying Docker on OS X</a></li>
+</ol>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/dlite/" rel="tag">#dlite</a>
+          
+            <a href="/tags/docker/" rel="tag">#docker</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/01/24/learn-redis-protocol-with-wireshark/" rel="next" title="使用 wireshark 分析 redis 协议">
+                <i class="fa fa-chevron-left"></i> 使用 wireshark 分析 redis 协议
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/06/26/inspect-go-binary-date-and-version/" rel="prev" title="Go 二进制文件版本信息查看">
+                Go 二进制文件版本信息查看 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+        </div>
+
+        
+
+
+        
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+      </div>
+    
+  </div>
+
+
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="https://avatars0.githubusercontent.com/u/1198913?v=3&s=460" alt="holys" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">holys</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">14</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">分类</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">21</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/holys" target="_blank">
+                  
+                    <i class="fa fa-globe"></i> github
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/chendahui007" target="_blank">
+                  
+                    <i class="fa fa-globe"></i> twitter
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.douban.com/people/chendahui007" target="_blank">
+                  
+                    <i class="fa fa-globe"></i> douban
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="http://creativecommons.org/licenses/by-nc-sa/4.0" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Dlite_是什么？"><span class="nav-number">1.</span> <span class="nav-text">Dlite 是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何安装_Dlite"><span class="nav-number">2.</span> <span class="nav-text">如何安装 Dlite</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何使用_Dlite"><span class="nav-number">3.</span> <span class="nav-text">如何使用 Dlite</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Dlite_的不足"><span class="nav-number">4.</span> <span class="nav-text">Dlite 的不足</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他"><span class="nav-number">5.</span> <span class="nav-text">其他</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#更新"><span class="nav-number">7.</span> <span class="nav-text">更新</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">holys</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+    
+    
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'holysblog';
+      var disqus_identifier = '2016/02/22/run-docker-on-osx-with-dlite/';
+      var disqus_title = 'Simplifying Docker on OS X With Dlite';
+      var disqus_url = 'http://holys.im/2016/02/22/run-docker-on-osx-with-dlite/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
+
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    motionMiddleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+  
+  
+
+  
+  
+
+</body>
+</html>

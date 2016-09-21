@@ -1,0 +1,803 @@
+<!doctype html>
+<html class="theme-next   use-motion ">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="heartbeat,lvs,rabbitmq," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+
+
+
+
+<meta name="description" content="背景：
+service_event 服务，是下文提到的消费者服务，会消费 rabbitmq 里面的消息。每个服务起 10 个消费者线程去消费消息，如果连接断开，隔 1秒后会重连。
+
+service_event用到的线上环境的rabbitmq  一览：
+
+
+（A机房的 rabbitmq 是两两节点一个集群，下面的排序不是按集群来，这对本文来说不重要，重要的是“版本号是统一的”）
+1234567891">
+<meta property="og:type" content="article">
+<meta property="og:title" content="记一次 RabbitMQ 消息堆积分析">
+<meta property="og:url" content="http://holys.im/2016/09/20/why-rabbitmq-message-not-consumed/index.html">
+<meta property="og:site_name" content="holys'">
+<meta property="og:description" content="背景：
+service_event 服务，是下文提到的消费者服务，会消费 rabbitmq 里面的消息。每个服务起 10 个消费者线程去消费消息，如果连接断开，隔 1秒后会重连。
+
+service_event用到的线上环境的rabbitmq  一览：
+
+
+（A机房的 rabbitmq 是两两节点一个集群，下面的排序不是按集群来，这对本文来说不重要，重要的是“版本号是统一的”）
+1234567891">
+<meta property="og:image" content="http://holys.im/images/F5D55E56-D642-458A-B71A-26F14FF5BA8E.png">
+<meta property="og:image" content="http://holys.im/images/E0C46E20-8E78-4EF0-9D8F-D186F95F302C.png">
+<meta property="og:image" content="http://holys.im/images/14743505786043.jpg">
+<meta property="og:image" content="http://holys.im/images/14743505278978.jpg">
+<meta property="og:image" content="http://holys.im/images/14743507868573.jpg">
+<meta property="og:image" content="http://holys.im/images/14743508647084.jpg">
+<meta property="og:image" content="http://holys.im/images/14743521103347.jpg">
+<meta property="og:updated_time" content="2016-09-21T01:54:48.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="记一次 RabbitMQ 消息堆积分析">
+<meta name="twitter:description" content="背景：
+service_event 服务，是下文提到的消费者服务，会消费 rabbitmq 里面的消息。每个服务起 10 个消费者线程去消费消息，如果连接断开，隔 1秒后会重连。
+
+service_event用到的线上环境的rabbitmq  一览：
+
+
+（A机房的 rabbitmq 是两两节点一个集群，下面的排序不是按集群来，这对本文来说不重要，重要的是“版本号是统一的”）
+1234567891">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post',
+    motion: true
+  };
+</script>
+
+  <title> 记一次 RabbitMQ 消息堆积分析 | holys' </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-45099047-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">holys'</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                记一次 RabbitMQ 消息堆积分析
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2016-09-20T11:39:19+08:00" content="2016-09-20">
+              2016-09-20
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2016/09/20/why-rabbitmq-message-not-consumed/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/09/20/why-rabbitmq-message-not-consumed/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h2 id="背景：">背景：</h2><ol>
+<li><p>service_event 服务，是下文提到的消费者服务，会消费 rabbitmq 里面的消息。<br>每个服务起 10 个消费者线程去消费消息，如果连接断开，隔 1秒后会重连。</p>
+</li>
+<li><p>service_event用到的线上环境的rabbitmq  一览：</p>
+</li>
+</ol>
+<p>（A机房的 rabbitmq 是两两节点一个集群，下面的排序不是按集群来，这对本文来说不重要，重要的是“版本号是统一的”）</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">A-rabbitmq04.<span class="keyword">bj: </span>      &#123;rabbit,<span class="string">"RabbitMQ"</span>,<span class="string">"3.5.3"</span>&#125;,</span><br><span class="line">A-rabbitmq06.<span class="keyword">bj: </span>      &#123;rabbit,<span class="string">"RabbitMQ"</span>,<span class="string">"3.5.3"</span>&#125;,</span><br><span class="line">A-rabbitmq09.<span class="keyword">bj: </span>      &#123;rabbit,<span class="string">"RabbitMQ"</span>,<span class="string">"3.5.3"</span>&#125;,</span><br><span class="line">A-rabbitmq10.<span class="keyword">bj: </span>      &#123;rabbit,<span class="string">"RabbitMQ"</span>,<span class="string">"3.5.3"</span>&#125;,</span><br><span class="line">A-rabbitmq11.<span class="keyword">bj: </span>      &#123;rabbit,<span class="string">"RabbitMQ"</span>,<span class="string">"3.5.3"</span>&#125;,</span><br><span class="line">A-rabbitmq12.<span class="keyword">bj: </span>      &#123;rabbit,<span class="string">"RabbitMQ"</span>,<span class="string">"3.5.3"</span>&#125;,</span><br><span class="line">A-rabbitmq13.<span class="keyword">bj: </span>      &#123;rabbit,<span class="string">"RabbitMQ"</span>,<span class="string">"3.5.3"</span>&#125;,</span><br><span class="line">A-rabbitmq14.<span class="keyword">bj: </span>      &#123;rabbit,<span class="string">"RabbitMQ"</span>,<span class="string">"3.5.3"</span>&#125;,</span><br><span class="line">A-rabbitmq15.<span class="keyword">bj: </span>      &#123;rabbit,<span class="string">"RabbitMQ"</span>,<span class="string">"3.5.3"</span>&#125;,</span><br><span class="line">A-rabbitmq16.<span class="keyword">bj: </span>      &#123;rabbit,<span class="string">"RabbitMQ"</span>,<span class="string">"3.5.3"</span>&#125;,</span><br><span class="line">A-rabbitmq17.<span class="keyword">bj: </span>      &#123;rabbit,<span class="string">"RabbitMQ"</span>,<span class="string">"3.5.3"</span>&#125;,</span><br><span class="line">A-rabbitmq18.<span class="keyword">bj: </span>      &#123;rabbit,<span class="string">"RabbitMQ"</span>,<span class="string">"3.5.3"</span>&#125;,</span><br><span class="line">A-rabbitmq19.<span class="keyword">bj: </span>      &#123;rabbit,<span class="string">"RabbitMQ"</span>,<span class="string">"3.5.3"</span>&#125;,</span><br><span class="line">A-rabbitmq20.<span class="keyword">bj: </span>      &#123;rabbit,<span class="string">"RabbitMQ"</span>,<span class="string">"3.5.3"</span>&#125;,</span><br></pre></td></tr></table></figure>
+<p>（这是 B 机房中出现问题的集群，当事人之一，在本案中的现象为：消费者都跑掉了，最终为一个消费者都没有）</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">B-rabbitmq01.bj: </span>      &#123;rabbit,<span class="string">"RabbitMQ"</span>,<span class="string">"3.5.3"</span>&#125;,</span><br><span class="line"><span class="keyword">B-rabbitmq02.bj: </span>      &#123;rabbit,<span class="string">"RabbitMQ"</span>,<span class="string">"3.5.3"</span>&#125;,</span><br><span class="line"><span class="keyword">B-rabbitmq03.bj: </span>      &#123;rabbit,<span class="string">"RabbitMQ"</span>,<span class="string">"3.5.3"</span>&#125;,</span><br></pre></td></tr></table></figure>
+<p>（这是 B 机房中的另一个集群，在本案中现象为： 消费者都跑这边来了）</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">B-rabbitmq04.bj: </span>      &#123;rabbit,<span class="string">"RabbitMQ"</span>,<span class="string">"3.6.0"</span>&#125;,</span><br><span class="line"><span class="keyword">B-rabbitmq05.bj: </span>      &#123;rabbit,<span class="string">"RabbitMQ"</span>,<span class="string">"3.6.0"</span>&#125;,</span><br></pre></td></tr></table></figure>
+<p>可以看到，A 机房的版本是统一的，为 3.5.3, B 机房的版本，其中一个集群是 3.5.3, 另一个是 3.6.0</p>
+<p>LVS： 这也是当事人之一，差点成了窦娥。事实证明它是无辜的（当然还得后面的改进方案实施后，观察没问题才能彻底洗白）.  RabbitMQ 集群并不直接暴露给客户端，而是通过 LVS 作为前端，顺带负载均衡。<br>LVS 使用了 WRR 负载均衡算法。</p>
+<p>关于rabbitmq 的心跳：<br>如果是客户端设定的值小于 1秒， 则以服务端的为准。<br>测试环境是 RabbitMQ 3.1.1， 默认心跳值为 600秒</p>
+<p>实测也是 600秒（wireshark 抓包）：</p>
+<p><img src="/images/F5D55E56-D642-458A-B71A-26F14FF5BA8E.png" alt="F5D55E56-D642-458A-B71A-26F14FF5BA8E"></p>
+<h2 id="一开始观察到的现象">一开始观察到的现象</h2><p>B 机房的 01/02/03 这个集群的 EventOrder 队列出现消息没有被消费。 正常是： 消息数量会不断变化，而不是停留在某个值上。<br>并不是一开始就没有消费，而是过一段时间才出现这种情况。 而重启消费者服务后，堆积的消息马上被消费掉。<br>一开始大伙儿都认为是 LVS 有问题。<br>其实这里有疑点：<br>A, B 机房的 LVS 是一样的，为什么就其中一个出了问题，说不过去呀。</p>
+<h2 id="第一次分析过程">第一次分析过程</h2><p>业务访问的是 rabbitmq01.sys.srv， 这只是个 LVS 域名。<br>如果是来自 A 机房的访问，LVS 会解析域名到 A 的 rabbitmq 集群。<br>如果是来自 B 机房的访问， LVS 会解析域名到 B 的 rabbitmq 集群。</p>
+<p>集群分布：<br>A 机房目前提供了7个 rabbitmq 集群,  其中每个集群都是两个节点，其中一个节点为内存节点，另一个节点为磁盘节点（数据落地）</p>
+<p>B 机房目前提供了 2个 rabbitmq 集群, 其中一个集群是 三个节点（编号1、2、3，1 是内存节点，2 、 3 是磁盘节点）， 另一个集群是 两个节点（编号4、5，其中4为磁盘节点，5 为内存节点）</p>
+<p>集群之间的数据是不共享的。一般而言，数据也不跨机房传输，除非是出现一个机房全部宕机（？）</p>
+<p><strong>已知</strong>： 无论是生产者还是消费者都是使用长连接。</p>
+<p>并不是一开始就没有消费，而是过一段时间才出现这种情况， 可能是 idle 时间过长， 连接被 LVS drop掉（正常），然后重连的时候，就没有连上 目标集群，导致目标集群的消息一直没有被消费掉。</p>
+<p>B 机房部署了 4个 消费服务，每个消费服务里面有10个线程去消费，每个线程使用一个长连接。<br>而 B 机房一共两个集群，难道 40 个连接都没法命中堆积消息的那个集群的任何一个节点？</p>
+<p><strong>质疑1</strong>: LVS 有问题？如何定位问题？<br><strong>质疑2</strong>: 真的是重连有问题？ 如果是重连有问题，那重启服务也算重连吧，怎么就没问题了呢？</p>
+<h2 id="work_around">work around</h2><p>既然是连接断掉之后才引起的问题，那如何避免连接长时间不活跃？<br>内核默认的 keepalive time 是 7200秒， 远大于目前 lvs 360 秒的设定，也就是没啥卵用，远水救不了近火。<br>可以改 keepalive time， 但是这个改动会影响当前主机上的所有使用 TCP 的服务，<br>还有一种办法是 rabbitmq 自带的 <a href="https://www.rabbitmq.com/heartbeats.html" target="_blank" rel="external">heartbeat</a> 功能, 这个只会影响 rabbitmq 本身。</p>
+<p>但是 无论是 heartbeat 还是 keepalive， 都具有两个特点：保活好的连接，剔除坏的连接。<br>如果一个连接只是空闲，但是没有断，保活是可以的，一旦断了（即使是短期可恢复的），被心跳包发现后，<br>也就永远断了。感觉现在最大的问题<strong>不是连接为什么断（超时就断很正常），而是重连后某个集群的消费者不见了</strong>。</p>
+<p>heartbeat 虽然不治本，但是能治标吗？</p>
+<p>上面只是我的个人猜测，然后我去找同事 @zhangqin 聊了下，发现一个重大线索：<br>出现消息堆积的时候， 目标集群的目标队列一个消费者都没有。他自己改了心跳值后（改为5秒），就没出现这种问题，而且 另一个项目 <code>freeman</code> 也是这么干的，也没出现过这种问题。</p>
+<p>看样子， 心跳好像能解决问题，但还是有些疑点没有得到解答: 如 <strong>为何线上看到的 60s 心跳不能解决问题，而 5秒就能解决问题？但都是小于 LVS 的 360 秒呀！</strong></p>
+<p>于是开始做实验来验证：</p>
+<h2 id="实验过程">实验过程</h2><h3 id="实验1">实验1</h3><p>用默认心跳（就是什么都没改）。 观察 B 机房的 rabbitmq 集群情况（分别是 01/02/03 和 04/05 ）。</p>
+<p>每隔 6分钟（刚好和 lvs 的 timeout 值吻合），断掉一大批空闲连接 N 个，然后重连 N 个，但是每一次重连，都是连 04/05 集群居多，久而久之（每隔六分钟一次）， 01/02/03 这个集群的消费者越来越少，最终应该是 一个消费者都没有了。<br>注意： 重连后的 消费者总数是不变的，因为重连都是成功的，只是一边倒了。</p>
+<p>从下图来看，非常直观的看出来 每隔六分钟 重连一大批（LVS: 怪我咯）</p>
+<p>（注意：下图来自Kibana 日志截图，高度不代表消费者数量。日志记录了重连活动，所以只是反映重连的时间）<br><img src="/images/E0C46E20-8E78-4EF0-9D8F-D186F95F302C.png" alt="E0C46E20-8E78-4EF0-9D8F-D186F95F302"></p>
+<p>这个集群的目标队列 只剩下一个消费者了 （最开始的时候是 16个）</p>
+<p><img src="/images/14743505786043.jpg" alt="01/02/03"></p>
+<p>绝大多数消费者都跑到 另一个集群了最终有39个（最开始的时候是24个）<br><img src="/images/14743505278978.jpg" alt="04/05"></p>
+<p>备注： B 机房共有4个服务实例，每个实例是10个消费者，刚好 16 + 24 = 4 * 10 = 40</p>
+<h3 id="实验2">实验2</h3><p>心跳改为10秒，看是否对连接数有影响。</p>
+<p>启动时间为 22:05<br>01/02/03 集群:  23个<br>04/05 集群: 17个</p>
+<p>第二次观察时间： 第二天早上 09:01<br>01/02/03: 23 个<br>04/05：17个</p>
+<p>看样子心跳值为 10秒时起作用。<br><strong>问: 为什么 60 s 的默认心跳值没起作用？</strong></p>
+<h3 id="实验3">实验3</h3><p>使用 rabbitmq server 默认心跳<br>虽然 <code>实验1</code> 也是用了默认心跳，但是当时忘了观察实际的心跳值，所以重做。<br>发现重大线索： 特么的版本不一致！ 而且两个版本对应的默认心跳时间也不一样。基本上所有疑点都得到解答了。</p>
+<p><img src="/images/14743507868573.jpg" alt="01/02/03"></p>
+<p><img src="/images/14743508647084.jpg" alt="04/05"></p>
+<h2 id="原因分析">原因分析</h2><p>（看官此时可翻到最上面看背景介绍）</p>
+<p>A 机房集群之所以没出问题，是因为 A 机房的 rabbitmq 都是统一版本，即 <code>3.5.3</code>， 其默认心跳都是<code>580 s</code>， 由于服务端和客户端都没有配置心跳，所以都是用了<code>580s</code> 这个值，远大于 lvs 设置的 <code>360 s</code> timeout， 也就是 lvs 必杀之。但是<strong>因为死的很均匀，重连后也是很均匀，所以没出问题（每个集群都有消费者）</strong></p>
+<p>B 机房集群之所以出问题， 是因为 B 机房的 rabbitmq 存在两个版本。<br>一个是 <code>3.5.3</code>, 默认心跳是 580 秒，远大于 lvs 的 360 秒， 也就是 lvs 必杀之。<br>一个是 <code>3.6.0</code>, 默认心跳是 60 秒，远小于 lvs 的 360 秒，空闲连接不会被 drop， 因为有心跳。</p>
+<p>问题来了： <code>04/05</code> 集群（版本3.6.0）的连接一直保持着，没断过（即使空闲，因为有心跳）， <code>01/02/03</code>集群（版本3.5.3） 每隔 360 秒必断（当然是空闲时，因为没有心跳）， 然后重连时 LVS 使用 WRR 负载均衡算法，虽然能保证两边都有连接，但是久而久之，3.5.3 版本的集群肯定是越来越少连接，直至 0， 造成消息堆积现象。</p>
+<p>来个稍微直观的图表：</p>
+<p>假设一开始两个集群的消费者是均等的，每次重连后，分配就开始失衡。直到最后完全偏向一边。<br><img src="/images/14743521103347.jpg" alt=""></p>
+<h2 id="解决办法">解决办法</h2><p>根本原因：不一致的心跳值。<br>有很多办法可以解决：</p>
+<ol>
+<li>统一 rabbitmq server 版本，需要升级，风险略大；</li>
+<li>统一服务端的心跳值，心跳值必须小于 LVS 的默认 timeout；</li>
+<li>统一客户端的心跳值，心跳值必须小于 LVS 的默认 timeout。</li>
+</ol>
+<h2 id="总结">总结</h2><ol>
+<li><p>一开始让我去分析这个问题，我内心是拒绝的，因为我一不懂 rabbitmq（只听过，没深入了解过），二不懂 LVS（只听过，没深入了解过）。总之一开始是一头雾水，不知从哪里开始。连对现象的准确描述也做不到。而且也不好重现与模拟（线上）。  不过第一感觉，这应该跟TCP连接有关，Google 过 rabbitmq connection timeout 相关问题，找到关于 heartbeat 相关资料，但是不确定是不是这个问题。</p>
+</li>
+<li><p>多方请教。 请教过多位同事。 每一次请教，使线索越来越清晰。尤其是当 @zhangqin 告诉我，他自己改了心跳值后，就没出现这种问题，而且 freeman项目也是这么干的，也没出现过这种问题。虽然看起来 it works, 但是还是有很多疑点没有得到解答。不过此时应该算接近答案的 80% 了，剩下的只需按图索骥，多次做实验对比结果。</p>
+</li>
+<li><p>豁然开朗： 就当我准备进行第三次实验，看看用默认心跳会怎样，突然发现待实验的两个集群 其版本不一样， 而且默认心跳值也不一样。之前内心问了一万个为什么的“为什么都是 60s 心跳值却还是会断开连接？” 疑惑终于得到解答，有种拨云见日的感觉。特么版本是不一样的啊！！！ 至此， 几乎所有疑问都得到解答，然后再请运维同学查询下所有的rabbitmq 版本，发现  A 机房的版本是统一的，所以它不会出问题（统一的话，要么全断，要全不断，不会出现一部分断，一部分不断）</p>
+</li>
+<li><p>对于工作中要用到的东西要深入了解，有时候答案就在那里，你知道的越多，找答案就越快。</p>
+</li>
+<li><p>这篇文章改过好几次，感觉写起来思路依然不是那么的清晰，毕竟当时思路就不是清晰的！！！都是一步步（有错的尝试，也有对的尝试）试探出来的。</p>
+</li>
+</ol>
+<h2 id="参考文档">参考文档</h2><ol>
+<li><a href="https://www.rabbitmq.com/heartbeats.html" target="_blank" rel="external">https://www.rabbitmq.com/heartbeats.html</a></li>
+<li><a href="http://my.oschina.net/hncscwc/blog/195343" target="_blank" rel="external">http://my.oschina.net/hncscwc/blog/195343</a></li>
+</ol>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/heartbeat/" rel="tag">#heartbeat</a>
+          
+            <a href="/tags/lvs/" rel="tag">#lvs</a>
+          
+            <a href="/tags/rabbitmq/" rel="tag">#rabbitmq</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/09/20/go-get-in-gitlab/" rel="next" title="如何使用 go get 下载 gitlab 私有项目">
+                <i class="fa fa-chevron-left"></i> 如何使用 go get 下载 gitlab 私有项目
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+        </div>
+
+        
+
+
+        
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+      </div>
+    
+  </div>
+
+
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="https://avatars0.githubusercontent.com/u/1198913?v=3&s=460" alt="holys" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">holys</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">14</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">分类</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">21</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/holys" target="_blank">
+                  
+                    <i class="fa fa-globe"></i> github
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/chendahui007" target="_blank">
+                  
+                    <i class="fa fa-globe"></i> twitter
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.douban.com/people/chendahui007" target="_blank">
+                  
+                    <i class="fa fa-globe"></i> douban
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="http://creativecommons.org/licenses/by-nc-sa/4.0" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景："><span class="nav-number">1.</span> <span class="nav-text">背景：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一开始观察到的现象"><span class="nav-number">2.</span> <span class="nav-text">一开始观察到的现象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第一次分析过程"><span class="nav-number">3.</span> <span class="nav-text">第一次分析过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#work_around"><span class="nav-number">4.</span> <span class="nav-text">work around</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验过程"><span class="nav-number">5.</span> <span class="nav-text">实验过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#实验1"><span class="nav-number">5.1.</span> <span class="nav-text">实验1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实验2"><span class="nav-number">5.2.</span> <span class="nav-text">实验2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实验3"><span class="nav-number">5.3.</span> <span class="nav-text">实验3</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原因分析"><span class="nav-number">6.</span> <span class="nav-text">原因分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解决办法"><span class="nav-number">7.</span> <span class="nav-text">解决办法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">8.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文档"><span class="nav-number">9.</span> <span class="nav-text">参考文档</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">holys</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+    
+    
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'holysblog';
+      var disqus_identifier = '2016/09/20/why-rabbitmq-message-not-consumed/';
+      var disqus_title = '记一次 RabbitMQ 消息堆积分析';
+      var disqus_url = 'http://holys.im/2016/09/20/why-rabbitmq-message-not-consumed/';
+
+      function run_disqus_script(disqus_script){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+      
+        run_disqus_script('embed.js');
+      
+    </script>
+  
+
+
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
+
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    motionMiddleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+  
+  
+
+  
+  
+
+</body>
+</html>
