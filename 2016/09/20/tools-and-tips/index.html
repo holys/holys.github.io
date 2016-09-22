@@ -29,7 +29,7 @@
   <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
 
 
-<link rel="canonical" href="http://holys.im/2015/11/29/charles-work-around/" />
+<link rel="canonical" href="http://holys.im/2016/09/20/tools-and-tips/" />
 
 
 <link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
@@ -37,7 +37,7 @@
 <link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="charles,chrome,tool," />
+  <meta name="keywords" content="golang,tool," />
 
 
 
@@ -53,30 +53,32 @@
 
 
 
-<meta name="description" content="我之前一直用 Charles 这个抓包软件来分析 HTTP 请求。而对于浏览器（这里特指Chrome）的抓包， 我通常使用 Proxy-SwitchySharp 这款插件来辅助。
-突然有一天，上面这个搭配没法工作了（提供 HTTPS 的网站才会这样）！浏览器提示：
-Server has a weak ephemeral Diffie-Hellman public key
-
-看样子是服务端的 HTT">
+<meta name="description" content="前阵子在小组内部分享过我平时使用的工具和资源，这里权当记录一下，也充当一篇 😜
+工具篇开发工具
+Alfred / Spotlight 快速检索文件, 二者互补
+Sublime Text 3 / Atom / VS Code(看好)
+Gas Mask （管理 hosts, Mac）同类: SwitchHosts 支持 Windows/Mac
+抓包软件 Wireshark / Charles 。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Charles Work Around">
-<meta property="og:url" content="http://holys.im/2015/11/29/charles-work-around/index.html">
+<meta property="og:title" content="工具与资源">
+<meta property="og:url" content="http://holys.im/2016/09/20/tools-and-tips/index.html">
 <meta property="og:site_name" content="holys'">
-<meta property="og:description" content="我之前一直用 Charles 这个抓包软件来分析 HTTP 请求。而对于浏览器（这里特指Chrome）的抓包， 我通常使用 Proxy-SwitchySharp 这款插件来辅助。
-突然有一天，上面这个搭配没法工作了（提供 HTTPS 的网站才会这样）！浏览器提示：
-Server has a weak ephemeral Diffie-Hellman public key
-
-看样子是服务端的 HTT">
-<meta property="og:image" content="http://holys.im/images/chrome.png">
-<meta property="og:image" content="http://holys.im/images/confirm.png">
-<meta property="og:updated_time" content="2015-11-29T03:04:05.000Z">
+<meta property="og:description" content="前阵子在小组内部分享过我平时使用的工具和资源，这里权当记录一下，也充当一篇 😜
+工具篇开发工具
+Alfred / Spotlight 快速检索文件, 二者互补
+Sublime Text 3 / Atom / VS Code(看好)
+Gas Mask （管理 hosts, Mac）同类: SwitchHosts 支持 Windows/Mac
+抓包软件 Wireshark / Charles 。">
+<meta property="og:image" content="http://holys.im/images/tools.png">
+<meta property="og:updated_time" content="2016-09-22T14:38:45.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Charles Work Around">
-<meta name="twitter:description" content="我之前一直用 Charles 这个抓包软件来分析 HTTP 请求。而对于浏览器（这里特指Chrome）的抓包， 我通常使用 Proxy-SwitchySharp 这款插件来辅助。
-突然有一天，上面这个搭配没法工作了（提供 HTTPS 的网站才会这样）！浏览器提示：
-Server has a weak ephemeral Diffie-Hellman public key
-
-看样子是服务端的 HTT">
+<meta name="twitter:title" content="工具与资源">
+<meta name="twitter:description" content="前阵子在小组内部分享过我平时使用的工具和资源，这里权当记录一下，也充当一篇 😜
+工具篇开发工具
+Alfred / Spotlight 快速检索文件, 二者互补
+Sublime Text 3 / Atom / VS Code(看好)
+Gas Mask （管理 hosts, Mac）同类: SwitchHosts 支持 Windows/Mac
+抓包软件 Wireshark / Charles 。">
 
 
 
@@ -88,7 +90,7 @@ Server has a weak ephemeral Diffie-Hellman public key
   };
 </script>
 
-  <title> Charles Work Around | holys' </title>
+  <title> 工具与资源 | holys' </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -227,7 +229,7 @@ Server has a weak ephemeral Diffie-Hellman public key
             
             
               
-                Charles Work Around
+                工具与资源
               
             
           </h1>
@@ -236,8 +238,8 @@ Server has a weak ephemeral Diffie-Hellman public key
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2015-11-29T09:43:18+08:00" content="2015-11-29">
-              2015-11-29
+            <time itemprop="dateCreated" datetime="2016-09-20T15:18:07+08:00" content="2016-09-20">
+              2016-09-20
             </time>
           </span>
 
@@ -247,8 +249,8 @@ Server has a weak ephemeral Diffie-Hellman public key
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/2015/11/29/charles-work-around/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/11/29/charles-work-around/" itemprop="commentsCount"></span>
+              <a href="/2016/09/20/tools-and-tips/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/09/20/tools-and-tips/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -267,26 +269,107 @@ Server has a weak ephemeral Diffie-Hellman public key
       
 
       
-        <span itemprop="articleBody"><p>我之前一直用 <a href="https://www.charlesproxy.com/" target="_blank" rel="external">Charles</a> 这个抓包软件来分析 HTTP 请求。而对于浏览器（这里特指Chrome）的抓包， 我通常使用 <a href="https://chrome.google.com/webstore/detail/proxy-switchysharp/dpplabbmogkhghncfbfdeeokoefdjegm" target="_blank" rel="external">Proxy-SwitchySharp</a> 这款插件来辅助。</p>
-<p>突然有一天，上面这个搭配没法工作了（提供 HTTPS 的网站才会这样）！浏览器提示：</p>
-<p>Server has a weak ephemeral Diffie-Hellman public key</p>
-<p><img src="/images/chrome.png" alt=""></p>
-<p>看样子是服务端的 HTTPS 安全级别不够高，被浏览器禁止访问了。</p>
-<p>于是我按图索骥， Google 了一下，发现很多人也遇到<a href="http://stackoverflow.com/questions/30942288/server-has-a-weak-ephemeral-diffie-hellman-public-key-how-to-by-pass-it" target="_blank" rel="external">类似问题</a>。别人的出发点也跟我一样， 就是 bypass it。 毕竟花时间研究代码比折腾这种东西有意义多了。</p>
-<p>很显然，最简单暴力的方式就是通过给浏览器添加启动参数来绕过检查。</p>
-<p>Mac 下面是这样处理：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">open /Applications/Google\ Chrome.app --args --cipher-suite-blacklist=<span class="number">0x0088</span>,<span class="number">0x0087</span>,<span class="number">0x0039</span>,<span class="number">0x0038</span>,<span class="number">0x0044</span>,<span class="number">0x0045</span>,<span class="number">0x0066</span>,<span class="number">0x0032</span>,<span class="number">0x0033</span>,<span class="number">0x0016</span>,<span class="number">0x0013</span></span><br></pre></td></tr></table></figure>
-<p>其他平台的解决方案请参考 SO 上面的<a href="http://stackoverflow.com/questions/30942288/server-has-a-weak-ephemeral-diffie-hellman-public-key-how-to-by-pass-it/" target="_blank" rel="external">回答</a>。</p>
-<p>但是每次这么启动浏览器， 不太方便吧。 我找到 Chrome的安装目录。修改下启动 App的方式，让其自动带上参数。</p>
-<p>Chrome 的安装目录通常是： </p>
-<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="regexp">/Applications/G</span>oogle\ Chrome.app</span><br></pre></td></tr></table></figure>
-<p>而我的是通过 brew cask install google-chrome 来安装的。 </p>
-<p>通过 brew cask info google-chrome 得知我的 Chrome 目录是： /opt/homebrew-cask/Caskroom/google-chrome/latest。 真正的二进制文件在 /opt/homebrew-cask/Caskroom/google-chrome/latest/Google Chrome.app/Contents/MacOS/Google\ Chrome。</p>
-<p>我将其重命名为 Google\ Chrome.real （随意起个名字），然后用一个 shell 脚本来代替之前的二进制， 并赋予执行权限。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ cat Google\ Chrome</span><br><span class="line"><span class="preprocessor">#!/bin/bash</span></span><br><span class="line">/opt/homebrew-cask/Caskroom/google-chrome/latest/Google\ Chrome.app/Contents/MacOS/Google\ Chrome.real -a -D --args --cipher-suite-blacklist=<span class="number">0x0088</span>,<span class="number">0x0087</span>,<span class="number">0x0039</span>,<span class="number">0x0038</span>,<span class="number">0x0044</span>,<span class="number">0x0045</span>,<span class="number">0x0066</span>,<span class="number">0x0032</span>,<span class="number">0x0033</span>,<span class="number">0x0016</span>,<span class="number">0x0013</span></span><br><span class="line"></span><br><span class="line">$ chmod +x Google\ Chrome</span><br></pre></td></tr></table></figure>
-<p>不过， 还是不够完美，因为会弹窗：</p>
-<p><img src="/images/confirm.png" alt=""></p>
-<p>先这样吧。</p>
+        <span itemprop="articleBody"><p>前阵子在小组内部分享过我平时使用的工具和资源，这里权当记录一下，也充当一篇 😜</p>
+<h2 id="工具篇">工具篇</h2><h3 id="开发工具">开发工具</h3><ul>
+<li>Alfred / Spotlight 快速检索文件, 二者互补</li>
+<li>Sublime Text 3 / Atom / VS Code(看好)</li>
+<li><a href="http://clockwise.ee/" target="_blank" rel="external">Gas Mask</a> （管理 hosts, Mac）<br>同类: <a href="https://oldj.github.io/SwitchHosts" target="_blank" rel="external">SwitchHosts</a> 支持 Windows/Mac</li>
+<li>抓包软件 Wireshark / Charles 。  tcpdump + wireshark</li>
+<li>Markdown:  MacDown/Mweb (收费)</li>
+</ul>
+<ul>
+<li>Git:  GitHub 客户端（推荐） / SourceTree（功能强大）</li>
+<li><a href="https://www.sequelpro.com/" target="_blank" rel="external">SequelPro</a>  MySQL 客户端</li>
+<li><a href="https://eggerapps.at/postico/" target="_blank" rel="external">Postico</a> Postgres 客户端</li>
+<li>推荐推荐一款轻量级磁盘清理工具 <a href="https://www.omnigroup.com/more" target="_blank" rel="external">OmniDiskSweeper</a>，帮我找到了隐藏 N 久的虚拟机镜像文件（可怜我只有128GB 的闪存空间）</li>
+<li>如果用 HHKB, <a href="https://pqrs.org/osx/karabiner/" target="_blank" rel="external">Karabiner</a> 基本是必备的，改键盘映射。</li>
+</ul>
+<p>更多的，见图， 不一一介绍了。</p>
+<p><img src="/images/tools.png" alt="tools"></p>
+<p>Sublime Text 目前依然是我的主力编辑器。年少无知时，我是个 IDE 黑，现在越来觉得有必要搞一款 IDE 来作为我的主力开发工具，但是一直没有物色到。</p>
+<h4 id="Sublime_插件">Sublime 插件</h4><ul>
+<li>SideBarEnhancements</li>
+<li>Pretty JSON</li>
+<li>Git</li>
+<li>GoSublime（随着 GOPATH 下面代码量的增加，有些功能就变得很慢了）</li>
+<li>Godef （有些项目本身就占一个 GOPATH,所以每次新增项目都得配置 GOPATH，烦）</li>
+</ul>
+<p>快捷键那些就不介绍啦~</p>
+<h4 id="Chrome_插件">Chrome 插件</h4><ul>
+<li><a href="https://chrome.google.com/webstore/detail/sourcegraph-for-github/dgjhfomjieaadpoljlnidmbgkdffpack" target="_blank" rel="external">Sourcegraph</a> （github. Browse and search code on GitHub like an IDE, with jump-to-definition, doc tooltips, and semantic search.）</li>
+<li><a href="https://chrome.google.com/webstore/detail/octotree/bkhaagjahfmjljalopjnoealnfndnagc" target="_blank" rel="external">Octotree</a> （Code tree for GitHub and GitLab ,  我们用的 gitlab 版本不兼容 ）</li>
+<li>Save to pocket. Pocket 用户推荐（<a href="https://zhuanlan.zhihu.com/p/22545574?hmsr=toutiao.io&amp;utm_medium=toutiao.io&amp;utm_source=toutiao.io" target="_blank" rel="external">又有人说</a>不要依赖 pocket,力争一次看完，要么就不看）。</li>
+<li>Proxy SwitchyOmega（你懂的）</li>
+<li>JSON View (跟 JSON API打交道，需要一个格式化工具)</li>
+<li>HTTP 调试工具  Postman / DHC</li>
+<li><a href="https://www.eff.org/https-everywhere" target="_blank" rel="external">HTTPS Everywhere</a></li>
+<li>…</li>
+</ul>
+<h4 id="终端">终端</h4><ol>
+<li>zsh/oh-my-zsh</li>
+<li>readline (readline 是一个行编辑库，常见的 shell 如 bash, zsh 支持 readline)<br><a href="https://cnswww.cns.cwru.edu/php/chet/readline/rluserman.html" target="_blank" rel="external">https://cnswww.cns.cwru.edu/php/chet/readline/rluserman.html</a></li>
+<li>autojump ( a faster way to navigate your filesystem)     / z?<br><a href="https://github.com/wting/autojump" target="_blank" rel="external">https://github.com/wting/autojump</a><br><a href="https://github.com/rupa/z" target="_blank" rel="external">https://github.com/rupa/z</a>   跟 autojump 很像</li>
+</ol>
+<h3 id="知识管理工具">知识管理工具</h3><ul>
+<li>Evernote / 有道笔记 / 为知笔记</li>
+<li>Pocket （read it later =&gt; read it never， 收藏文章）</li>
+</ul>
+<h3 id="爬墙工具">爬墙工具</h3><ul>
+<li>lantern + Proxy SwitchyOmega</li>
+<li>靠谱的 VPN ？</li>
+</ul>
+<h3 id="硬件">硬件</h3><ol>
+<li>Macbook Pro/Air  / Mac Mini （官网购买 + appletuan.com 港）<br>插入： IBM  大规模采购苹果电脑 <a href="http://www.solidot.org/story?threshold=0&amp;mode=flat&amp;sid=44981" target="_blank" rel="external">http://www.solidot.org/story?threshold=0&amp;mode=flat&amp;sid=44981</a></li>
+<li>一款舒适的键盘 机械式 / 静电电容式（HHKB）</li>
+</ol>
+<h2 id="资源篇">资源篇</h2><h3 id="资讯来源">资讯来源</h3><p>（加粗的表示我重度使用的）</p>
+<ul>
+<li><strong>weibo</strong> 关注的人 / @湾区日报BayArea</li>
+<li><strong>github</strong> 首页 （关注的人，像刷微博一样刷动态）</li>
+<li>reddit.com/r/golang （reddit 太多 topic, 挑自己感兴趣的）</li>
+<li><strong>toutiao.io</strong>  关注自己感兴趣的</li>
+<li>twitter （偶尔看，第一手资料）</li>
+<li>hacker news(其实很少看)</li>
+<li>v2ex(? 越来越水， 用来招聘/找工作还行)</li>
+<li>逛博客，从一个链接跳到另一个链接</li>
+<li>纸质书</li>
+</ul>
+<h3 id="如何查资料">如何查资料</h3><pre><code><span class="number">0.</span> 具体项目 首选官网
+<span class="number">1.</span> google  + 英文 keyword   =&gt;  stackoverflow  + github + google groups +  wikipedia + 个人博客 。 候选 bing
+<span class="number">2.</span> slides 搜索。 www.slideshare.net  / https:<span class="comment">//speakerdeck.com/</span>
+<span class="number">3.</span> 如果是某个github项目, 直接搜索其 issue
+<span class="number">4.</span> 如果是想找某个项目  github 直接搜：  keyword + language: xxx
+<span class="number">5.</span> 找书上豆瓣, 找电子书  问 google    site:pan.baidu.com  + 书名 + pdf/mobi/epub
+<span class="number">6.</span> 知乎也是可以的
+<span class="number">7.</span> 找视频 youtube.com / vimeo.com
+</code></pre><h2 id="Go_语言相关资源">Go 语言相关资源</h2><h3 id="推荐">推荐</h3><ol>
+<li>所有精华的东西都在官网！！！</li>
+<li>语言规范：<a href="https://golang.org/ref/spec" target="_blank" rel="external">https://golang.org/ref/spec</a></li>
+<li>effective go  <a href="https://golang.org/doc/effective_go.html" target="_blank" rel="external">https://golang.org/doc/effective_go.html</a></li>
+<li>godoc 看文档 <a href="https://godoc.org/" target="_blank" rel="external">https://godoc.org/</a></li>
+<li>faq  <a href="https://golang.org/doc/faq" target="_blank" rel="external">https://golang.org/doc/faq</a></li>
+<li>style guide: <a href="https://github.com/golang/go/wiki/CodeReviewComments" target="_blank" rel="external">https://github.com/golang/go/wiki/CodeReviewComments</a>  以及上面的 effective go</li>
+<li>官方博客: <a href="https://blog.golang.org/" target="_blank" rel="external">https://blog.golang.org/</a></li>
+<li>Dave Cheney 博客 <a href="http://dave.cheney.net/category/golang" target="_blank" rel="external">http://dave.cheney.net/category/golang</a> （推荐）</li>
+</ol>
+<p>如果想了解更多：</p>
+<ol>
+<li><a href="https://github.com/golang/go/wiki" target="_blank" rel="external">https://github.com/golang/go/wiki</a></li>
+<li><a href="http://stackoverflow.com/tags/go/info" target="_blank" rel="external">http://stackoverflow.com/tags/go/info</a></li>
+</ol>
+<h3 id="图书">图书</h3><ol>
+<li>入门：The Go Programming Language <a href="https://book.douban.com/subject/26337545/" target="_blank" rel="external">https://book.douban.com/subject/26337545/</a></li>
+<li>进阶：Go 语言学习笔记 <a href="https://book.douban.com/subject/26832468/" target="_blank" rel="external">https://book.douban.com/subject/26832468/</a></li>
+</ol>
+<h3 id="代码">代码</h3><ol>
+<li>go 标准库代码 /usr/local/go/src/</li>
+<li>siddontang <a href="https://github.com/siddontang" target="_blank" rel="external">https://github.com/siddontang</a> （前同事代码，非常值得一看）</li>
+<li>thrift/go</li>
+<li>tidb/etcd/fasthttp</li>
+<li>language:go stars:&gt;5000</li>
+</ol>
+<h3 id="工具">工具</h3><p><a href="http://dominik.honnef.co/posts/2014/12/go-tools/" target="_blank" rel="external">http://dominik.honnef.co/posts/2014/12/go-tools/</a></p>
+<p>以上，仅代表个人习惯。而且也会随着时间变化而变化。</p>
 </span>
       
     </div>
@@ -295,9 +378,7 @@ Server has a weak ephemeral Diffie-Hellman public key
       
         <div class="post-tags">
           
-            <a href="/tags/charles/" rel="tag">#charles</a>
-          
-            <a href="/tags/chrome/" rel="tag">#chrome</a>
+            <a href="/tags/golang/" rel="tag">#golang</a>
           
             <a href="/tags/tool/" rel="tag">#tool</a>
           
@@ -308,17 +389,13 @@ Server has a weak ephemeral Diffie-Hellman public key
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/11/24/mysql-add-column/" rel="next" title="记一次在线 Alter table 大表操作">
-                <i class="fa fa-chevron-left"></i> 记一次在线 Alter table 大表操作
+              <a href="/2016/09/20/why-rabbitmq-message-not-consumed/" rel="next" title="记一次 RabbitMQ 消息堆积分析">
+                <i class="fa fa-chevron-left"></i> 记一次 RabbitMQ 消息堆积分析
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/01/24/learn-redis-protocol-with-wireshark/" rel="prev" title="使用 wireshark 分析 redis 协议">
-                使用 wireshark 分析 redis 协议 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -468,7 +545,7 @@ Server has a weak ephemeral Diffie-Hellman public key
               
             
             
-              <p class="post-toc-empty">此文章未包含目录</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#工具篇"><span class="nav-number">1.</span> <span class="nav-text">工具篇</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#开发工具"><span class="nav-number">1.1.</span> <span class="nav-text">开发工具</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Sublime_插件"><span class="nav-number">1.1.1.</span> <span class="nav-text">Sublime 插件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Chrome_插件"><span class="nav-number">1.1.2.</span> <span class="nav-text">Chrome 插件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#终端"><span class="nav-number">1.1.3.</span> <span class="nav-text">终端</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#知识管理工具"><span class="nav-number">1.2.</span> <span class="nav-text">知识管理工具</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#爬墙工具"><span class="nav-number">1.3.</span> <span class="nav-text">爬墙工具</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#硬件"><span class="nav-number">1.4.</span> <span class="nav-text">硬件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#资源篇"><span class="nav-number">2.</span> <span class="nav-text">资源篇</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#资讯来源"><span class="nav-number">2.1.</span> <span class="nav-text">资讯来源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何查资料"><span class="nav-number">2.2.</span> <span class="nav-text">如何查资料</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Go_语言相关资源"><span class="nav-number">3.</span> <span class="nav-text">Go 语言相关资源</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#推荐"><span class="nav-number">3.1.</span> <span class="nav-text">推荐</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#图书"><span class="nav-number">3.2.</span> <span class="nav-text">图书</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码"><span class="nav-number">3.3.</span> <span class="nav-text">代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#工具"><span class="nav-number">3.4.</span> <span class="nav-text">工具</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
@@ -528,9 +605,9 @@ Server has a weak ephemeral Diffie-Hellman public key
 
     <script type="text/javascript">
       var disqus_shortname = 'holysblog';
-      var disqus_identifier = '2015/11/29/charles-work-around/';
-      var disqus_title = 'Charles Work Around';
-      var disqus_url = 'http://holys.im/2015/11/29/charles-work-around/';
+      var disqus_identifier = '2016/09/20/tools-and-tips/';
+      var disqus_title = '工具与资源';
+      var disqus_url = 'http://holys.im/2016/09/20/tools-and-tips/';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');
