@@ -63,7 +63,7 @@
 <meta property="og:description" content="问题：如何得知某个二进制的文件的 Git SHA1 值 和编译时间？总的思路都是编译时候通过某种方式将所需信息保存下来。有好几种实现方式： 
 1. 将这些信息作为文件名的一部分如 XXX_$Version_$Date
 1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950">
-<meta property="og:updated_time" content="2016-09-22T14:01:40.000Z">
+<meta property="og:updated_time" content="2016-09-22T14:11:06.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="自动生成 Go 程序版本号">
 <meta name="twitter:description" content="问题：如何得知某个二进制的文件的 Git SHA1 值 和编译时间？总的思路都是编译时候通过某种方式将所需信息保存下来。有好几种实现方式： 
@@ -262,28 +262,16 @@
         <span itemprop="articleBody"><h2 id="问题：如何得知某个二进制的文件的_Git_SHA1_值_和编译时间？">问题：如何得知某个二进制的文件的 Git SHA1 值 和编译时间？</h2><p>总的思路都是编译时候通过某种方式将所需信息保存下来。<br>有好几种实现方式： </p>
 <h2 id="1-_将这些信息作为文件名的一部分">1. 将这些信息作为文件名的一部分</h2><p>如 <code>XXX_$Version_$Date</code></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="shebang">#!/bin/bash </span><br><span class="line"></span></span><br><span class="line">Version=`git rev-parse -- short HEAD` </span><br><span class="line">Date=`date <span class="string">"+%Y%m%d%H%M%S"</span>` </span><br><span class="line">Target =“XXX_<span class="variable">$Version_</span><span class="variable">$Date</span>&#125;<span class="string">" </span><br><span class="line">go build -o <span class="variable">$Target</span> /path/to/main </span><br><span class="line">``` </span><br><span class="line"></span><br><span class="line">不过这种方式有个缺点： 文件名是不规则的，可能对运维同学不是那么的友好。 </span><br><span class="line"></span><br><span class="line">## 2. 将这些信息作为源代码的一部分 </span><br><span class="line"></span><br><span class="line">生成代码也有两种方式： </span><br><span class="line"></span><br><span class="line">### 2.1 通过 shell 脚本方式生成代码 </span><br><span class="line"></span><br><span class="line">``` </span><br><span class="line">#!/bin/bash </span><br><span class="line"></span><br><span class="line">version=`git log --date=iso --pretty=format:"</span>%<span class="built_in">cd</span> @%h<span class="string">" -1` </span><br><span class="line">if [ $? -ne 0 ]; then </span><br><span class="line">    version="</span>not a git repo<span class="string">" </span><br><span class="line">fi </span><br><span class="line"></span><br><span class="line">compile=`date +"</span>%F %T %z<span class="string">"`"</span> by <span class="string">"`go version` </span><br><span class="line"></span><br><span class="line">cat &lt;&lt; EOF | gofmt &gt; version.go </span><br><span class="line">package version </span><br><span class="line"></span><br><span class="line">const ( </span><br><span class="line">    Version = "</span><span class="variable">$version</span><span class="string">" </span><br><span class="line">    Compile = "</span><span class="variable">$compile</span><span class="string">" </span><br><span class="line">) </span><br><span class="line">EOF% </span><br><span class="line">``` </span><br><span class="line">生成的代码效果为： </span><br><span class="line"></span><br><span class="line">```go </span><br><span class="line">$ cat version.go </span><br><span class="line">package version </span><br><span class="line"></span><br><span class="line">const ( </span><br><span class="line">    Version = "</span><span class="number">2016</span>-<span class="number">03</span>-<span class="number">23</span> <span class="number">17</span>:<span class="number">06</span>:<span class="number">31</span> +<span class="number">0800</span> @c0d144f<span class="string">" </span><br><span class="line">    Compile = "</span><span class="number">2016</span>-<span class="number">06</span>-<span class="number">05</span> <span class="number">23</span>:<span class="number">29</span>:<span class="number">45</span> +<span class="number">0800</span> by go version go1.<span class="number">6.2</span> darwin/amd64<span class="string">" </span><br><span class="line">) </span><br><span class="line">``` </span><br><span class="line"></span><br><span class="line">### 2.2.  通过 go build 的 -ldflags 参数在编译时候传入 </span><br><span class="line"></span><br><span class="line">其原理是： go tool link 提供了个 `-X` 参数，允许我们在编译构建Go程序的时候，传入自定义的值，覆盖对应的import path下的指定变量</span></span><br></pre></td></tr></table></figure>
-<p>-X importpath.name=value<br>    Set the value of the string variable in importpath named name to value.<br>    Note that before Go 1.5 this option took two separate arguments.<br>    Now it takes one argument split on the first = sign.</p>
+<p>-X importpath.name=value<br>    Set the value of the string variable in importpath named name to value.<br>    Note that before Go 1.5 this option took two separate arguments.<br>    Now it takes one argument split on the first = sign.<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<p>#!/bin/bash</p>
+<p>COMMIT_HASH=<code>git rev-parse HEAD 2&gt;/dev/null</code><br>BUILD_DATE=<code>date</code><br>TARGET=./bin/xxx<br>SOURCE=./src/main.go </p>
+<p>go build -ldflags “-X \”main.BuildVersion=${COMMIT_HASH}\” -X \”main.BuildDate=${BUILD_DATE}\”” -o ${TARGET} ${SOURCE} </p>
 <pre><code>
-
-<span class="bash">```bash 
-<span class="shebang">#!/bin/bash
-</span>
-COMMIT_HASH=`git rev-parse HEAD <span class="number">2</span>&gt;/dev/null` 
-BUILD_DATE=`date` 
-TARGET=./bin/xxx 
-SOURCE=./src/main.go 
-
-go build -ldflags <span class="string">"-X \”main.BuildVersion=<span class="variable">${COMMIT_HASH}</span>\" -X \”main.BuildDate=<span class="variable">${BUILD_DATE}</span>\""</span> -o <span class="variable">${TARGET}</span> <span class="variable">${SOURCE}</span></span>
-</code></pre><p>对应的 version.go(文件名随意，注意package name 要跟上面的一致就好) 应该是编译前就创建好的，而赋值是编译期间直接生成在二进制文件里面，不体现在源码里面赋值。 </p>
-<pre><code>$ cat version.<span class="keyword">go</span> 
-
-<span class="keyword">package</span> main 
-
-<span class="keyword">var</span> ( 
-    BuildDate    <span class="typename">string</span> 
-    BuildVersion <span class="typename">string</span>
-)
-</code></pre><p>生成代码后，就可以通过变量的方式来获取了。既可以通过命令行 类似 –version 参数的形式来获取版本号和编译时间等，还可以通过 HTTP 请求的方式提供给相应的运维管理平台。当然还有更多的展示形式吧，留给读者自己思考。有更好方式的，也不妨留言指出，先感谢。</p>
+对应的 version.<span class="function"><span class="title">go</span><span class="params">(文件名随意，注意package name 要跟上面的一致就好)</span></span> 应该是编译前就创建好的，而赋值是编译期间直接生成在二进制文件里面，不体现在源码里面赋值。
+</code></pre><p>$ cat version.go </p>
+<p>package main </p>
+<p>var (<br>    BuildDate    string<br>    BuildVersion string<br>)<br>``` </p>
+<p>生成代码后，就可以通过变量的方式来获取了。既可以通过命令行 类似 –version 参数的形式来获取版本号和编译时间等，还可以通过 HTTP 请求的方式提供给相应的运维管理平台。当然还有更多的展示形式吧，留给读者自己思考。有更好方式的，也不妨留言指出，先感谢。</p>
 <p>参考：</p>
 <ol>
 <li><a href="http://stackoverflow.com/questions/11354518/golang-application-auto-build-versioning" target="_blank" rel="external">http://stackoverflow.com/questions/11354518/golang-application-auto-build-versioning</a></li>
