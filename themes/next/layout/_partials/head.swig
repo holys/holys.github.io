@@ -32,6 +32,8 @@
   <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
 {% endif %}
 
+<link rel="canonical" href="{{ config.url }}/{{ page.path }}" />
+
 
 <link href="{{ url_for(theme.vendors) }}/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
 
