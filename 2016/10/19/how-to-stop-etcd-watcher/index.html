@@ -29,7 +29,7 @@
   <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
 
 
-<link rel="canonical" href="http://holys.im/2016/01/24/learn-redis-protocol-with-wireshark/" />
+<link rel="canonical" href="http://holys.im/2016/10/19/how-to-stop-etcd-watcher/" />
 
 
 <link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
@@ -37,7 +37,7 @@
 <link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="redis,wireshark," />
+  <meta name="keywords" content="context,etcd,golang," />
 
 
 
@@ -53,21 +53,19 @@
 
 
 
-<meta name="description" content="如果想要和 redis 打交道， 譬如实现某种语言的 redis 的客户端， 实现 redis 的 proxy，都得懂 redis 的数据序列化协议 REdis Serialization Protocol(RESP)(MySQL 同理). Redis使用 TCP 作为其数据传输协议，而分析 TCP 包就不得不祭出 wireshark 这个神器了。 虽然wireshark 可以分析 TCP 包，">
+<meta name="description" content="一般而言，我们用 etcd 的 watcher 时，都是像下面这样用，永不休止。
+12345678910111213141516171819202122232425262728import (	&quot;time&quot;	&quot;context&quot;	&quot;github.com/coreos/etcd/client&quot;)func main() &amp;#123;	c, _ := client.New(client.Config&amp;#1">
 <meta property="og:type" content="article">
-<meta property="og:title" content="使用 wireshark 分析 redis 协议">
-<meta property="og:url" content="http://holys.im/2016/01/24/learn-redis-protocol-with-wireshark/index.html">
+<meta property="og:title" content="如何结束 etcd watcher">
+<meta property="og:url" content="http://holys.im/2016/10/19/how-to-stop-etcd-watcher/index.html">
 <meta property="og:site_name" content="holys'">
-<meta property="og:description" content="如果想要和 redis 打交道， 譬如实现某种语言的 redis 的客户端， 实现 redis 的 proxy，都得懂 redis 的数据序列化协议 REdis Serialization Protocol(RESP)(MySQL 同理). Redis使用 TCP 作为其数据传输协议，而分析 TCP 包就不得不祭出 wireshark 这个神器了。 虽然wireshark 可以分析 TCP 包，">
-<meta property="og:image" content="http://holys.im/images/wireshark.png">
-<meta property="og:image" content="http://holys.im/images/C745546B-D7AD-42E1-863A-43A8141B460B.png">
-<meta property="og:image" content="http://holys.im/images/F145FAE4-FBB8-4E05-869D-42A379B47420.png">
-<meta property="og:image" content="http://holys.im/images/229DCAA5-60D7-4EBD-9842-4E601818D1F4.png">
-<meta property="og:image" content="http://holys.im/images/2CCA3B72-CD20-4B8F-BA83-E9BF4E925986.png">
-<meta property="og:updated_time" content="2016-01-24T16:24:03.000Z">
+<meta property="og:description" content="一般而言，我们用 etcd 的 watcher 时，都是像下面这样用，永不休止。
+12345678910111213141516171819202122232425262728import (	&quot;time&quot;	&quot;context&quot;	&quot;github.com/coreos/etcd/client&quot;)func main() &amp;#123;	c, _ := client.New(client.Config&amp;#1">
+<meta property="og:updated_time" content="2016-10-20T15:06:04.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="使用 wireshark 分析 redis 协议">
-<meta name="twitter:description" content="如果想要和 redis 打交道， 譬如实现某种语言的 redis 的客户端， 实现 redis 的 proxy，都得懂 redis 的数据序列化协议 REdis Serialization Protocol(RESP)(MySQL 同理). Redis使用 TCP 作为其数据传输协议，而分析 TCP 包就不得不祭出 wireshark 这个神器了。 虽然wireshark 可以分析 TCP 包，">
+<meta name="twitter:title" content="如何结束 etcd watcher">
+<meta name="twitter:description" content="一般而言，我们用 etcd 的 watcher 时，都是像下面这样用，永不休止。
+12345678910111213141516171819202122232425262728import (	&quot;time&quot;	&quot;context&quot;	&quot;github.com/coreos/etcd/client&quot;)func main() &amp;#123;	c, _ := client.New(client.Config&amp;#1">
 
 
 
@@ -79,7 +77,7 @@
   };
 </script>
 
-  <title> 使用 wireshark 分析 redis 协议 | holys' </title>
+  <title> 如何结束 etcd watcher | holys' </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -218,7 +216,7 @@
             
             
               
-                使用 wireshark 分析 redis 协议
+                如何结束 etcd watcher
               
             
           </h1>
@@ -227,8 +225,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2016-01-24T17:14:27+08:00" content="2016-01-24">
-              2016-01-24
+            <time itemprop="dateCreated" datetime="2016-10-19T16:58:51+08:00" content="2016-10-19">
+              2016-10-19
             </time>
           </span>
 
@@ -238,8 +236,8 @@
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/2016/01/24/learn-redis-protocol-with-wireshark/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/01/24/learn-redis-protocol-with-wireshark/" itemprop="commentsCount"></span>
+              <a href="/2016/10/19/how-to-stop-etcd-watcher/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/10/19/how-to-stop-etcd-watcher/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -258,53 +256,29 @@
       
 
       
-        <span itemprop="articleBody"><p>如果想要和 redis 打交道， 譬如实现某种语言的 redis 的客户端， 实现 redis 的 proxy，都得懂 redis 的数据序列化协议 <a href="http://redis.io/topics/protocol" target="_blank" rel="external">REdis Serialization Protocol(RESP)</a>(MySQL 同理). Redis使用 TCP 作为其数据传输协议，而分析 TCP 包就不得不祭出 wireshark 这个神器了。 虽然wireshark 可以分析 TCP 包， 但是直接看 TCP 包不是那么直观的看出与 redis 的关系的。此时，我们将借助 <a href="https://github.com/jzwinck/redis-wireshark" target="_blank" rel="external">Redis-wireshark</a> 这个wireshark 插件来分析协议。</p>
-<h2 id="备注">备注</h2><ol>
-<li>我当前所用的 redis 版本是 2.8。</li>
-<li>本文只是分析 C-S 模型的 redis server 的协议。redis cluster 是另一套二进制协议。</li>
-</ol>
-<h2 id="Tips">Tips</h2><p>如果redis-server 和 redis-cli 都是运行在本机, wireshark 应该使用 <code>loopback</code>这个虚拟接口来查看数据。至于原因， wireshark 的文档是这么解释的：</p>
-<blockquote>
-<p>If you are trying to capture traffic from a machine to itself, that traffic will not be sent over a real network interface, even if it’s being sent to an address on one of the machine’s network adapters. This means that you will not see it if you are trying to capture on, for example, the interface device for the adapter to which the destination address is assigned. You will only see it if you capture on the “loopback interface”, if there is such an interface and it is possible to capture on it; </p>
-<p><a href="https://wiki.wireshark.org/CaptureSetup/Loopback" target="_blank" rel="external">https://wiki.wireshark.org/CaptureSetup/Loopback</a></p>
-</blockquote>
-<p><img src="/images/wireshark.png" alt="wireshark"></p>
-<h2 id="分析过程">分析过程</h2><p>redis 使用第一个字符来区分不同的数据类型</p>
+        <span itemprop="articleBody"><p>一般而言，我们用 etcd 的 watcher 时，都是像下面这样用，永不休止。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"time"</span></span><br><span class="line">	<span class="string">"context"</span></span><br><span class="line">	<span class="string">"github.com/coreos/etcd/client"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">func</span> main() &#123;</span><br><span class="line"></span><br><span class="line">	c, _ := client.New(client.Config&#123;</span><br><span class="line">		Endpoints:               []<span class="typename">string</span>&#123;<span class="string">"http://host:port/"</span>&#125;,</span><br><span class="line">		Transport:               client.DefaultTransport,</span><br><span class="line">		HeaderTimeoutPerRequest: time.Second,</span><br><span class="line">	&#125;)</span><br><span class="line">	kapi := client.NewKeysAPI(c)</span><br><span class="line"></span><br><span class="line">	watcher := kapi.Watcher(<span class="string">"/node"</span>, <span class="constant">nil</span>)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> &#123;</span><br><span class="line">		resp, err := watcher.Next(context.Background())</span><br><span class="line">		<span class="keyword">if</span> err != <span class="constant">nil</span> &#123;</span><br><span class="line">			<span class="comment">// handle error</span></span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// do something with resp</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但是有时候，我们希望达到某种条件时，终止 watcher。翻看 etcd/client 的文档，没找到类似 watcher.Close() 、 watcher.Stop() 之类的方法，后来才知道，原来这些控制权都交给了 context了。</p>
+<p>context 原先只是一个备胎库 <code>golang.org/x/net/context</code>， go 1.7 以后被纳入标准库 <code>context</code>了，转正成功。 一句话概括，它是一个管理协程树生命周期的解决方案。就是父协程能通过 context 来控制其子协程什么时候退出。</p>
+<p>如果读者想了解更多关于 context 资料，可阅读下面的链接内容：</p>
 <ol>
-<li><code>+</code> 表示simple string</li>
-<li><code>-</code> 表示错误 error</li>
-<li><code>:</code> 表示冒号表示整数</li>
-<li><code>$</code> 表示bulk string</li>
-<li><code>*</code> 表示arrays</li>
+<li><a href="https://godoc.org/golang.org/x/net/context" target="_blank" rel="external">https://godoc.org/golang.org/x/net/context</a></li>
+<li><a href="https://blog.golang.org/context" target="_blank" rel="external">https://blog.golang.org/context</a></li>
+<li><a href="http://blog.golang.org/pipelines" target="_blank" rel="external">http://blog.golang.org/pipelines</a></li>
+<li><a href="http://lanlingzi.cn/post/technical/2016/0802_go_context/" target="_blank" rel="external">http://lanlingzi.cn/post/technical/2016/0802_go_context/</a> (中文)</li>
 </ol>
-<p>使用<code>\r\n</code> CRLF 字符来表示结尾</p>
-<p>举例：</p>
-<p>1、 Simple string</p>
-<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">+OK<span class="command">\r</span><span class="command">\n</span></span><br><span class="line">+PONG<span class="command">\r</span><span class="command">\n</span></span><br></pre></td></tr></table></figure>
-<p><img src="/images/C745546B-D7AD-42E1-863A-43A8141B460B.png" alt="C745546B-D7AD-42E1-863A-43A8141B460B"></p>
-<p>2、 error</p>
-<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-ERR unknown <span class="command"><span class="keyword">command</span> ‘<span class="title">ada</span>’\<span class="title">r</span>\<span class="title">n</span></span></span><br></pre></td></tr></table></figure>
-<p><img src="/images/F145FAE4-FBB8-4E05-869D-42A379B47420.png" alt="F145FAE4-FBB8-4E05-869D-42A379B47420"></p>
-<p>3、 integer<br>删除一个不存在的key, 返回了下面的内容</p>
-<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:0<span class="command">\r</span><span class="command">\n</span></span><br></pre></td></tr></table></figure>
-<p><img src="/images/229DCAA5-60D7-4EBD-9842-4E601818D1F4.png" alt="229DCAA5-60D7-4EBD-9842-4E601818D1F4"></p>
-<p>4、 bulk srting<br>bulk string 用来表示一个<code>二进制安全</code>的字符。<br>其编码结构是：</p>
-<ol>
-<li><code>$</code> 开头，后面紧跟字符的字节长度，然后是 <code>\r\n</code> 结尾;</li>
-<li>实际的字符内容;</li>
-<li><code>\r\n</code> 结尾。</li>
-</ol>
-<p>如 <code>foobar</code>  可表示为 <code>$6\r\nfoobar\r\n</code>，空串可表示为 <code>$0\r\n\r\n</code>。</p>
-<p>bulk string 好像没有单独的用途, 抓包图片见 arrays。</p>
-<p>5、 arrays<br>也叫 multi bulk。<br>arrays 的编码结构：</p>
-<ol>
-<li><code>*</code> 星号开头， 然后是元素的个数（十进制表示）， <code>\r\n</code> 结尾</li>
-<li>多个用 bulk string 表示元素</li>
-</ol>
-<p>客户端发送的内容 都是用 array 表示<br>如：发送 ping 命令</p>
-<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">*1<span class="command">\r</span><span class="command">\n</span><span class="formula">$4<span class="command">\r</span><span class="command">\nping</span><span class="command">\r</span><span class="command">\n</span></span></span><br></pre></td></tr></table></figure>
-<p><img src="/images/2CCA3B72-CD20-4B8F-BA83-E9BF4E925986.png" alt="2CCA3B72-CD20-4B8F-BA83-E9BF4E925986"></p>
-<h2 id="小结">小结</h2><p>明白了 redis 的协议之后，我们就可以尝试编写一个 redis client 了。下篇我会尝试去讲述如何写一个简单的 redis client。其实写 client 只需要关心如何encode， decode 是服务端需要做的事情。当然 client 还需要关心连接池等问题。敬请期待！</p>
+<p>回到正题 “如何结束 etcd watcher” 上来。</p>
+<p>由于 context.Background  <code>return a non-nil, empty Context. It is never canceled, has no values, and has no deadline.</code>, 所以不指望他能干啥了。但是 WithCancel 可以帮助我们。</p>
+<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">WithCancel</span><span class="params">(parent Context)</span> <span class="params">(ctx Context, cancel CancelFunc)</span></span></span><br></pre></td></tr></table></figure>
+<p>WithCancel 返回的 cancel 函数，能让我们结束其 child context， 也就是包含了其 child context 的 goroutine 也会退出，当然这是由开发者自己正确实现才起作用的。</p>
+<p>子协程实现的套路是这样的：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">select</span> &#123;</span><br><span class="line">    <span class="keyword">case</span> &lt;-cxt.Done():</span><br><span class="line">        // <span class="keyword">do</span> <span class="keyword">some</span> clean...</span><br><span class="line">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>很显然（看代码得知，😝），etcd client 是实现了这种方法。</p>
+<p>但是，什么时候去调用 cancel() 方法呢？ 这当然取决于自己的业务需求。</p>
+<p>举个例子：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">func</span> watch(kapi *client.KeysAPI, node <span class="typename">string</span>, stopChan <span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;) error &#123;</span><br><span class="line">	watcher := kapi.Watcher(node, <span class="constant">nil</span>)</span><br><span class="line">	ctx, cancel := context.WithCancel(context.Background())</span><br><span class="line">	cancelRoutine := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;)</span><br><span class="line">	<span class="keyword">defer</span> <span class="built_in">close</span>(cancelRoutine)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">go</span> <span class="keyword">func</span>() &#123;</span><br><span class="line">		<span class="keyword">for</span> &#123;</span><br><span class="line">			<span class="keyword">select</span> &#123;</span><br><span class="line">			<span class="comment">// 当外部传来 stopChan 时， cancel watcher 的 context</span></span><br><span class="line">			<span class="keyword">case</span> &lt;-stopChan:</span><br><span class="line">				cancel()</span><br><span class="line">				<span class="keyword">return</span></span><br><span class="line">			<span class="keyword">case</span> &lt;-cancelRoutine:</span><br><span class="line">				<span class="keyword">return</span></span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;()</span><br><span class="line"></span><br><span class="line">Loop:</span><br><span class="line">	<span class="keyword">for</span> &#123;</span><br><span class="line">	<span class="comment">// Next 方法会一直阻塞，直到有事件触发。</span></span><br><span class="line">		resp, err := watcher.Next()</span><br><span class="line">		<span class="keyword">if</span> err != <span class="constant">nil</span> &#123;</span><br><span class="line">		<span class="comment">// 当 cancel() 被调用，会返回 context.Canceled 错误。</span></span><br><span class="line">			<span class="keyword">if</span> err == context.Canceled &#123;</span><br><span class="line">				log.Println(<span class="string">"context canceled"</span>)</span><br><span class="line">				<span class="keyword">break</span> Loop</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">return</span> err</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// handle resp here</span></span><br><span class="line">	&#125;</span><br><span class="line">	log.Println(<span class="string">"watch ended"</span>)</span><br><span class="line">	<span class="keyword">return</span> <span class="constant">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我也看过<a href="https://github.com/kelseyhightower/confd/blob/master/backends/etcd/client.go#L133" target="_blank" rel="external">别的写法</a>，总而言之都是取决于业务的需要。</p>
+<p>题外话，go 1.7 的 net/http 已经大力推广 context 包了，推荐使用。</p>
 </span>
       
     </div>
@@ -313,9 +287,11 @@
       
         <div class="post-tags">
           
-            <a href="/tags/redis/" rel="tag">#redis</a>
+            <a href="/tags/context/" rel="tag">#context</a>
           
-            <a href="/tags/wireshark/" rel="tag">#wireshark</a>
+            <a href="/tags/etcd/" rel="tag">#etcd</a>
+          
+            <a href="/tags/golang/" rel="tag">#golang</a>
           
         </div>
       
@@ -324,17 +300,13 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/11/29/charles-work-around/" rel="next" title="Charles Work Around">
-                <i class="fa fa-chevron-left"></i> Charles Work Around
+              <a href="/2016/09/20/tools-and-tips/" rel="next" title="工具与资源">
+                <i class="fa fa-chevron-left"></i> 工具与资源
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/02/22/run-docker-on-osx-with-dlite/" rel="prev" title="Simplifying Docker on OS X With Dlite">
-                Simplifying Docker on OS X With Dlite <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -484,7 +456,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#备注"><span class="nav-number">1.</span> <span class="nav-text">备注</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tips"><span class="nav-number">2.</span> <span class="nav-text">Tips</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分析过程"><span class="nav-number">3.</span> <span class="nav-text">分析过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-number">4.</span> <span class="nav-text">小结</span></a></li></ol></div>
+              <p class="post-toc-empty">此文章未包含目录</p>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
@@ -544,9 +516,9 @@
 
     <script type="text/javascript">
       var disqus_shortname = 'holysblog';
-      var disqus_identifier = '2016/01/24/learn-redis-protocol-with-wireshark/';
-      var disqus_title = '使用 wireshark 分析 redis 协议';
-      var disqus_url = 'http://holys.im/2016/01/24/learn-redis-protocol-with-wireshark/';
+      var disqus_identifier = '2016/10/19/how-to-stop-etcd-watcher/';
+      var disqus_title = '如何结束 etcd watcher';
+      var disqus_url = 'http://holys.im/2016/10/19/how-to-stop-etcd-watcher/';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');
