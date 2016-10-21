@@ -9,5 +9,6 @@ preview:
 deploy:
 	hexo clean
 	@sh copy.sh
+	hexo g
 	hexo g -d
 	 

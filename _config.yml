@@ -69,10 +69,10 @@ theme: next
 # Deployment
 ## Docs: http://hexo.io/docs/deployment.html
 deploy:
-  type: git 
+- type: git 
   repo: https://github.com/holys/holys.github.io
   branch: master
 
-  type: git
+- type: git
   repo: https://git.coding.net/holys/holys.git
   branch: coding-pages
