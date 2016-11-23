@@ -29,7 +29,7 @@
   <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
 
 
-<link rel="canonical" href="http://holys.im/2016/06/26/inspect-go-binary-date-and-version/" />
+<link rel="canonical" href="http://holys.im/2016/11/23/time-wait-go-http/" />
 
 
 <link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
@@ -37,7 +37,7 @@
 <link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="golang,ldflags," />
+  <meta name="keywords" content="http,tcp,time_wait,wrk," />
 
 
 
@@ -53,22 +53,17 @@
 
 
 
-<meta name="description" content="问题：如何得知某个二进制的文件的 Git SHA1 值 和编译时间？总的思路都是编译时候通过某种方式将所需信息保存下来。有好几种实现方式： 
-1. 将这些信息作为文件名的一部分如 XXX_$Version_$Date
-1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950">
+<meta name="description" content="最近在对我们的网关服务（gateway）进行压力测试时，发现网关服务产生大量的 TIME_WAIT. Gateway 是用 go 实现的，通过 HTTP 方式与后端服务进行通信，也就是说使用了 net/http 包。 在我的理解中，net/http 是默认保持长连接的，按理说不会有这么多 TIME_WAIT 状态的。除非是使用了短连接，每次都是三次握手，然后客户端（gateway）主动关闭连接，进">
 <meta property="og:type" content="article">
-<meta property="og:title" content="自动生成 Go 程序版本号">
-<meta property="og:url" content="http://holys.im/2016/06/26/inspect-go-binary-date-and-version/index.html">
+<meta property="og:title" content="net/http 与 TIME_WAIT">
+<meta property="og:url" content="http://holys.im/2016/11/23/time-wait-go-http/index.html">
 <meta property="og:site_name" content="holys'">
-<meta property="og:description" content="问题：如何得知某个二进制的文件的 Git SHA1 值 和编译时间？总的思路都是编译时候通过某种方式将所需信息保存下来。有好几种实现方式： 
-1. 将这些信息作为文件名的一部分如 XXX_$Version_$Date
-1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950">
-<meta property="og:updated_time" content="2016-10-20T16:52:29.000Z">
+<meta property="og:description" content="最近在对我们的网关服务（gateway）进行压力测试时，发现网关服务产生大量的 TIME_WAIT. Gateway 是用 go 实现的，通过 HTTP 方式与后端服务进行通信，也就是说使用了 net/http 包。 在我的理解中，net/http 是默认保持长连接的，按理说不会有这么多 TIME_WAIT 状态的。除非是使用了短连接，每次都是三次握手，然后客户端（gateway）主动关闭连接，进">
+<meta property="og:image" content="http://holys.im/images/14799159319678.jpg">
+<meta property="og:updated_time" content="2016-11-23T15:45:33.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="自动生成 Go 程序版本号">
-<meta name="twitter:description" content="问题：如何得知某个二进制的文件的 Git SHA1 值 和编译时间？总的思路都是编译时候通过某种方式将所需信息保存下来。有好几种实现方式： 
-1. 将这些信息作为文件名的一部分如 XXX_$Version_$Date
-1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950">
+<meta name="twitter:title" content="net/http 与 TIME_WAIT">
+<meta name="twitter:description" content="最近在对我们的网关服务（gateway）进行压力测试时，发现网关服务产生大量的 TIME_WAIT. Gateway 是用 go 实现的，通过 HTTP 方式与后端服务进行通信，也就是说使用了 net/http 包。 在我的理解中，net/http 是默认保持长连接的，按理说不会有这么多 TIME_WAIT 状态的。除非是使用了短连接，每次都是三次握手，然后客户端（gateway）主动关闭连接，进">
 
 
 
@@ -80,7 +75,7 @@
   };
 </script>
 
-  <title> 自动生成 Go 程序版本号 | holys' </title>
+  <title> net/http 与 TIME_WAIT | holys' </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -219,7 +214,7 @@
             
             
               
-                自动生成 Go 程序版本号
+                net/http 与 TIME_WAIT
               
             
           </h1>
@@ -228,8 +223,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2016-06-26T17:22:27+08:00" content="2016-06-26">
-              2016-06-26
+            <time itemprop="dateCreated" datetime="2016-11-23T22:16:49+08:00" content="2016-11-23">
+              2016-11-23
             </time>
           </span>
 
@@ -239,8 +234,8 @@
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/2016/06/26/inspect-go-binary-date-and-version/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/06/26/inspect-go-binary-date-and-version/" itemprop="commentsCount"></span>
+              <a href="/2016/11/23/time-wait-go-http/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/11/23/time-wait-go-http/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -259,35 +254,31 @@
       
 
       
-        <span itemprop="articleBody"><h2 id="问题：如何得知某个二进制的文件的_Git_SHA1_值_和编译时间？">问题：如何得知某个二进制的文件的 Git SHA1 值 和编译时间？</h2><p>总的思路都是编译时候通过某种方式将所需信息保存下来。<br>有好几种实现方式： </p>
-<h2 id="1-_将这些信息作为文件名的一部分">1. 将这些信息作为文件名的一部分</h2><p>如 <code>XXX_$Version_$Date</code></p>
-<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash </span><br><span class="line"></span><br><span class="line"><span class="keyword">Version</span>=`git rev-<span class="keyword">parse</span> -- short HEAD` </span><br><span class="line">Date=`date <span class="string">"+%Y%m%d%H%M%S"</span>` </span><br><span class="line">Target =“XXX_<span class="label">$Version_</span><span class="label">$Date&#125;</span>" </span><br><span class="line">go build -o <span class="label">$Target</span> /path/to/main </span><br><span class="line">``` </span><br><span class="line"></span><br><span class="line">不过这种方式有个缺点： 文件名是不规则的，可能对运维同学不是那么的友好。 </span><br><span class="line"></span><br><span class="line">## 2. 将这些信息作为源代码的一部分 </span><br><span class="line"></span><br><span class="line">生成代码也有两种方式： </span><br><span class="line"></span><br><span class="line">### 2.1 通过 <span class="keyword">shell</span> 脚本方式生成代码 </span><br><span class="line"></span><br><span class="line">```bash</span><br><span class="line">#!/bin/bash </span><br><span class="line"></span><br><span class="line"><span class="keyword">version</span>=`git <span class="keyword">log</span> --date=iso --pretty=<span class="keyword">format</span>:<span class="string">"%cd @%h"</span> -1` </span><br><span class="line"><span class="keyword">if</span> [ $? -ne 0 ]; then </span><br><span class="line">    <span class="keyword">version</span>=<span class="string">"not a git repo"</span> </span><br><span class="line">fi </span><br><span class="line"></span><br><span class="line">compile=`date +<span class="string">"%F %T %z"</span>`<span class="string">" by "</span>`go <span class="keyword">version</span>` </span><br><span class="line"></span><br><span class="line"><span class="keyword">cat</span> &lt;&lt; EOF | gofmt &gt; <span class="keyword">version</span>.go </span><br><span class="line">package <span class="keyword">version</span> </span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> ( </span><br><span class="line">    <span class="keyword">Version</span> = <span class="string">"$version"</span> </span><br><span class="line">    Compile = <span class="string">"$compile"</span> </span><br><span class="line">) </span><br><span class="line">EOF% </span><br><span class="line">``` </span><br><span class="line"></span><br><span class="line">生成的代码效果为： </span><br><span class="line"></span><br><span class="line">```go</span><br><span class="line">$ <span class="keyword">cat</span> <span class="keyword">version</span>.go </span><br><span class="line">package <span class="keyword">version</span> </span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> ( </span><br><span class="line">    <span class="keyword">Version</span> = <span class="string">"2016-03-23 17:06:31 +0800 @c0d144f"</span> </span><br><span class="line">    Compile = <span class="string">"2016-06-05 23:29:45 +0800 by go version go1.6.2 darwin/amd64"</span> </span><br><span class="line">) </span><br><span class="line">``` </span><br><span class="line"></span><br><span class="line">### 2.2.  通过 go build 的 -ldflags 参数在编译时候传入 </span><br><span class="line"></span><br><span class="line">其原理是： go tool link 提供了个 `-X` 参数，允许我们在编译构建Go程序的时候，传入自定义的值，覆盖对应的import path下的指定变量</span><br><span class="line"></span><br><span class="line">```bash</span><br><span class="line">-X importpath.name=value</span><br><span class="line">	<span class="keyword">Set</span> the value of the string variable <span class="keyword">in</span> importpath named name to value.</span><br><span class="line">	<span class="keyword">Note</span> that before Go 1.5 this option took <span class="keyword">two</span> <span class="keyword">separate</span> arguments.</span><br><span class="line">	Now it takes <span class="keyword">one</span> argument <span class="keyword">split</span> <span class="keyword">on</span> the first = sign.</span><br></pre></td></tr></table></figure>
-<pre><code><span class="shebang">#!/bin/bash
-</span>
-COMMIT_HASH=`git rev-parse HEAD <span class="number">2</span>&gt;/dev/null` 
-BUILD_DATE=`date` 
-TARGET=./bin/xxx 
-SOURCE=./src/main.go 
-
-go build -ldflags <span class="string">"-X \”main.BuildVersion=<span class="variable">${COMMIT_HASH}</span>\" -X \”main.BuildDate=<span class="variable">${BUILD_DATE}</span>\""</span> -o <span class="variable">${TARGET}</span> <span class="variable">${SOURCE}</span>
-</code></pre><p>对应的 version.go(文件名随意，注意package name 要跟上面的一致就好) 应该是编译前就创建好的，而赋值是编译期间直接生成在二进制文件里面，不体现在源码里面赋值。 </p>
-<pre><code>$ cat version.<span class="keyword">go</span> 
-
-<span class="keyword">package</span> main 
-
-<span class="keyword">var</span> ( 
-    BuildDate    <span class="typename">string</span> 
-    BuildVersion <span class="typename">string</span>
-)
-</code></pre><p>生成代码后，就可以通过变量的方式来获取了。既可以通过命令行 类似 –version 参数的形式来获取版本号和编译时间等，还可以通过 HTTP 请求的方式提供给相应的运维管理平台。当然还有更多的展示形式吧，留给读者自己思考。有更好方式的，也不妨留言指出，先感谢。</p>
+        <span itemprop="articleBody"><p>最近在对我们的网关服务（gateway）进行压力测试时，发现网关服务产生大量的 TIME_WAIT. Gateway 是用 go 实现的，通过 HTTP 方式与后端服务进行通信，也就是说使用了 net/http 包。 在我的理解中，net/http 是默认保持长连接的，按理说不会有这么多 TIME_WAIT 状态的。除非是使用了短连接，每次都是三次握手，然后客户端（gateway）主动关闭连接，进入 TIME_WAIT 状态。有 TIME_WAIT 不奇怪，数量多了就奇怪了。</p>
+<p><img src="/images/14799159319678.jpg" alt=""></p>
+<p>我看了下 gateway 的代码，里面实现并没有使用 http.Client, 而是用了比较 low-level 的 Transport, 而且是 DefaultTransport， 并且对 DefaultTransport 的 MaxIdleConnsPerHost 做了调整。</p>
+<pre><code>http<span class="class">.DefaultTransport</span>.(*http.Transport)<span class="class">.MaxIdleConnsPerHost</span> = <span class="number">200</span>
+</code></pre><p>当我用 wrk 压测时，</p>
+<pre><code>wrk -s post<span class="class">.lua</span>  http:<span class="comment">//ip:port/path -c 1000 -t 20 -d 30</span>
+</code></pre><p>会产生大量的 TIME_WAIT，大概 6000 ~ 7000 左右吧， 机器是一台 2 核的 docker 容器，在好一点的机器能达到 28000多。 而当我在不断调整 wrk 的 连接数时， 发现有时候TIME_WAIT 的数量少，少到那些 TIME_WAIT 都不是 gateway 程序产生的。突然想起，这应该跟连接池有关。然后我看了下 transport.go 的代码， 发现我们用错了。</p>
+<p>我们只是设置了 MaxIdleConnsPerHost = 200， 但是 还有一个值 MaxIdleConns 没有设置，而这个的默认值是 100. MaxIdleConns 与 MaxIdleConnsPerHost 的关系是： </p>
+<pre><code><span class="attribute">MaxIdleConnsPerHost &lt;</span>=<span class="string"> MaxIdleConns</span>
+</code></pre><p>net/http 包没有对二者关系作强制检查，但是会影响实际的长连接数量。也就是说，gateway 虽然配置了 MaxIdleConnsPerHost = 200，实际上只有 100个长连接。</p>
+<p>关于MaxIdleConnsPerHost 与 MaxIdleConns 关系的相关代码如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">func</span> (t *Transport) tryPutIdleConn(pconn *persistConn) error &#123;</span><br><span class="line">	<span class="keyword">if</span> t.DisableKeepAlives || t.MaxIdleConnsPerHost &lt; <span class="number">0</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> errKeepAlivesDisabled</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> pconn.isBroken() &#123;</span><br><span class="line">		<span class="keyword">return</span> errConnBroken</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> pconn.alt != <span class="constant">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> errNotCachingH2Conn</span><br><span class="line">	&#125;</span><br><span class="line">	pconn.markReused()</span><br><span class="line">	key := pconn.cacheKey</span><br><span class="line"></span><br><span class="line">	t.idleMu.Lock()</span><br><span class="line">	<span class="keyword">defer</span> t.idleMu.Unlock()</span><br><span class="line"></span><br><span class="line">	waitingDialer := t.idleConnCh[key]</span><br><span class="line">	<span class="keyword">select</span> &#123;</span><br><span class="line">	<span class="keyword">case</span> waitingDialer &lt;- pconn:</span><br><span class="line">		<span class="comment">// We're done with this pconn and somebody else is</span></span><br><span class="line">		<span class="comment">// currently waiting for a conn of this type (they're</span></span><br><span class="line">		<span class="comment">// actively dialing, but this conn is ready</span></span><br><span class="line">		<span class="comment">// first). Chrome calls this socket late binding. See</span></span><br><span class="line">		<span class="comment">// https://insouciant.org/tech/connection-management-in-chromium/</span></span><br><span class="line">		<span class="keyword">return</span> <span class="constant">nil</span></span><br><span class="line">	<span class="keyword">default</span>:</span><br><span class="line">		<span class="keyword">if</span> waitingDialer != <span class="constant">nil</span> &#123;</span><br><span class="line">			<span class="comment">// They had populated this, but their dial won</span></span><br><span class="line">			<span class="comment">// first, so we can clean up this map entry.</span></span><br><span class="line">			<span class="built_in">delete</span>(t.idleConnCh, key)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> t.wantIdle &#123;</span><br><span class="line">		<span class="keyword">return</span> errWantIdle</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> t.idleConn == <span class="constant">nil</span> &#123;</span><br><span class="line">		t.idleConn = <span class="built_in">make</span>(<span class="keyword">map</span>[connectMethodKey][]*persistConn)</span><br><span class="line">	&#125;</span><br><span class="line">	idles := t.idleConn[key]</span><br><span class="line">	<span class="comment">// MaxIdleConnsPerHost 作为第一层检查，如果当前 idle 数量 &gt;= MaxIdleConnsPerHost，</span></span><br><span class="line">	<span class="comment">// 则返回错误。当然这个错误不会一直往外抛，有些地方处理了，有些地方没处理。</span></span><br><span class="line">	<span class="keyword">if</span> <span class="built_in">len</span>(idles) &gt;= t.maxIdleConnsPerHost() &#123;</span><br><span class="line">		<span class="keyword">return</span> errTooManyIdleHost</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span> _, exist := <span class="keyword">range</span> idles &#123;</span><br><span class="line">		<span class="keyword">if</span> exist == pconn &#123;</span><br><span class="line">			log.Fatalf(<span class="string">"dup idle pconn %p in freelist"</span>, pconn)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	t.idleConn[key] = <span class="built_in">append</span>(idles, pconn)</span><br><span class="line">	t.idleLRU.add(pconn)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// MaxIdleConns 作为第二层检查，如果 idleLRU 数量大于 MaxIdleConns，则清除最老的连接 （LRU）， 保证长连接数量不超过 MaxIdleConns </span></span><br><span class="line">	<span class="keyword">if</span> t.MaxIdleConns != <span class="number">0</span> &amp;&amp; t.idleLRU.<span class="built_in">len</span>() &gt; t.MaxIdleConns &#123;</span><br><span class="line">		oldest := t.idleLRU.removeOldest()</span><br><span class="line">		oldest.<span class="built_in">close</span>(errTooManyIdle)</span><br><span class="line">		t.removeIdleConnLocked(oldest)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> t.IdleConnTimeout &gt; <span class="number">0</span> &#123;</span><br><span class="line">		<span class="keyword">if</span> pconn.idleTimer != <span class="constant">nil</span> &#123;</span><br><span class="line">			pconn.idleTimer.Reset(t.IdleConnTimeout)</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			pconn.idleTimer = time.AfterFunc(t.IdleConnTimeout, pconn.closeConnIfStillIdle)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	pconn.idleAt = time.Now()</span><br><span class="line">	<span class="keyword">return</span> <span class="constant">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当然我在本机用 wrk 压 1000个长连接时， 就出现了大量  connect: cannot assign requested address。 因为只有 gateway 只维持了 100个长连接，剩下900 个连接会不断创建、销毁（这里都是指 gateway 对后端服务）。大量的三次握手，并 gateway 作为客户端 主动关闭连接（对 后端服务的连接），连接会进入 TIME_WAIT 状态，<br>等待回收。 这个回收时间虽然可以通过设置系统内核参数来临时解决，但是治标不治本，也不知道会有什么不良影响。</p>
+<p>$ sudo sysctl -w net.ipv4.tcp_timestamps=1<br>$ sudo sysctl -w net.ipv4.tcp_tw_recycle=1</p>
+<p>当我设置<br>http.DefaultTransport.(<em>http.Transport).MaxIdleConnsPerHost = 1000<br>http.DefaultTransport.(</em>http.Transport).MaxIdleConns = 1000</p>
+<p>然后再用 wrk 1000个 长连接去压测时， </p>
+<pre><code>netstat -natpl |<span class="string">grep TIME_WAIT </span>|<span class="string"> wc -l  </span>
+</code></pre><p>发现 TIME_WAIT 数量很小，跟程序 gateway 未启动 保持一致，也就是没有产生额外的 TIME_WAIT.<br>没有大量 TIME_WAIT ，也就是全部都是长连接， 其效果就是， wrk =&gt; gateway =&gt; 后端服务 的 QPS 直接上来了，达到 11934. 而直接压后端服务， 其 QPS 是 13462， 性能只是损耗了 11.3%。  之前是损耗了 33%.  可见，短连接对性能的影响还是蛮大的（并不是说短连接相比长连接的性能下降是20%）。</p>
+<p>小结： 如果对用的东西不熟悉，就会导致误用，出现各种奇怪的问题。</p>
 <p>参考：</p>
 <ol>
-<li><a href="http://stackoverflow.com/questions/11354518/golang-application-auto-build-versioning" target="_blank" rel="external">http://stackoverflow.com/questions/11354518/golang-application-auto-build-versioning</a></li>
-<li><a href="https://golang.org/cmd/link/" target="_blank" rel="external">https://golang.org/cmd/link/</a></li>
-<li><a href="https://www.atatus.com/blog/golang-auto-build-versioning/" target="_blank" rel="external">https://www.atatus.com/blog/golang-auto-build-versioning/</a></li>
-<li><a href="http://www.xiaozhou.net/go-makefile-and-auto-version-2016-06-13.html" target="_blank" rel="external">http://www.xiaozhou.net/go-makefile-and-auto-version-2016-06-13.html</a></li>
+<li><a href="http://www.firefoxbug.com/index.php/archives/2795/" target="_blank" rel="external">http://www.firefoxbug.com/index.php/archives/2795/</a>  （对 TIME_WAIT 讲解很透彻，推荐阅读）</li>
+<li><a href="http://www.cs.northwestern.edu/~agupta/cs340/project2/TCPIP_State_Transition_Diagram.pdf" target="_blank" rel="external">http://www.cs.northwestern.edu/~agupta/cs340/project2/TCPIP_State_Transition_Diagram.pdf</a>     </li>
 </ol>
-<p>本文地址 <a href="http://holys.im/2016/06/26/inspect-go-binary-date-and-version/">http://holys.im/2016/06/26/inspect-go-binary-date-and-version/</a> </p>
+<p>本文地址 <a href="http://holys.im/2016/11/23/time-wait-go-http/">http://holys.im/2016/11/23/time-wait-go-http/</a> </p>
 </span>
       
     </div>
@@ -296,9 +287,13 @@ go build -ldflags <span class="string">"-X \”main.BuildVersion=<span class="va
       
         <div class="post-tags">
           
-            <a href="/tags/golang/" rel="tag">#golang</a>
+            <a href="/tags/http/" rel="tag">#http</a>
           
-            <a href="/tags/ldflags/" rel="tag">#ldflags</a>
+            <a href="/tags/tcp/" rel="tag">#tcp</a>
+          
+            <a href="/tags/time-wait/" rel="tag">#time_wait</a>
+          
+            <a href="/tags/wrk/" rel="tag">#wrk</a>
           
         </div>
       
@@ -307,17 +302,13 @@ go build -ldflags <span class="string">"-X \”main.BuildVersion=<span class="va
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/02/22/run-docker-on-osx-with-dlite/" rel="next" title="Simplifying Docker on OS X With Dlite">
-                <i class="fa fa-chevron-left"></i> Simplifying Docker on OS X With Dlite
+              <a href="/2016/10/27/2016-10-27/" rel="next" title="">
+                <i class="fa fa-chevron-left"></i> 
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/07/01/monitor-golang-gc/" rel="prev" title="如何监控 golang 程序的垃圾回收">
-                如何监控 golang 程序的垃圾回收 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -467,7 +458,7 @@ go build -ldflags <span class="string">"-X \”main.BuildVersion=<span class="va
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题：如何得知某个二进制的文件的_Git_SHA1_值_和编译时间？"><span class="nav-number">1.</span> <span class="nav-text">问题：如何得知某个二进制的文件的 Git SHA1 值 和编译时间？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-_将这些信息作为文件名的一部分"><span class="nav-number">2.</span> <span class="nav-text">1. 将这些信息作为文件名的一部分</span></a></li></ol></div>
+              <p class="post-toc-empty">此文章未包含目录</p>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
@@ -527,9 +518,9 @@ go build -ldflags <span class="string">"-X \”main.BuildVersion=<span class="va
 
     <script type="text/javascript">
       var disqus_shortname = 'holysblog';
-      var disqus_identifier = '2016/06/26/inspect-go-binary-date-and-version/';
-      var disqus_title = '自动生成 Go 程序版本号';
-      var disqus_url = 'http://holys.im/2016/06/26/inspect-go-binary-date-and-version/';
+      var disqus_identifier = '2016/11/23/time-wait-go-http/';
+      var disqus_title = 'net/http 与 TIME_WAIT';
+      var disqus_url = 'http://holys.im/2016/11/23/time-wait-go-http/';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');

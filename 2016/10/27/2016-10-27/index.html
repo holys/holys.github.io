@@ -29,7 +29,7 @@
   <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
 
 
-<link rel="canonical" href="http://holys.im/2016/06/26/inspect-go-binary-date-and-version/" />
+<link rel="canonical" href="http://holys.im/2016/10/27/2016-10-27/" />
 
 
 <link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
@@ -37,7 +37,7 @@
 <link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="golang,ldflags," />
+  <meta name="keywords" content="Golang, holys, chendahui007" />
 
 
 
@@ -53,22 +53,61 @@
 
 
 
-<meta name="description" content="问题：如何得知某个二进制的文件的 Git SHA1 值 和编译时间？总的思路都是编译时候通过某种方式将所需信息保存下来。有好几种实现方式： 
-1. 将这些信息作为文件名的一部分如 XXX_$Version_$Date
-1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950">
+<meta name="description" content="API服务平台讨论
+API后台管理（服务增删改查，通过idl生成，接口增删改查）
+
+API接口文档生成、展示
+
+支持多种类别API，（shopapi，pms，pulse）
+
+API数据接入配置服务
+
+gateway读取配置服务数据（client、global、idl、api）
+
+其他数据准备（数据字典整理、client、全局配置）
+
+API SOA服务开发规范
+
+SOA服务开发启动（地址、用户、支">
 <meta property="og:type" content="article">
-<meta property="og:title" content="自动生成 Go 程序版本号">
-<meta property="og:url" content="http://holys.im/2016/06/26/inspect-go-binary-date-and-version/index.html">
+<meta property="og:title" content="holys'">
+<meta property="og:url" content="http://holys.im/2016/10/27/2016-10-27/index.html">
 <meta property="og:site_name" content="holys'">
-<meta property="og:description" content="问题：如何得知某个二进制的文件的 Git SHA1 值 和编译时间？总的思路都是编译时候通过某种方式将所需信息保存下来。有好几种实现方式： 
-1. 将这些信息作为文件名的一部分如 XXX_$Version_$Date
-1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950">
-<meta property="og:updated_time" content="2016-10-20T16:52:29.000Z">
+<meta property="og:description" content="API服务平台讨论
+API后台管理（服务增删改查，通过idl生成，接口增删改查）
+
+API接口文档生成、展示
+
+支持多种类别API，（shopapi，pms，pulse）
+
+API数据接入配置服务
+
+gateway读取配置服务数据（client、global、idl、api）
+
+其他数据准备（数据字典整理、client、全局配置）
+
+API SOA服务开发规范
+
+SOA服务开发启动（地址、用户、支">
+<meta property="og:updated_time" content="2016-10-27T01:38:32.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="自动生成 Go 程序版本号">
-<meta name="twitter:description" content="问题：如何得知某个二进制的文件的 Git SHA1 值 和编译时间？总的思路都是编译时候通过某种方式将所需信息保存下来。有好几种实现方式： 
-1. 将这些信息作为文件名的一部分如 XXX_$Version_$Date
-1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950">
+<meta name="twitter:title" content="holys'">
+<meta name="twitter:description" content="API服务平台讨论
+API后台管理（服务增删改查，通过idl生成，接口增删改查）
+
+API接口文档生成、展示
+
+支持多种类别API，（shopapi，pms，pulse）
+
+API数据接入配置服务
+
+gateway读取配置服务数据（client、global、idl、api）
+
+其他数据准备（数据字典整理、client、全局配置）
+
+API SOA服务开发规范
+
+SOA服务开发启动（地址、用户、支">
 
 
 
@@ -80,7 +119,7 @@
   };
 </script>
 
-  <title> 自动生成 Go 程序版本号 | holys' </title>
+  <title>  | holys' </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -219,7 +258,7 @@
             
             
               
-                自动生成 Go 程序版本号
+                
               
             
           </h1>
@@ -228,8 +267,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2016-06-26T17:22:27+08:00" content="2016-06-26">
-              2016-06-26
+            <time itemprop="dateCreated" datetime="2016-10-27T09:38:33+08:00" content="2016-10-27">
+              2016-10-27
             </time>
           </span>
 
@@ -239,8 +278,8 @@
             
               <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/2016/06/26/inspect-go-binary-date-and-version/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/06/26/inspect-go-binary-date-and-version/" itemprop="commentsCount"></span>
+              <a href="/2016/10/27/2016-10-27/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/10/27/2016-10-27/" itemprop="commentsCount"></span>
               </a>
             </span>
             
@@ -259,64 +298,49 @@
       
 
       
-        <span itemprop="articleBody"><h2 id="问题：如何得知某个二进制的文件的_Git_SHA1_值_和编译时间？">问题：如何得知某个二进制的文件的 Git SHA1 值 和编译时间？</h2><p>总的思路都是编译时候通过某种方式将所需信息保存下来。<br>有好几种实现方式： </p>
-<h2 id="1-_将这些信息作为文件名的一部分">1. 将这些信息作为文件名的一部分</h2><p>如 <code>XXX_$Version_$Date</code></p>
-<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash </span><br><span class="line"></span><br><span class="line"><span class="keyword">Version</span>=`git rev-<span class="keyword">parse</span> -- short HEAD` </span><br><span class="line">Date=`date <span class="string">"+%Y%m%d%H%M%S"</span>` </span><br><span class="line">Target =“XXX_<span class="label">$Version_</span><span class="label">$Date&#125;</span>" </span><br><span class="line">go build -o <span class="label">$Target</span> /path/to/main </span><br><span class="line">``` </span><br><span class="line"></span><br><span class="line">不过这种方式有个缺点： 文件名是不规则的，可能对运维同学不是那么的友好。 </span><br><span class="line"></span><br><span class="line">## 2. 将这些信息作为源代码的一部分 </span><br><span class="line"></span><br><span class="line">生成代码也有两种方式： </span><br><span class="line"></span><br><span class="line">### 2.1 通过 <span class="keyword">shell</span> 脚本方式生成代码 </span><br><span class="line"></span><br><span class="line">```bash</span><br><span class="line">#!/bin/bash </span><br><span class="line"></span><br><span class="line"><span class="keyword">version</span>=`git <span class="keyword">log</span> --date=iso --pretty=<span class="keyword">format</span>:<span class="string">"%cd @%h"</span> -1` </span><br><span class="line"><span class="keyword">if</span> [ $? -ne 0 ]; then </span><br><span class="line">    <span class="keyword">version</span>=<span class="string">"not a git repo"</span> </span><br><span class="line">fi </span><br><span class="line"></span><br><span class="line">compile=`date +<span class="string">"%F %T %z"</span>`<span class="string">" by "</span>`go <span class="keyword">version</span>` </span><br><span class="line"></span><br><span class="line"><span class="keyword">cat</span> &lt;&lt; EOF | gofmt &gt; <span class="keyword">version</span>.go </span><br><span class="line">package <span class="keyword">version</span> </span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> ( </span><br><span class="line">    <span class="keyword">Version</span> = <span class="string">"$version"</span> </span><br><span class="line">    Compile = <span class="string">"$compile"</span> </span><br><span class="line">) </span><br><span class="line">EOF% </span><br><span class="line">``` </span><br><span class="line"></span><br><span class="line">生成的代码效果为： </span><br><span class="line"></span><br><span class="line">```go</span><br><span class="line">$ <span class="keyword">cat</span> <span class="keyword">version</span>.go </span><br><span class="line">package <span class="keyword">version</span> </span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> ( </span><br><span class="line">    <span class="keyword">Version</span> = <span class="string">"2016-03-23 17:06:31 +0800 @c0d144f"</span> </span><br><span class="line">    Compile = <span class="string">"2016-06-05 23:29:45 +0800 by go version go1.6.2 darwin/amd64"</span> </span><br><span class="line">) </span><br><span class="line">``` </span><br><span class="line"></span><br><span class="line">### 2.2.  通过 go build 的 -ldflags 参数在编译时候传入 </span><br><span class="line"></span><br><span class="line">其原理是： go tool link 提供了个 `-X` 参数，允许我们在编译构建Go程序的时候，传入自定义的值，覆盖对应的import path下的指定变量</span><br><span class="line"></span><br><span class="line">```bash</span><br><span class="line">-X importpath.name=value</span><br><span class="line">	<span class="keyword">Set</span> the value of the string variable <span class="keyword">in</span> importpath named name to value.</span><br><span class="line">	<span class="keyword">Note</span> that before Go 1.5 this option took <span class="keyword">two</span> <span class="keyword">separate</span> arguments.</span><br><span class="line">	Now it takes <span class="keyword">one</span> argument <span class="keyword">split</span> <span class="keyword">on</span> the first = sign.</span><br></pre></td></tr></table></figure>
-<pre><code><span class="shebang">#!/bin/bash
-</span>
-COMMIT_HASH=`git rev-parse HEAD <span class="number">2</span>&gt;/dev/null` 
-BUILD_DATE=`date` 
-TARGET=./bin/xxx 
-SOURCE=./src/main.go 
-
-go build -ldflags <span class="string">"-X \”main.BuildVersion=<span class="variable">${COMMIT_HASH}</span>\" -X \”main.BuildDate=<span class="variable">${BUILD_DATE}</span>\""</span> -o <span class="variable">${TARGET}</span> <span class="variable">${SOURCE}</span>
-</code></pre><p>对应的 version.go(文件名随意，注意package name 要跟上面的一致就好) 应该是编译前就创建好的，而赋值是编译期间直接生成在二进制文件里面，不体现在源码里面赋值。 </p>
-<pre><code>$ cat version.<span class="keyword">go</span> 
-
-<span class="keyword">package</span> main 
-
-<span class="keyword">var</span> ( 
-    BuildDate    <span class="typename">string</span> 
-    BuildVersion <span class="typename">string</span>
-)
-</code></pre><p>生成代码后，就可以通过变量的方式来获取了。既可以通过命令行 类似 –version 参数的形式来获取版本号和编译时间等，还可以通过 HTTP 请求的方式提供给相应的运维管理平台。当然还有更多的展示形式吧，留给读者自己思考。有更好方式的，也不妨留言指出，先感谢。</p>
-<p>参考：</p>
-<ol>
-<li><a href="http://stackoverflow.com/questions/11354518/golang-application-auto-build-versioning" target="_blank" rel="external">http://stackoverflow.com/questions/11354518/golang-application-auto-build-versioning</a></li>
-<li><a href="https://golang.org/cmd/link/" target="_blank" rel="external">https://golang.org/cmd/link/</a></li>
-<li><a href="https://www.atatus.com/blog/golang-auto-build-versioning/" target="_blank" rel="external">https://www.atatus.com/blog/golang-auto-build-versioning/</a></li>
-<li><a href="http://www.xiaozhou.net/go-makefile-and-auto-version-2016-06-13.html" target="_blank" rel="external">http://www.xiaozhou.net/go-makefile-and-auto-version-2016-06-13.html</a></li>
+        <span itemprop="articleBody"><h1 id="API服务平台讨论">API服务平台讨论</h1><ol>
+<li><p>API后台管理（服务增删改查，通过idl生成，接口增删改查）</p>
+</li>
+<li><p>API接口文档生成、展示</p>
+</li>
+<li><p>支持多种类别API，（shopapi，pms，pulse）</p>
+</li>
+<li><p>API数据接入配置服务</p>
+</li>
+<li><p>gateway读取配置服务数据（client、global、idl、api）</p>
+</li>
+<li><p>其他数据准备（数据字典整理、client、全局配置）</p>
+</li>
+<li><p>API SOA服务开发规范</p>
+</li>
+<li><p>SOA服务开发启动（地址、用户、支付）</p>
+</li>
 </ol>
-<p>本文地址 <a href="http://holys.im/2016/06/26/inspect-go-binary-date-and-version/">http://holys.im/2016/06/26/inspect-go-binary-date-and-version/</a> </p>
+<p>目前api表结构<br>xm_shop=&gt; \d plsv2.pls_api_definition;<br>                                             Table “plsv2.pls_api_definition”<br>     Column      |            Type             |                                 Modifiers<br>—————–+—————————–+—————————————————————————<br> api_id          | integer                     | not null default nextval(‘plsv2.pls_api_definition_api_id_seq’::regclass)<br> service_id      | integer                     | not null<br> path            | character varying(64)       | not null<br> api_name        | character varying(64)       | not null<br> idl_method_name | character varying(32)       |<br> type            | smallint                    | not null default 0<br> cate            | smallint                    | not null default 0<br> desc            | character varying(128)      | not null<br> status          | smallint                    | not null default 1<br> add_time        | integer                     | not null default 0<br> update_time     | timestamp without time zone | not null default now()<br>Indexes:<br>    “pls_api_definition_pkey” PRIMARY KEY, btree (api_id)<br>    “pls_api_definition_index01” btree (path) WITH (fillfactor=’100’)</p>
+<p>xm_shop=&gt; \d plsv2.pls_api_service;<br>                                            Table “plsv2.pls_api_service”<br>      Column      |            Type             |                             Modifiers<br>——————+—————————–+——————————————————————–<br> id               | integer                     | not null default nextval(‘plsv2.pls_api_service_id_seq’::regclass)<br> name             | character varying(64)       | not null<br> idl_content      | character varying(8192)     |<br> idl_json         | character varying(8192)     |<br> mis_service_name | character varying(32)       |<br> idl_service_name | character varying(32)       |<br> desc             | character varying(64)       | not null<br> add_time         | integer                     | not null default 0<br> update_time      | timestamp without time zone | default now()<br>Indexes:<br>    “pls_api_service_pkey” PRIMARY KEY, btree (id)<br>    “pls_api_service_index01” btree (name)</p>
+<p>xm_shop=&gt; \d plsv2.pls_api_params;<br>                                         Table “plsv2.pls_api_params”<br>   Column    |            Type             |                             Modifiers<br>————-+—————————–+——————————————————————-<br> id          | integer                     | not null default nextval(‘plsv2.pls_api_params_id_seq’::regclass)<br> api_id      | integer                     | not null<br> name        | character varying(32)       | not null<br> desc        | character varying(64)       | not null<br> type        | character varying(16)       |<br> required    | boolean                     | not null default false<br> default     | character varying(64)       |<br> data_range  | character varying(1024)     |<br> verify_ext  | character varying(32)       |<br> add_time    | integer                     | not null default 0<br> update_time | timestamp without time zone | not null default now()<br>Indexes:<br>    “pls_api_params_pkey” PRIMARY KEY, btree (id)<br>    “pls_api_params_index01” btree (api_id)</p>
+<p>本文地址 <a href="http://holys.im/2016/10/27/2016-10-27/">http://holys.im/2016/10/27/2016-10-27/</a> </p>
 </span>
       
     </div>
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/golang/" rel="tag">#golang</a>
-          
-            <a href="/tags/ldflags/" rel="tag">#ldflags</a>
-          
-        </div>
-      
 
       
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/02/22/run-docker-on-osx-with-dlite/" rel="next" title="Simplifying Docker on OS X With Dlite">
-                <i class="fa fa-chevron-left"></i> Simplifying Docker on OS X With Dlite
+              <a href="/2016/10/19/how-to-stop-etcd-watcher/" rel="next" title="如何结束 etcd watcher">
+                <i class="fa fa-chevron-left"></i> 如何结束 etcd watcher
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/07/01/monitor-golang-gc/" rel="prev" title="如何监控 golang 程序的垃圾回收">
-                如何监控 golang 程序的垃圾回收 <i class="fa fa-chevron-right"></i>
+              <a href="/2016/11/23/time-wait-go-http/" rel="prev" title="net/http 与 TIME_WAIT">
+                net/http 与 TIME_WAIT <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -467,7 +491,7 @@ go build -ldflags <span class="string">"-X \”main.BuildVersion=<span class="va
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题：如何得知某个二进制的文件的_Git_SHA1_值_和编译时间？"><span class="nav-number">1.</span> <span class="nav-text">问题：如何得知某个二进制的文件的 Git SHA1 值 和编译时间？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-_将这些信息作为文件名的一部分"><span class="nav-number">2.</span> <span class="nav-text">1. 将这些信息作为文件名的一部分</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#API服务平台讨论"><span class="nav-number">1.</span> <span class="nav-text">API服务平台讨论</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
@@ -527,9 +551,9 @@ go build -ldflags <span class="string">"-X \”main.BuildVersion=<span class="va
 
     <script type="text/javascript">
       var disqus_shortname = 'holysblog';
-      var disqus_identifier = '2016/06/26/inspect-go-binary-date-and-version/';
-      var disqus_title = '自动生成 Go 程序版本号';
-      var disqus_url = 'http://holys.im/2016/06/26/inspect-go-binary-date-and-version/';
+      var disqus_identifier = '2016/10/27/2016-10-27/';
+      var disqus_title = '';
+      var disqus_url = 'http://holys.im/2016/10/27/2016-10-27/';
 
       function run_disqus_script(disqus_script){
         var dsq = document.createElement('script');
