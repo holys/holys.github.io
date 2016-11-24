@@ -230,6 +230,100 @@
             
               
                 
+                <a class="post-title-link" href="/2016/11/24/3-kind-of-md5-sum/" itemprop="url">
+                  Go 的三种不同 md5 计算方式性能比较
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2016-11-24T20:42:50+08:00" content="2016-11-24">
+              2016-11-24
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2016/11/24/3-kind-of-md5-sum/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/11/24/3-kind-of-md5-sum/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+            今天介绍的三种不同的 md5 计算方式，其实区别是读文件的不同，也就是磁盘 I/O, 所以也可以举一反三用在网络 I/O 上。
+ReadFile先看第一种， 简单粗暴：
+123456789func md5sum1(file string) string &#123;    data, err := 
+            ...
+          </span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/11/24/3-kind-of-md5-sum/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/11/23/time-wait-go-http/" itemprop="url">
                   net/http 与 TIME_WAIT
                 </a>
@@ -1057,100 +1151,6 @@ Dlite 是什么？早在2013年底，笔者实习的时候就开始玩 docker，
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2015/11/29/charles-work-around/" itemprop="url">
-                  Charles Work Around
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            发表于
-            <time itemprop="dateCreated" datetime="2015-11-29T09:43:18+08:00" content="2015-11-29">
-              2015-11-29
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/2015/11/29/charles-work-around/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/11/29/charles-work-around/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-            我之前一直用 Charles 这个抓包软件来分析 HTTP 请求。而对于浏览器（这里特指Chrome）的抓包， 我通常使用 Proxy-SwitchySharp 这款插件来辅助。
-突然有一天，上面这个搭配没法工作了（提供 HTTPS 的网站才会这样）！浏览器提示：
-Server has a weak
-            ...
-          </span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/11/29/charles-work-around/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
 
   </section>
 
@@ -1197,7 +1197,7 @@ Server has a weak
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">17</span>
+              <span class="site-state-item-count">18</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1211,7 +1211,7 @@ Server has a weak
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">27</span>
+              <span class="site-state-item-count">30</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>
