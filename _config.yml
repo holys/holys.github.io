@@ -76,3 +76,7 @@ deploy:
 - type: git
   repo: https://git.coding.net/holys/holys.git
   branch: coding-pages
+
+addlink:
+  before_text: 本文地址 # text before the post link
+  after_text: # text after the post link
