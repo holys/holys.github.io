@@ -59,8 +59,8 @@
 3. 观察程序占用 CPU 情况
 4.  观察内存占用情况，甚至 heapalloc, heapinuse, heapidle,等
 5. 观察协程的使用情况
-6. 还可以看看GC 的情况
-7. GC 也可以这么观测$ gcvis /path/to/bin2016/12/13 21:13:51 opening b">
+6. 还可以看看 GC 的情况
+7. GC 也可以这么观测$ gcvis /path/to/bin2016/12/13 21:13:51 opening">
 <meta property="og:type" content="article">
 <meta property="og:title" content="当我们在压测 Go 程序时，我们要观察什么？">
 <meta property="og:url" content="http://holys.im/2016/12/13/when-we-benchmark-what-should-we-care/index.html">
@@ -71,8 +71,8 @@
 3. 观察程序占用 CPU 情况
 4.  观察内存占用情况，甚至 heapalloc, heapinuse, heapidle,等
 5. 观察协程的使用情况
-6. 还可以看看GC 的情况
-7. GC 也可以这么观测$ gcvis /path/to/bin2016/12/13 21:13:51 opening b">
+6. 还可以看看 GC 的情况
+7. GC 也可以这么观测$ gcvis /path/to/bin2016/12/13 21:13:51 opening">
 <meta property="og:image" content="http://holys.im/images/26764633-806F-443E-95E8-8719E87BFCC6.png">
 <meta property="og:image" content="http://holys.im/images/06DEF2A1-CFCE-4FEB-AE1C-367E1EA64C0B.png">
 <meta property="og:image" content="http://holys.im/images/33AB8635-AE6F-4FC6-9570-06DF33CCE1FD.png">
@@ -82,7 +82,7 @@
 <meta property="og:image" content="http://holys.im/images/E97AF6FA-8442-443F-98DD-766548F3E35A.png">
 <meta property="og:image" content="http://holys.im/images/A0CE91D8-334D-4711-88FA-A6FFFD905D36.png">
 <meta property="og:image" content="http://holys.im/images/1FF8C7A7-C19E-4995-B422-FC75B8518ABA.png">
-<meta property="og:updated_time" content="2016-12-13T14:07:33.000Z">
+<meta property="og:updated_time" content="2016-12-13T14:09:30.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="当我们在压测 Go 程序时，我们要观察什么？">
 <meta name="twitter:description" content="This is a quick post.
@@ -91,8 +91,8 @@
 3. 观察程序占用 CPU 情况
 4.  观察内存占用情况，甚至 heapalloc, heapinuse, heapidle,等
 5. 观察协程的使用情况
-6. 还可以看看GC 的情况
-7. GC 也可以这么观测$ gcvis /path/to/bin2016/12/13 21:13:51 opening b">
+6. 还可以看看 GC 的情况
+7. GC 也可以这么观测$ gcvis /path/to/bin2016/12/13 21:13:51 opening">
 
 
 
@@ -282,9 +282,9 @@
 <h3 id="3-_观察程序占用_CPU_情况">3. 观察程序占用 CPU 情况</h3><p><img src="/images/33AB8635-AE6F-4FC6-9570-06DF33CCE1FD.png" alt="33AB8635-AE6F-4FC6-9570-06DF33CCE1FD"></p>
 <h3 id="4-_观察内存占用情况，甚至_heapalloc,_heapinuse,_heapidle,等">4.  观察内存占用情况，甚至 heapalloc, heapinuse, heapidle,等</h3><p><img src="/images/14081EB6-8E38-480C-94B3-F2D8D3458754.png" alt="14081EB6-8E38-480C-94B3-F2D8D3458754"></p>
 <h3 id="5-_观察协程的使用情况">5. 观察协程的使用情况</h3><p><img src="/images/F86E45FA-777A-4D6E-9291-2989786374C4-1.png" alt="F86E45FA-777A-4D6E-9291-2989786374"></p>
-<h3 id="6-_还可以看看GC_的情况">6. 还可以看看GC 的情况</h3><p><img src="/images/CE68422A-D92D-4FF5-8ED7-FE77593FAAF5-1.png" alt="CE68422A-D92D-4FF5-8ED7-FE77593FAAF5"></p>
+<h3 id="6-_还可以看看_GC_的情况">6. 还可以看看 GC 的情况</h3><p><img src="/images/CE68422A-D92D-4FF5-8ED7-FE77593FAAF5-1.png" alt="CE68422A-D92D-4FF5-8ED7-FE77593FAAF5"></p>
 <h3 id="7-_GC_也可以这么观测">7. GC 也可以这么观测</h3><p>$ gcvis /path/to/bin<br>2016/12/13 21:13:51 opening browser window, if this fails, navigate to <a href="http://127.0.0.1:63383/" target="_blank" rel="external">http://127.0.0.1:63383/</a><br><img src="/images/E97AF6FA-8442-443F-98DD-766548F3E35A.png" alt="E97AF6FA-8442-443F-98DD-766548F3E35A"></p>
-<h3 id="8-_还可以应该做下_profile_(cpu,_heap)">8.  还可以应该做下 profile (cpu, heap)</h3><p><img src="/images/A0CE91D8-334D-4711-88FA-A6FFFD905D36.png" alt="A0CE91D8-334D-4711-88FA-A6FFFD905D36"></p>
+<h3 id="8-_还可以应该做下_profile_(cpu,_heap,_heap_的话重点看_alloc_objects)">8.  还可以应该做下 profile (cpu, heap, heap 的话重点看 alloc_objects)</h3><p><img src="/images/A0CE91D8-334D-4711-88FA-A6FFFD905D36.png" alt="A0CE91D8-334D-4711-88FA-A6FFFD905D36"></p>
 <h3 id="9-_还可以通过火焰图的方式看_程序哪里占用_CPU比较厉害">9. 还可以通过火焰图的方式看 程序哪里占用 CPU比较厉害</h3><p><img src="/images/1FF8C7A7-C19E-4995-B422-FC75B8518ABA.png" alt="1FF8C7A7-C19E-4995-B422-FC75B8518ABA"></p>
 <p>大概以上这些。</p>
 <p>本文地址 <a href="http://holys.im/2016/12/13/when-we-benchmark-what-should-we-care/">http://holys.im/2016/12/13/when-we-benchmark-what-should-we-care/</a> </p>
@@ -459,7 +459,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-_观察_QPS"><span class="nav-number">1.</span> <span class="nav-text">1. 观察 QPS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-_观察请求响应时间"><span class="nav-number">2.</span> <span class="nav-text">2. 观察请求响应时间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-_观察程序占用_CPU_情况"><span class="nav-number">3.</span> <span class="nav-text">3. 观察程序占用 CPU 情况</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-_观察内存占用情况，甚至_heapalloc,_heapinuse,_heapidle,等"><span class="nav-number">4.</span> <span class="nav-text">4.  观察内存占用情况，甚至 heapalloc, heapinuse, heapidle,等</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-_观察协程的使用情况"><span class="nav-number">5.</span> <span class="nav-text">5. 观察协程的使用情况</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-_还可以看看GC_的情况"><span class="nav-number">6.</span> <span class="nav-text">6. 还可以看看GC 的情况</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-_GC_也可以这么观测"><span class="nav-number">7.</span> <span class="nav-text">7. GC 也可以这么观测</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-_还可以应该做下_profile_(cpu,_heap)"><span class="nav-number">8.</span> <span class="nav-text">8.  还可以应该做下 profile (cpu, heap)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-_还可以通过火焰图的方式看_程序哪里占用_CPU比较厉害"><span class="nav-number">9.</span> <span class="nav-text">9. 还可以通过火焰图的方式看 程序哪里占用 CPU比较厉害</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-_观察_QPS"><span class="nav-number">1.</span> <span class="nav-text">1. 观察 QPS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-_观察请求响应时间"><span class="nav-number">2.</span> <span class="nav-text">2. 观察请求响应时间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-_观察程序占用_CPU_情况"><span class="nav-number">3.</span> <span class="nav-text">3. 观察程序占用 CPU 情况</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-_观察内存占用情况，甚至_heapalloc,_heapinuse,_heapidle,等"><span class="nav-number">4.</span> <span class="nav-text">4.  观察内存占用情况，甚至 heapalloc, heapinuse, heapidle,等</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-_观察协程的使用情况"><span class="nav-number">5.</span> <span class="nav-text">5. 观察协程的使用情况</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-_还可以看看_GC_的情况"><span class="nav-number">6.</span> <span class="nav-text">6. 还可以看看 GC 的情况</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-_GC_也可以这么观测"><span class="nav-number">7.</span> <span class="nav-text">7. GC 也可以这么观测</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-_还可以应该做下_profile_(cpu,_heap,_heap_的话重点看_alloc_objects)"><span class="nav-number">8.</span> <span class="nav-text">8.  还可以应该做下 profile (cpu, heap, heap 的话重点看 alloc_objects)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-_还可以通过火焰图的方式看_程序哪里占用_CPU比较厉害"><span class="nav-number">9.</span> <span class="nav-text">9. 还可以通过火焰图的方式看 程序哪里占用 CPU比较厉害</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
