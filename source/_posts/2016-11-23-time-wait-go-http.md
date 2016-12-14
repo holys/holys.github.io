@@ -120,7 +120,7 @@ http.DefaultTransport.(*http.Transport).MaxIdleConns = 1000
 发现 TIME_WAIT 数量很小，跟程序 gateway 未启动 保持一致，也就是没有产生额外的 TIME_WAIT.
 没有大量 TIME_WAIT ，也就是全部都是长连接， 其效果就是， wrk => gateway => 后端服务 的 QPS 直接上来了，达到 11934. 而直接压后端服务， 其 QPS 是 13462， 性能只是损耗了 11.3%。  之前是损耗了 33%.  可见，短连接对性能的影响还是蛮大的（并不是说短连接相比长连接的性能下降是20%）。
     
-小结： 如果对用的东西不熟悉，就会导致误用，出现各种奇怪的问题。
+小结：在本文环境中， TIME_WAIT 是在客户端产生的，原因是客户端的连接池太小，导致新连接不断创建，然后又主动关闭连接，产生大量 TIME_WAIT。解决办法是调大连接池的数量。
 
 参考：
 1. http://www.firefoxbug.com/index.php/archives/2795/  （对 TIME_WAIT 讲解很透彻，推荐阅读）
