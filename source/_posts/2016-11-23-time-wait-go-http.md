@@ -127,6 +127,9 @@ http.DefaultTransport.(*http.Transport).MaxIdleConns = 1000
 2. http://www.cs.northwestern.edu/~agupta/cs340/project2/TCPIP_State_Transition_Diagram.pdf     
 
 
+更新： 最近（2016.12.14） 发现老外写了一篇和我的很相似的文章，给大家参考:
+https://tleyden.github.io/blog/2016/11/21/tuning-the-go-http-client-library-for-load-testing
+
 
 
 
