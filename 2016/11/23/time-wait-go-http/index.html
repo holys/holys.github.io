@@ -60,7 +60,7 @@
 <meta property="og:site_name" content="holys'">
 <meta property="og:description" content="最近在对我们的网关服务（gateway）进行压力测试时，发现网关服务产生大量的 TIME_WAIT. Gateway 是用 go 实现的，通过 HTTP 方式与后端服务进行通信，也就是说使用了 net/http 包。 在我的理解中，net/http 是默认保持长连接的，按理说不会有这么多 TIME_WAIT 状态的。除非是使用了短连接，每次都是三次握手，然后客户端（gateway）主动关闭连接，进">
 <meta property="og:image" content="http://holys.im/images/14799159319678.jpg">
-<meta property="og:updated_time" content="2016-12-14T06:06:24.000Z">
+<meta property="og:updated_time" content="2016-12-14T06:12:31.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="net/http 与 TIME_WAIT">
 <meta name="twitter:description" content="最近在对我们的网关服务（gateway）进行压力测试时，发现网关服务产生大量的 TIME_WAIT. Gateway 是用 go 实现的，通过 HTTP 方式与后端服务进行通信，也就是说使用了 net/http 包。 在我的理解中，net/http 是默认保持长连接的，按理说不会有这么多 TIME_WAIT 状态的。除非是使用了短连接，每次都是三次握手，然后客户端（gateway）主动关闭连接，进">
@@ -271,6 +271,7 @@
 <li><a href="http://www.firefoxbug.com/index.php/archives/2795/" target="_blank" rel="external">http://www.firefoxbug.com/index.php/archives/2795/</a>  （对 TIME_WAIT 讲解很透彻，推荐阅读）</li>
 <li><a href="http://www.cs.northwestern.edu/~agupta/cs340/project2/TCPIP_State_Transition_Diagram.pdf" target="_blank" rel="external">http://www.cs.northwestern.edu/~agupta/cs340/project2/TCPIP_State_Transition_Diagram.pdf</a>     </li>
 </ol>
+<p>更新： 最近（2016.12.14） 发现老外写了一篇和我的很相似的文章，给大家参考:<br><a href="https://tleyden.github.io/blog/2016/11/21/tuning-the-go-http-client-library-for-load-testing" target="_blank" rel="external">https://tleyden.github.io/blog/2016/11/21/tuning-the-go-http-client-library-for-load-testing</a></p>
 <p>本文地址 <a href="http://holys.im/2016/11/23/time-wait-go-http/">http://holys.im/2016/11/23/time-wait-go-http/</a> </p>
 </span>
       
