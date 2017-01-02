@@ -1,0 +1,693 @@
+<!doctype html>
+<html class="theme-next   use-motion ">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.lug.ustc.edu.cn/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+<link rel="canonical" href="http://holys.im/2017/01/02/a-pure-go-implementation-of-redis-cli/" />
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="go,redis," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.2" />
+
+
+
+
+
+
+<meta name="description" content="为何造新轮子？有时候，我想查下线上的 redis 数据，但是我不能直接在内网访问生产环境的机器，我只能通过跳板机登录上我拥有权限的机器，而我拥有权限（开发权限）的机器上并没有安装 redis-cli。这时候我只能请求运维同学帮我装一个，虽然对他们来说只是敲一条命令的事情， 但是每次都麻烦别人，不是很好，而且当你找别人的时候，别人不一定有空。为什么装完了，下次还得装呢？这涉及到我们的运维体系设计问题">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Go 语言实现的 redis-cli">
+<meta property="og:url" content="http://holys.im/2017/01/02/a-pure-go-implementation-of-redis-cli/index.html">
+<meta property="og:site_name" content="holys'">
+<meta property="og:description" content="为何造新轮子？有时候，我想查下线上的 redis 数据，但是我不能直接在内网访问生产环境的机器，我只能通过跳板机登录上我拥有权限的机器，而我拥有权限（开发权限）的机器上并没有安装 redis-cli。这时候我只能请求运维同学帮我装一个，虽然对他们来说只是敲一条命令的事情， 但是每次都麻烦别人，不是很好，而且当你找别人的时候，别人不一定有空。为什么装完了，下次还得装呢？这涉及到我们的运维体系设计问题">
+<meta property="og:updated_time" content="2017-01-02T10:29:02.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Go 语言实现的 redis-cli">
+<meta name="twitter:description" content="为何造新轮子？有时候，我想查下线上的 redis 数据，但是我不能直接在内网访问生产环境的机器，我只能通过跳板机登录上我拥有权限的机器，而我拥有权限（开发权限）的机器上并没有安装 redis-cli。这时候我只能请求运维同学帮我装一个，虽然对他们来说只是敲一条命令的事情， 但是每次都麻烦别人，不是很好，而且当你找别人的时候，别人不一定有空。为什么装完了，下次还得装呢？这涉及到我们的运维体系设计问题">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'post',
+    motion: true
+  };
+</script>
+
+  <title> Go 语言实现的 redis-cli | holys' </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-45099047-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">holys'</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Go 语言实现的 redis-cli
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2017-01-02T17:28:52+08:00" content="2017-01-02">
+              2017-01-02
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><h2 id="为何造新轮子？">为何造新轮子？</h2><p>有时候，我想查下线上的 redis 数据，但是我不能直接在内网访问生产环境的机器，我只能通过跳板机登录上我拥有权限的机器，而我拥有权限（开发权限）的机器上并没有安装 redis-cli。这时候我只能请求运维同学帮我装一个，虽然对他们来说只是敲一条命令的事情， 但是每次都麻烦别人，不是很好，而且当你找别人的时候，别人不一定有空。为什么装完了，下次还得装呢？这涉及到我们的运维体系设计问题。开发可以申请自己负责的项目的机器权限，可以是永久权限，也可以是临时的权限，过期失效。因为微服务的原因，我手上的有权限的机器不少，但是我不记得哪台机器上有 redis-cli， 也许当初安装 redis-cli 的那台机器我只有临时权限，而且过期了，谁记得这么多呢！ 我只期望一点： 当我需要一个 redis-cli， 我能在很短时间内，自助快速安装一个。</p>
+<p>装过 redis 的同学应该都知道，redis 是通过动态链接的方式引用了外部库的，也就是你一般是不可能直接拷贝一个编译好的 linux 二进制文件到另一台 linux 机器上直接执行的（这方面我不是特别了解，如果有误，请指出！）</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ ldd redis-cli</span><br><span class="line">    linux-vdso<span class="class">.so</span>.<span class="number">1</span> =&gt;  (<span class="number">0</span>x00007fffe93fe000)</span><br><span class="line">    libm<span class="class">.so</span>.<span class="number">6</span> =&gt; /lib/x86_64-linux-gnu/libm<span class="class">.so</span>.<span class="number">6</span> (<span class="number">0</span>x00007f17ff5f9000)</span><br><span class="line">    libpthread<span class="class">.so</span>.<span class="number">0</span> =&gt; /lib/x86_64-linux-gnu/libpthread<span class="class">.so</span>.<span class="number">0</span> (<span class="number">0</span>x00007f17ff3db000)</span><br><span class="line">    libc<span class="class">.so</span>.<span class="number">6</span> =&gt; /lib/x86_64-linux-gnu/libc<span class="class">.so</span>.<span class="number">6</span> (<span class="number">0</span>x00007f17ff015000)</span><br><span class="line">    /lib64/ld-linux-x86-<span class="number">64</span><span class="class">.so</span>.<span class="number">2</span> (<span class="number">0</span>x00007f17ff919000)</span><br></pre></td></tr></table></figure>
+<p>上面提到需求， 我想自己安装一个 redis-cli，不需要运维的介入。 读者也许会问，为什么不直接去 github clone 一份，然后自己编译一个 redis-cli？<br>我也想这样啊，可是网速实在感人：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">git clone https:<span class="comment">//github.com/antirez/redis.git</span></span><br><span class="line">Initialized empty Git repository in /home/work/app/redis/.git/</span><br><span class="line">remote: Counting objects: <span class="number">45784</span>, done.</span><br><span class="line">remote: Compressing objects: <span class="number">100</span>% (<span class="number">92</span>/<span class="number">92</span>), done.</span><br><span class="line">Receiving objects:   <span class="number">0</span>% (<span class="number">62</span>/<span class="number">45784</span>), <span class="number">20.01</span> KiB | <span class="number">5</span> KiB/s</span><br><span class="line"></span><br><span class="line">Receiving objects:   <span class="number">0</span>% (<span class="number">291</span>/<span class="number">45784</span>), <span class="number">84.01</span> KiB | <span class="number">1</span> KiB/s</span><br><span class="line"></span><br><span class="line">Receiving objects:   <span class="number">2</span>% (<span class="number">1242</span>/<span class="number">45784</span>), <span class="number">300.01</span> KiB | <span class="number">7</span> KiB/s</span><br></pre></td></tr></table></figure>
+<p>所以，我只能自救了。</p>
+<h2 id="功能介绍">功能介绍</h2><p>先甩个地址: <a href="https://github.com/holys/redis-cli" target="_blank" rel="external">https://github.com/holys/redis-cli</a> 有兴趣的同学可以下载试试。</p>
+<p>这个 <code>redis-cli</code> 是基于 <code>ledis-cli</code> 的，这是我的前同事 <a href="https://github.com/siddontang" target="_blank" rel="external">@siddongtang</a> 的 <a href="https://github.com/siddontang/ledisdb" target="_blank" rel="external">ledisdb</a> 的附属工具，我当时也贡献了几行代码。但是 ledis-cli 当时是为了适配 ledisdb 而作，只有很基础的 REPL 功能，连直接执行命令都不支持，当然也没有我非常喜欢的 raw output format 功能 和 monitor 功能。于是我自己改了下，使之表现尽量和官方的 redis-cli 一致。</p>
+<p>目前的功能如下：</p>
+<ul>
+<li>基本的 hostname, port, auth, db 选项支持，当然也支持 socket 的方式连接</li>
+<li>支持 RESP (REdis Serialization Protocol) 协议，毕竟 ledisdb 是支持 RESP，所以这部分应该没啥问题。   </li>
+<li>REPL，即交互式执行命令</li>
+<li>直接执行命令，非交互式</li>
+<li>monitor 命令支持，这个的原理就是你向 redis-server 发一个 monitor 命令，然后你可以不断地从 redis-server 读取命令输出</li>
+<li>raw 输出，对于 JSON 格式的数据比较友好。</li>
+<li>最大亮点应该就是编译一次，随处运行（因为go编译程序的时候把 runtime 也编译进去了）</li>
+</ul>
+<h2 id="功能演示">功能演示</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">$ ./redis-cli <span class="comment">--help</span></span><br><span class="line">Usage of ./redis-cli:</span><br><span class="line">  -a string</span><br><span class="line">        Password to <span class="operator"><span class="keyword">use</span> <span class="keyword">when</span> connecting <span class="keyword">to</span> the <span class="keyword">server</span></span><br><span class="line">  -h <span class="keyword">string</span></span><br><span class="line">        <span class="keyword">Server</span> hostname (<span class="keyword">default</span> <span class="string">"127.0.0.1"</span>)</span><br><span class="line">  -<span class="keyword">n</span> <span class="built_in">int</span></span><br><span class="line">        <span class="keyword">Database</span> <span class="built_in">number</span>(<span class="keyword">default</span> <span class="number">0</span>)</span><br><span class="line">  -<span class="keyword">p</span> <span class="built_in">int</span></span><br><span class="line">        <span class="keyword">Server</span> <span class="keyword">server</span> port (<span class="keyword">default</span> <span class="number">6379</span>)</span><br><span class="line">  -<span class="keyword">raw</span></span><br><span class="line">        <span class="keyword">Use</span> <span class="keyword">raw</span> formatting <span class="keyword">for</span> replies</span><br><span class="line">  -s <span class="keyword">string</span></span><br><span class="line">        <span class="keyword">Server</span> socket. (overwrites hostname <span class="keyword">and</span> port)</span><br><span class="line"></span><br><span class="line">Almost the same <span class="keyword">as</span> the official redis-cli.</span><br><span class="line"></span><br><span class="line">$ ./redis-cli</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span>&gt; <span class="keyword">get</span> info</span><br><span class="line"><span class="string">"&#123;\"age\":1,\"name\":\"cdh\"&#125;"</span></span><br><span class="line"></span><br><span class="line">$ ./redis-cli <span class="comment">--raw</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span>&gt; <span class="keyword">get</span> info</span><br><span class="line">&#123;<span class="string">"age"</span>:<span class="number">1</span>,<span class="string">"name"</span>:<span class="string">"cdh"</span>&#125;</span><br><span class="line"></span><br><span class="line">$ ./redis-cli <span class="keyword">get</span> info</span><br><span class="line"><span class="string">"&#123;\"age\":1,\"name\":\"cdh\"&#125;"</span></span><br><span class="line"></span><br><span class="line">$ ./redis-cli <span class="comment">--raw get info</span></span><br><span class="line">&#123;<span class="string">"age"</span>:<span class="number">1</span>,<span class="string">"name"</span>:<span class="string">"cdh"</span>&#125;</span><br><span class="line"></span><br><span class="line">$ ./redis-cli monitor</span><br><span class="line">OK</span><br><span class="line"><span class="number">1483327130.764598</span> [<span class="number">0</span> <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">61344</span>] <span class="string">"PING"</span></span><br><span class="line"><span class="number">1483327133.769646</span> [<span class="number">0</span> <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">61344</span>] <span class="string">"PING"</span></span><br><span class="line"><span class="number">1483327136.768431</span> [<span class="number">0</span> <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">61344</span>] <span class="string">"PING"</span></span><br><span class="line"><span class="number">1483327139.767084</span> [<span class="number">0</span> <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">61344</span>] <span class="string">"PING"</span></span><br><span class="line"> ...</span></span><br></pre></td></tr></table></figure>
+<h2 id="安装">安装</h2><p>可通过 <code>go-get</code> 的方式安装：</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">go</span> <span class="built_in">get</span> -<span class="keyword">u</span> -<span class="keyword">v</span> github.<span class="keyword">com</span>/holys/redis-cli</span><br></pre></td></tr></table></figure>
+<p>如果非 Go 用户又想体验下，可以在 <a href="https://github.com/holys/redis-cli/releases" target="_blank" rel="external">release</a> 页面下载事先编译好的可执行文件来玩玩。目前提供了<br>64位机器的 darwin, linux 和 windows 环境可执行文件。</p>
+<h2 id="Contribution">Contribution</h2><p>欢迎提 issue。 </p>
+<p>感谢阅读。</p>
+<p>本文地址 <a href="http://holys.im/2017/01/02/a-pure-go-implementation-of-redis-cli/">http://holys.im/2017/01/02/a-pure-go-implementation-of-redis-cli/</a> </p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/go/" rel="tag">#go</a>
+          
+            <a href="/tags/redis/" rel="tag">#redis</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/12/13/when-we-benchmark-what-should-we-care/" rel="next" title="当我们在压测 Go 程序时，我们要观察什么？">
+                <i class="fa fa-chevron-left"></i> 当我们在压测 Go 程序时，我们要观察什么？
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+        </div>
+
+        
+
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </div>
+
+      
+        
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="https://avatars0.githubusercontent.com/u/1198913?v=3&s=460" alt="holys" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">holys</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">20</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            
+              <span class="site-state-item-count">0</span>
+              <span class="site-state-item-name">分类</span>
+              
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">32</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/holys" target="_blank">
+                  
+                    <i class="fa fa-globe"></i> github
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/chendahui007" target="_blank">
+                  
+                    <i class="fa fa-globe"></i> twitter
+                  
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.douban.com/people/chendahui007" target="_blank">
+                  
+                    <i class="fa fa-globe"></i> douban
+                  
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="http://creativecommons.org/licenses/by-nc-sa/4.0" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#为何造新轮子？"><span class="nav-number">1.</span> <span class="nav-text">为何造新轮子？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#功能介绍"><span class="nav-number">2.</span> <span class="nav-text">功能介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#功能演示"><span class="nav-number">3.</span> <span class="nav-text">功能演示</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装"><span class="nav-number">4.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Contribution"><span class="nav-number">5.</span> <span class="nav-text">Contribution</span></a></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+      
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="icon-next-heart fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">holys</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+    
+    
+
+  
+
+
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.2"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.2"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+<script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+<script type="text/javascript" src="/js/motion.js?v=0.4.5.2" id="motion.global"></script>
+
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.2" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    motionMiddleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  <script type="text/javascript" src="/js/bootstrap.js"></script>
+
+  
+  
+
+  
+  
+
+</body>
+</html>
