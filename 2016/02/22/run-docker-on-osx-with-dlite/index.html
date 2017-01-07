@@ -63,7 +63,7 @@ Dlite 是什么？早在2013年底，笔者实习的时候就开始玩 docker，
 <meta property="og:description" content="前方高能提醒：如果你的系统小于 OS X Yosemite (10.10.3)，且不准备升级到符合条件的版本，就不用往下看了。
 Dlite 是什么？早在2013年底，笔者实习的时候就开始玩 docker，只是那时 docker 还是 dotCloud(现已卖掉，改名为 Docker.Inc)员工的业余项目，还很不成熟。转眼间到了2016年，又准备重新捡起来。
 使用 Mac OSX 系统的同学应该都">
-<meta property="og:updated_time" content="2016-10-20T16:52:29.000Z">
+<meta property="og:updated_time" content="2017-01-07T03:39:49.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Simplifying Docker on OS X With Dlite">
 <meta name="twitter:description" content="前方高能提醒：如果你的系统小于 OS X Yosemite (10.10.3)，且不准备升级到符合条件的版本，就不用往下看了。
@@ -306,6 +306,11 @@ dlite <span class="keyword">start</span></span>
 <figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker<span class="variable">@dlite</span><span class="symbol">:~</span><span class="variable">$ </span>cat /etc/default/docker</span><br><span class="line"><span class="constant">DOCKER_ARGS=</span><span class="string">"-H unix:///var/run/docker.sock -H tcp://0.0.0.0:2375 -s btrfs --registry-mirror=http://yours.m.daocloud.io"</span></span><br></pre></td></tr></table></figure>
 <h2 id="总结">总结</h2><p>刚接触 dlite 不久，暂时还没遇到什么大坑，用起来还是蛮方便的，值得推荐！如果读者在使用过程遇到问题，欢迎留言探讨，共同学习提高 😄</p>
 <h2 id="更新">更新</h2><p>2016.02.24<br>今天早上打开电脑，发现莫名奇妙关机了，得强制重启。联想起前几天也遇到这种问题，也是这么处理。怀疑是 Dlite 问题，去 Dlite 的 issues 搜索发现有<a href="https://github.com/nlf/dlite/issues/60" target="_blank" rel="external">类似情况</a>, 但是作者说这是 xhyve 的问题，然后去 xhyve 的 issue 搜索，发现真有<a href="https://github.com/mist64/xhyve/issues/86" target="_blank" rel="external">这种问题</a>，而且不少人遇到。暂时没看到解决办法。自己决定用不用吧。个人觉得是电脑休眠才会遇到这种问题，但是 MacBook 不合上怎么带回家呀？可能每天晚上睡觉前把 Dlite 进程关闭，不失为一个折中的办法 😄</p>
+<p>2017.01.07</p>
+<p>最近得知，docker 官方已经开始使用 HyperKit 作为 macOS 原生虚拟解决方案，和 dlite 应该是同一个套路，但是有docker 官方的支持，使用起来应该会更舒服，推荐这个方案。</p>
+<blockquote>
+<p>Docker for Mac does not use VirtualBox, but rather HyperKit, a lightweight macOS virtualization solution built on top of Hypervisor.framework in macOS 10.10 Yosemite and higher.<br><a href="https://docs.docker.com/docker-for-mac/docker-toolbox/" target="_blank" rel="external">https://docs.docker.com/docker-for-mac/docker-toolbox/</a></p>
+</blockquote>
 <p>references:</p>
 <ol>
 <li><a href="https://blog.andyet.com/2016/01/25/easy-docker-on-osx/" target="_blank" rel="external">Simplifying Docker on OS X</a></li>
@@ -408,7 +413,7 @@ dlite <span class="keyword">start</span></span>
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">20</span>
+              <span class="site-state-item-count">21</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
