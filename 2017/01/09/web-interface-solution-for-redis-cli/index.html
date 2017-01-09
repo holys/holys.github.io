@@ -63,7 +63,7 @@
 折腾过程如果是用 G">
 <meta property="og:image" content="http://holys.im/images/14839785801360.jpg">
 <meta property="og:image" content="http://holys.im/images/14839787857878.jpg">
-<meta property="og:updated_time" content="2017-01-09T16:40:17.000Z">
+<meta property="og:updated_time" content="2017-01-09T16:43:47.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Web 版 redis-cli 折腾记">
 <meta name="twitter:description" content="缘起最近整了个 Go 版 redis-cli， 完了之后给同事分享了下。TL 问能否整个 web 版的 redis-cli， 即在网页上命令行式地操作 redis。 回想起有个工具叫 gotty, 能让命令行工具运行在网页上。 网页和后端通过 websocket 的方式实时通信，效果能媲美原生终端操作，非常赞。 至于 gotty 的实现原理，有时间我会单写一篇，这里不展开了。
@@ -286,7 +286,7 @@
 <li><code>./redis-cli</code> 建议用绝对路径吧 或者加入了 PATH 的命令</li>
 </ol>
 <p><img src="/images/14839787857878.jpg" alt=""></p>
-<h2 id="后记">后记</h2><p>在写此文的这一天，gotty 的作者居然合并了那个 timeout 功能的 <a href="https://github.com/yudai/gotty/pull/115" target="_blank" rel="external">PR</a>. 不过目前的 gotty 依然不知此 CJK 和 IME， 如果需要这个功能的，可以考虑用我那个 fork version. </p>
+<h2 id="后记">后记</h2><p>在写此文的这一天，gotty 的作者居然合并了那个 timeout 功能的 <a href="https://github.com/yudai/gotty/pull/115" target="_blank" rel="external">PR</a>. 不过目前的 gotty 依然不支持 CJK 和 IME， 如果需要这个功能的，可以考虑用我那个 fork version. </p>
 <p>还有一些涉及安全的功能没有加进去，如只允许 read-only 的命令。如果有人不小心手抖，敲了个 flushdb 进去咋办？</p>
 <p>本文地址 <a href="http://holys.im/2017/01/09/web-interface-solution-for-redis-cli/">http://holys.im/2017/01/09/web-interface-solution-for-redis-cli/</a> </p>
 </span>
