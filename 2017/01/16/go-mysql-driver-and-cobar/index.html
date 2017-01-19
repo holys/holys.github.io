@@ -63,7 +63,7 @@
 <meta property="og:description" content="背景介绍由于历史原因，我们部门的 MySQL 中间件既有 Mycat, 也有 Cobar。 Cobar 号称支持事务， 但是居然不支持 START TRANSACTION 和 BEGIN 显式地开启事务。
 
 单库事务完全支持，分布式事务不能保持强一致性。  分布式事务采用两阶段执行，即分为执行阶段和提交阶段  执行阶段：把前端连接上当前事务所使用到的后端连接绑定下来，并执行SQL语句  提交阶段：">
-<meta property="og:updated_time" content="2017-01-19T08:24:37.000Z">
+<meta property="og:updated_time" content="2017-01-19T08:40:02.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="让 go-sql-driver/mysql 兼容 cobar 的事务">
 <meta name="twitter:description" content="背景介绍由于历史原因，我们部门的 MySQL 中间件既有 Mycat, 也有 Cobar。 Cobar 号称支持事务， 但是居然不支持 START TRANSACTION 和 BEGIN 显式地开启事务。
@@ -277,6 +277,17 @@
 <p>在使用上，创建一个 DB 对象就是这样啦：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db, err = sql.Open(<span class="string">"mysql_cobar"</span>, <span class="string">"YOUR_DSN"</span>)</span><br></pre></td></tr></table></figure>
 <p>希望 DBA 快点废掉 cobar ！</p>
+<h2 id="Cobar_和_Mycat_对_BEGIN_和_START_TrANSACTION_的代码实现">Cobar 和 Mycat 对 BEGIN 和 START TrANSACTION 的代码实现</h2><p>先看下 Cobar（不贴代码了，自己点链接去看）</p>
+<ul>
+<li><a href="https://github.com/alibaba/cobar/blob/850fb8b0ead8dffe3f7c6903d9471f12d53c2cc4/server/src/main/server/com/alibaba/cobar/server/handler/BeginHandler.java" target="_blank" rel="external">Begin</a></li>
+<li><a href="https://github.com/alibaba/cobar/blob/850fb8b0ead8dffe3f7c6903d9471f12d53c2cc4/server/src/main/server/com/alibaba/cobar/server/handler/StartHandler.java" target="_blank" rel="external">Start</a></li>
+</ul>
+<p>再看下 Mycat </p>
+<ul>
+<li><a href="https://github.com/MyCATApache/Mycat-Server/blob/5e4007af2cfe160b94f98174dd349afc3da99a21/src/main/java/io/mycat/server/handler/BeginHandler.java" target="_blank" rel="external">Begin</a></li>
+<li><a href="https://github.com/MyCATApache/Mycat-Server/blob/5e4007af2cfe160b94f98174dd349afc3da99a21/src/main/java/io/mycat/server/handler/StartHandler.java" target="_blank" rel="external">Start</a></li>
+</ul>
+<p>代码链接都是截止至 2017.01.19 最新的commit。</p>
 <h2 id="参考资料">参考资料</h2><ol>
 <li><a href="https://github.com/alibaba/cobar/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E7%AD%94" target="_blank" rel="external">Cobar 常见问答</a></li>
 <li><a href="http://blog.csdn.net/jiao_fuyou/article/details/14181541" target="_blank" rel="external"> Cobar的使用与心得（持续更新）</a></li>
@@ -457,7 +468,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景介绍"><span class="nav-number">1.</span> <span class="nav-text">背景介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何兼容"><span class="nav-number">2.</span> <span class="nav-text">如何兼容</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">3.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景介绍"><span class="nav-number">1.</span> <span class="nav-text">背景介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何兼容"><span class="nav-number">2.</span> <span class="nav-text">如何兼容</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cobar_和_Mycat_对_BEGIN_和_START_TrANSACTION_的代码实现"><span class="nav-number">3.</span> <span class="nav-text">Cobar 和 Mycat 对 BEGIN 和 START TrANSACTION 的代码实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">4.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
