@@ -2,7 +2,7 @@ title: 工具与资源
 date: 2016-09-20 15:18:07
 tags:
 - tool
-- golang
+- go
 
 ---
 

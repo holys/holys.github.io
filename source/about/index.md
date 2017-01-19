@@ -18,7 +18,7 @@ comments: false
 
 
 Open Source in GitHub:
-
+- [redis-cli](https://github.com/holys/redis-cli) A pure go redis-cli.
 - [Initials-Avatar](https://github.com/holys/initials-avatar)  Go语言实现的首字母头像 lib/server
 - [Safe](https://github.com/holys/safe) Go 版密码强度检查
 - [baidu-pcs](https://github.com/holys/baidu-pcs) 百度盘 Go client

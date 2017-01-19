@@ -4,7 +4,7 @@ tags:
 - md5
 - performance
 - bufio
-- golang
+- go
 ---
 
 今天介绍的三种不同的 md5 计算方式，其实区别是读文件的不同，也就是磁盘 I/O, 所以也可以举一反三用在网络 I/O 上。

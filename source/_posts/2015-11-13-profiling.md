@@ -3,7 +3,7 @@ layout: post
 title: 记一次性能调优
 date: 2015-11-13 12:00:00
 tags:
-- golang
+- go
 - profiling
 - performance
 ---

@@ -1,7 +1,7 @@
 title: 如何监控 golang 程序的垃圾回收
 date: 2016-07-01 16:50:01
 tags:
-- golang
+- go
 - gc
 - gcvis
 - runtime

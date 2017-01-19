@@ -1,7 +1,7 @@
 title: 自动生成 Go 程序版本号
 date: 2016-06-26 17:22:27
 tags:
-- golang
+- go
 - ldflags
 ---
 

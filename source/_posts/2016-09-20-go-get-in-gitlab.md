@@ -1,7 +1,7 @@
 title: 如何使用 go get 下载 gitlab 私有项目
 date: 2016-09-20 10:54:14
 tags:
-- golang
+- go
 - gitlab
 - tips
 ---

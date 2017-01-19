@@ -3,7 +3,7 @@ layout: post
 title: 部署 Go 应用到 Heroku
 date: 2015-11-23 17:00:50
 tags:
-- golang
+- go
 - heroku
 ---
 
@@ -94,3 +94,4 @@ $ heroku ps:scale web=1
 
 1. http://blog.anthonyringoet.be/heroku-no-web-processes-running/
 2. https://devcenter.heroku.com/articles/log-runtime-metrics#enabl
+

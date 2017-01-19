@@ -2,7 +2,7 @@ title: 如何结束 etcd watcher
 date: 2016-10-19 16:58:51
 tags:
 - etcd
-- golang
+- go
 - context
 ---
 
