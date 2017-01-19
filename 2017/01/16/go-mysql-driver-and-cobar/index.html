@@ -29,7 +29,7 @@
   <link href="//fonts.lug.ustc.edu.cn/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
 
 
-<link rel="canonical" href="http://holys.im/2016/09/20/tools-and-tips/" />
+<link rel="canonical" href="http://holys.im/2017/01/16/go-mysql-driver-and-cobar/" />
 
 
 <link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
@@ -37,7 +37,7 @@
 <link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="go,tool," />
+  <meta name="keywords" content="cobar,go,mysql," />
 
 
 
@@ -53,32 +53,22 @@
 
 
 
-<meta name="description" content="前阵子在小组内部分享过我平时使用的工具和资源，这里权当记录一下，也充当一篇 😜
-工具篇开发工具
-Alfred / Spotlight 快速检索文件, 二者互补
-Sublime Text 3 / Atom / VS Code(看好)
-Gas Mask （管理 hosts, Mac）同类: SwitchHosts 支持 Windows/Mac
-抓包软件 Wireshark / Charles 。">
+<meta name="description" content="背景介绍由于历史原因，我们部门的 MySQL 中间件既有 Mycat, 也有 Cobar。 Cobar 号称支持事务， 但是居然不支持 START TRANSACTION 和 BEGIN 显式地开启事务。
+
+单库事务完全支持，分布式事务不能保持强一致性。  分布式事务采用两阶段执行，即分为执行阶段和提交阶段  执行阶段：把前端连接上当前事务所使用到的后端连接绑定下来，并执行SQL语句  提交阶段：">
 <meta property="og:type" content="article">
-<meta property="og:title" content="工具与资源">
-<meta property="og:url" content="http://holys.im/2016/09/20/tools-and-tips/index.html">
+<meta property="og:title" content="让 go-sql-driver/mysql 兼容 cobar 的事务">
+<meta property="og:url" content="http://holys.im/2017/01/16/go-mysql-driver-and-cobar/index.html">
 <meta property="og:site_name" content="holys'">
-<meta property="og:description" content="前阵子在小组内部分享过我平时使用的工具和资源，这里权当记录一下，也充当一篇 😜
-工具篇开发工具
-Alfred / Spotlight 快速检索文件, 二者互补
-Sublime Text 3 / Atom / VS Code(看好)
-Gas Mask （管理 hosts, Mac）同类: SwitchHosts 支持 Windows/Mac
-抓包软件 Wireshark / Charles 。">
-<meta property="og:image" content="http://holys.im/images/tools.png">
-<meta property="og:updated_time" content="2017-01-19T08:23:01.000Z">
+<meta property="og:description" content="背景介绍由于历史原因，我们部门的 MySQL 中间件既有 Mycat, 也有 Cobar。 Cobar 号称支持事务， 但是居然不支持 START TRANSACTION 和 BEGIN 显式地开启事务。
+
+单库事务完全支持，分布式事务不能保持强一致性。  分布式事务采用两阶段执行，即分为执行阶段和提交阶段  执行阶段：把前端连接上当前事务所使用到的后端连接绑定下来，并执行SQL语句  提交阶段：">
+<meta property="og:updated_time" content="2017-01-19T08:24:37.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="工具与资源">
-<meta name="twitter:description" content="前阵子在小组内部分享过我平时使用的工具和资源，这里权当记录一下，也充当一篇 😜
-工具篇开发工具
-Alfred / Spotlight 快速检索文件, 二者互补
-Sublime Text 3 / Atom / VS Code(看好)
-Gas Mask （管理 hosts, Mac）同类: SwitchHosts 支持 Windows/Mac
-抓包软件 Wireshark / Charles 。">
+<meta name="twitter:title" content="让 go-sql-driver/mysql 兼容 cobar 的事务">
+<meta name="twitter:description" content="背景介绍由于历史原因，我们部门的 MySQL 中间件既有 Mycat, 也有 Cobar。 Cobar 号称支持事务， 但是居然不支持 START TRANSACTION 和 BEGIN 显式地开启事务。
+
+单库事务完全支持，分布式事务不能保持强一致性。  分布式事务采用两阶段执行，即分为执行阶段和提交阶段  执行阶段：把前端连接上当前事务所使用到的后端连接绑定下来，并执行SQL语句  提交阶段：">
 
 
 
@@ -90,7 +80,7 @@ Gas Mask （管理 hosts, Mac）同类: SwitchHosts 支持 Windows/Mac
   };
 </script>
 
-  <title> 工具与资源 | holys' </title>
+  <title> 让 go-sql-driver/mysql 兼容 cobar 的事务 | holys' </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -229,7 +219,7 @@ Gas Mask （管理 hosts, Mac）同类: SwitchHosts 支持 Windows/Mac
             
             
               
-                工具与资源
+                让 go-sql-driver/mysql 兼容 cobar 的事务
               
             
           </h1>
@@ -238,8 +228,8 @@ Gas Mask （管理 hosts, Mac）同类: SwitchHosts 支持 Windows/Mac
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2016-09-20T15:18:07+08:00" content="2016-09-20">
-              2016-09-20
+            <time itemprop="dateCreated" datetime="2017-01-16T23:10:57+08:00" content="2017-01-16">
+              2017-01-16
             </time>
           </span>
 
@@ -262,108 +252,38 @@ Gas Mask （管理 hosts, Mac）同类: SwitchHosts 支持 Windows/Mac
       
 
       
-        <span itemprop="articleBody"><p>前阵子在小组内部分享过我平时使用的工具和资源，这里权当记录一下，也充当一篇 😜</p>
-<h2 id="工具篇">工具篇</h2><h3 id="开发工具">开发工具</h3><ul>
-<li>Alfred / Spotlight 快速检索文件, 二者互补</li>
-<li>Sublime Text 3 / Atom / VS Code(看好)</li>
-<li><a href="http://clockwise.ee/" target="_blank" rel="external">Gas Mask</a> （管理 hosts, Mac）<br>同类: <a href="https://oldj.github.io/SwitchHosts" target="_blank" rel="external">SwitchHosts</a> 支持 Windows/Mac</li>
-<li>抓包软件 Wireshark / Charles 。  tcpdump + wireshark</li>
-<li>Markdown:  MacDown/Mweb (收费)</li>
-</ul>
-<ul>
-<li>Git:  GitHub 客户端（推荐） / SourceTree（功能强大）</li>
-<li><a href="https://www.sequelpro.com/" target="_blank" rel="external">SequelPro</a>  MySQL 客户端</li>
-<li><a href="https://eggerapps.at/postico/" target="_blank" rel="external">Postico</a> Postgres 客户端</li>
-<li>推荐推荐一款轻量级磁盘清理工具 <a href="https://www.omnigroup.com/more" target="_blank" rel="external">OmniDiskSweeper</a>，帮我找到了隐藏 N 久的虚拟机镜像文件（可怜我只有128GB 的闪存空间）</li>
-<li>如果用 HHKB, <a href="https://pqrs.org/osx/karabiner/" target="_blank" rel="external">Karabiner</a> 基本是必备的，改键盘映射。</li>
-</ul>
-<p>更多的，见图， 不一一介绍了。</p>
-<p><img src="/images/tools.png" alt="tools"></p>
-<p>Sublime Text 目前依然是我的主力编辑器。年少无知时，我是个 IDE 黑，现在越来觉得有必要搞一款 IDE 来作为我的主力开发工具，但是一直没有物色到。</p>
-<h4 id="Sublime_插件">Sublime 插件</h4><ul>
-<li>SideBarEnhancements</li>
-<li>Pretty JSON</li>
-<li>Git</li>
-<li>GoSublime（随着 GOPATH 下面代码量的增加，有些功能就变得很慢了）</li>
-<li>Godef （有些项目本身就占一个 GOPATH,所以每次新增项目都得配置 GOPATH，烦）</li>
-</ul>
-<p>快捷键那些就不介绍啦~</p>
-<h4 id="Chrome_插件">Chrome 插件</h4><ul>
-<li><a href="https://chrome.google.com/webstore/detail/sourcegraph-for-github/dgjhfomjieaadpoljlnidmbgkdffpack" target="_blank" rel="external">Sourcegraph</a> （github. Browse and search code on GitHub like an IDE, with jump-to-definition, doc tooltips, and semantic search.）</li>
-<li><a href="https://chrome.google.com/webstore/detail/octotree/bkhaagjahfmjljalopjnoealnfndnagc" target="_blank" rel="external">Octotree</a> （Code tree for GitHub and GitLab ,  我们用的 gitlab 版本不兼容 ）</li>
-<li>Save to pocket. Pocket 用户推荐（<a href="https://zhuanlan.zhihu.com/p/22545574?hmsr=toutiao.io&amp;utm_medium=toutiao.io&amp;utm_source=toutiao.io" target="_blank" rel="external">又有人说</a>不要依赖 pocket,力争一次看完，要么就不看）。</li>
-<li>Proxy SwitchyOmega（你懂的）</li>
-<li>JSON View (跟 JSON API打交道，需要一个格式化工具)</li>
-<li>HTTP 调试工具  Postman / DHC</li>
-<li><a href="https://www.eff.org/https-everywhere" target="_blank" rel="external">HTTPS Everywhere</a></li>
-<li>…</li>
-</ul>
-<h4 id="终端">终端</h4><ol>
-<li>zsh/oh-my-zsh</li>
-<li>readline (readline 是一个行编辑库，常见的 shell 如 bash, zsh 支持 readline)<br><a href="https://cnswww.cns.cwru.edu/php/chet/readline/rluserman.html" target="_blank" rel="external">https://cnswww.cns.cwru.edu/php/chet/readline/rluserman.html</a></li>
-<li>autojump ( a faster way to navigate your filesystem)     / z?<br><a href="https://github.com/wting/autojump" target="_blank" rel="external">https://github.com/wting/autojump</a><br><a href="https://github.com/rupa/z" target="_blank" rel="external">https://github.com/rupa/z</a>   跟 autojump 很像</li>
+        <span itemprop="articleBody"><h2 id="背景介绍">背景介绍</h2><p>由于历史原因，我们部门的 MySQL 中间件既有 <a href="http://mycat.io" target="_blank" rel="external">Mycat</a>, 也有 <a href="https://github.com/alibaba/cobar" target="_blank" rel="external">Cobar</a>。 Cobar 号称支持事务， 但是居然不支持 <code>START TRANSACTION</code> 和 <code>BEGIN</code> 显式地开启事务。</p>
+<blockquote>
+<p>单库事务完全支持，分布式事务不能保持强一致性。<br>  分布式事务采用两阶段执行，即分为执行阶段和提交阶段<br>  执行阶段：把前端连接上当前事务所使用到的后端连接绑定下来，并执行SQL语句<br>  提交阶段：将commit命令分发到这些绑定的后端连接中。<br>  在整个事务过程中，执行阶段出错，可以回滚。提交阶段出错不可以回滚。可以说只要是commit之前，执行出现不一致，cobar会自动回滚。</p>
+</blockquote>
+<h2 id="如何兼容">如何兼容</h2><p>可以通过 <code>SET AUTOCOMMIT=0</code> 来开启事务， 但是事务结束后，马上又开启了新的事务，如果后面的语句不希望起事务，那么一定要在这次事务中提交 <code>SET AUTOCOMMIT=1</code>，使改动立即生效。</p>
+<p>我们用的 mysql 驱动是 <a href="https://github.com/go-sql-driver/mysql" target="_blank" rel="external">go-sql-driver/mysql</a>，为了适配 Cobar，只能改代码了。</p>
+<p>connection.go</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="deletion">-	err := mc.exec("START TRANSACTION")</span></span><br><span class="line"><span class="addition">+	err := mc.exec("SET AUTOCOMMIT=0")</span></span><br></pre></td></tr></table></figure>
+<p>transaction.go</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> 	err = tx.mc.exec("COMMIT")</span><br><span class="line"><span class="addition">+	err = tx.mc.exec("SET AUTOCOMMIT=1")</span></span><br><span class="line"></span><br><span class="line">  err = tx.mc.exec("ROLLBACK")</span><br><span class="line"><span class="addition">+	err = tx.mc.exec("SET AUTOCOMMIT=1")</span></span><br></pre></td></tr></table></figure>
+<p>详细改动<a href="https://github.com/yiyulantian/mysql/commit/deb085abeb1a53643d094a11ce3bb33f00ba7287" target="_blank" rel="external">见此</a></p>
+<p>改完是能用的。但是后来这个项目迁移到我们的 SOA 框架去了，那个框架的基础库也有一份 go-sql-driver/mysql （没改过的），而且因为框架的设计原因，这个库一定会被引入的</p>
+<pre><code><span class="title">_</span>  <span class="string">"github.com/go-sql-driver/mysql"</span>
+</code></pre><p>问题是，我还得用改过的那份代码呢，并且二者是不能同时引入的。这就蛋疼了。</p>
+<p>为何不能同时引入 <code>github.com/go-sql-driver/mysql</code> 和 <code>github.com/yiyulantian/mysql</code>(就是上面提到改动的那份fork)  呢？ 其实它俩对于 database/sql 而言，是同一个数据库驱动。</p>
+<p><code>go-sql-driver/mysql</code> 是这样注册进去的</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">func</span> <span class="tag">init</span>() &#123;</span><br><span class="line">	<span class="tag">sql</span><span class="class">.Register</span>(<span class="string">"mysql"</span>, &amp;MySQLDriver&#123;&#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>而 <code>sql.Register</code> 做了名称的唯一性检查：</p>
+<figure class="highlight sqf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Register makes a database driver available by the provided name.</span></span><br><span class="line"><span class="comment">// If Register is called twice with the same name or if driver is nil,</span></span><br><span class="line"><span class="comment">// it panics.</span></span><br><span class="line">func Register(<span class="built_in">name</span> string, <span class="built_in">driver</span> <span class="built_in">driver</span>.<span class="built_in">Driver</span>) &#123;</span><br><span class="line">	driversMu.<span class="built_in">Lock</span>()</span><br><span class="line">	defer driversMu.Unlock()</span><br><span class="line">	<span class="keyword">if</span> <span class="built_in">driver</span> == <span class="literal">nil</span> &#123;</span><br><span class="line">		panic(<span class="string">"sql: Register driver is nil"</span>)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// 看到没，重复了会 panic 的</span></span><br><span class="line">	<span class="keyword">if</span> _, dup := drivers[<span class="built_in">name</span>]; dup &#123;</span><br><span class="line">		panic(<span class="string">"sql: Register called twice for driver "</span> + <span class="built_in">name</span>)</span><br><span class="line">	&#125;</span><br><span class="line">	drivers[<span class="built_in">name</span>] = <span class="built_in">driver</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>对于这种 panic, 总不能为了绕过去而做一次 recover 吧。</p>
+<p>于是我决定曲线救国， 改个名字。</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">func init() &#123;</span><br><span class="line"><span class="deletion">- sql.Register("mysql", &amp;MySQLDriver&#123;&#125;)</span></span><br><span class="line"><span class="addition">+ sql.Register("mysql_cobar", &amp;MySQLDriver&#123;&#125;)</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在使用上，创建一个 DB 对象就是这样啦：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db, err = sql.Open(<span class="string">"mysql_cobar"</span>, <span class="string">"YOUR_DSN"</span>)</span><br></pre></td></tr></table></figure>
+<p>希望 DBA 快点废掉 cobar ！</p>
+<h2 id="参考资料">参考资料</h2><ol>
+<li><a href="https://github.com/alibaba/cobar/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E7%AD%94" target="_blank" rel="external">Cobar 常见问答</a></li>
+<li><a href="http://blog.csdn.net/jiao_fuyou/article/details/14181541" target="_blank" rel="external"> Cobar的使用与心得（持续更新）</a></li>
+<li><a href="https://groups.google.com/forum/#!topic/ali-cobar/Z8394BLSpfw" target="_blank" rel="external">cobar中是怎么支持事务的</a></li>
+<li><a href="http://www.cnblogs.com/in-loading/archive/2012/02/21/2361702.html" target="_blank" rel="external">MYSQL–事务处理</a></li>
 </ol>
-<h3 id="知识管理工具">知识管理工具</h3><ul>
-<li>Evernote / 有道笔记 / 为知笔记</li>
-<li>Pocket （read it later =&gt; read it never， 收藏文章）</li>
-</ul>
-<h3 id="爬墙工具">爬墙工具</h3><ul>
-<li>lantern + Proxy SwitchyOmega</li>
-<li>靠谱的 VPN ？</li>
-</ul>
-<h3 id="硬件">硬件</h3><ol>
-<li>Macbook Pro/Air  / Mac Mini （官网购买 + appletuan.com 港）<br>插入： IBM  大规模采购苹果电脑 <a href="http://www.solidot.org/story?threshold=0&amp;mode=flat&amp;sid=44981" target="_blank" rel="external">http://www.solidot.org/story?threshold=0&amp;mode=flat&amp;sid=44981</a></li>
-<li>一款舒适的键盘 机械式 / 静电电容式（HHKB）</li>
-</ol>
-<h2 id="资源篇">资源篇</h2><h3 id="资讯来源">资讯来源</h3><p>（加粗的表示我重度使用的）</p>
-<ul>
-<li><strong>weibo</strong> 关注的人 / @湾区日报BayArea</li>
-<li><strong>github</strong> 首页 （关注的人，像刷微博一样刷动态）</li>
-<li>reddit.com/r/golang （reddit 太多 topic, 挑自己感兴趣的）</li>
-<li><strong>toutiao.io</strong>  关注自己感兴趣的</li>
-<li>twitter （偶尔看，第一手资料）</li>
-<li>hacker news(其实很少看)</li>
-<li>v2ex(? 越来越水， 用来招聘/找工作还行)</li>
-<li>逛博客，从一个链接跳到另一个链接</li>
-<li>纸质书</li>
-</ul>
-<h3 id="如何查资料">如何查资料</h3><pre><code><span class="number">0.</span> 具体项目 首选官网
-<span class="number">1.</span> google  + 英文 keyword   =&gt;  stackoverflow  + github + google groups +  wikipedia + 个人博客 。 候选 bing
-<span class="number">2.</span> slides 搜索。 www.slideshare.net  / https:<span class="comment">//speakerdeck.com/</span>
-<span class="number">3.</span> 如果是某个github项目, 直接搜索其 issue
-<span class="number">4.</span> 如果是想找某个项目  github 直接搜：  keyword + language: xxx
-<span class="number">5.</span> 找书上豆瓣, 找电子书  问 google    site:pan.baidu.com  + 书名 + pdf/mobi/epub
-<span class="number">6.</span> 知乎也是可以的
-<span class="number">7.</span> 找视频 youtube.com / vimeo.com
-</code></pre><h2 id="Go_语言相关资源">Go 语言相关资源</h2><h3 id="推荐">推荐</h3><ol>
-<li>所有精华的东西都在官网！！！</li>
-<li>语言规范：<a href="https://golang.org/ref/spec" target="_blank" rel="external">https://golang.org/ref/spec</a></li>
-<li>effective go  <a href="https://golang.org/doc/effective_go.html" target="_blank" rel="external">https://golang.org/doc/effective_go.html</a></li>
-<li>godoc 看文档 <a href="https://godoc.org/" target="_blank" rel="external">https://godoc.org/</a></li>
-<li>faq  <a href="https://golang.org/doc/faq" target="_blank" rel="external">https://golang.org/doc/faq</a></li>
-<li>style guide: <a href="https://github.com/golang/go/wiki/CodeReviewComments" target="_blank" rel="external">https://github.com/golang/go/wiki/CodeReviewComments</a>  以及上面的 effective go</li>
-<li>官方博客: <a href="https://blog.golang.org/" target="_blank" rel="external">https://blog.golang.org/</a></li>
-<li>Dave Cheney 博客 <a href="http://dave.cheney.net/category/golang" target="_blank" rel="external">http://dave.cheney.net/category/golang</a> （推荐）</li>
-</ol>
-<p>如果想了解更多：</p>
-<ol>
-<li><a href="https://github.com/golang/go/wiki" target="_blank" rel="external">https://github.com/golang/go/wiki</a></li>
-<li><a href="http://stackoverflow.com/tags/go/info" target="_blank" rel="external">http://stackoverflow.com/tags/go/info</a></li>
-</ol>
-<h3 id="图书">图书</h3><ol>
-<li>入门：The Go Programming Language <a href="https://book.douban.com/subject/26337545/" target="_blank" rel="external">https://book.douban.com/subject/26337545/</a></li>
-<li>进阶：Go 语言学习笔记 <a href="https://book.douban.com/subject/26832468/" target="_blank" rel="external">https://book.douban.com/subject/26832468/</a></li>
-</ol>
-<h3 id="代码">代码</h3><ol>
-<li>go 标准库代码 /usr/local/go/src/</li>
-<li>siddontang <a href="https://github.com/siddontang" target="_blank" rel="external">https://github.com/siddontang</a> （前同事代码，非常值得一看）</li>
-<li>thrift/go</li>
-<li>tidb/etcd/fasthttp</li>
-<li>language:go stars:&gt;5000</li>
-</ol>
-<h3 id="工具">工具</h3><p><a href="http://dominik.honnef.co/posts/2014/12/go-tools/" target="_blank" rel="external">http://dominik.honnef.co/posts/2014/12/go-tools/</a></p>
-<p>以上，仅代表个人习惯。而且也会随着时间变化而变化。</p>
-<p>本文地址 <a href="http://holys.im/2016/09/20/tools-and-tips/">http://holys.im/2016/09/20/tools-and-tips/</a> </p>
+<p>本文地址 <a href="http://holys.im/2017/01/16/go-mysql-driver-and-cobar/">http://holys.im/2017/01/16/go-mysql-driver-and-cobar/</a> </p>
 </span>
       
     </div>
@@ -372,9 +292,11 @@ Gas Mask （管理 hosts, Mac）同类: SwitchHosts 支持 Windows/Mac
       
         <div class="post-tags">
           
+            <a href="/tags/cobar/" rel="tag">#cobar</a>
+          
             <a href="/tags/go/" rel="tag">#go</a>
           
-            <a href="/tags/tool/" rel="tag">#tool</a>
+            <a href="/tags/mysql/" rel="tag">#mysql</a>
           
         </div>
       
@@ -383,17 +305,13 @@ Gas Mask （管理 hosts, Mac）同类: SwitchHosts 支持 Windows/Mac
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/09/20/why-rabbitmq-message-not-consumed/" rel="next" title="记一次 RabbitMQ 消息堆积分析">
-                <i class="fa fa-chevron-left"></i> 记一次 RabbitMQ 消息堆积分析
+              <a href="/2017/01/09/web-interface-solution-for-redis-cli/" rel="next" title="Web 版 redis-cli 折腾记">
+                <i class="fa fa-chevron-left"></i> Web 版 redis-cli 折腾记
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/10/19/how-to-stop-etcd-watcher/" rel="prev" title="如何结束 etcd watcher">
-                如何结束 etcd watcher <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -539,7 +457,7 @@ Gas Mask （管理 hosts, Mac）同类: SwitchHosts 支持 Windows/Mac
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#工具篇"><span class="nav-number">1.</span> <span class="nav-text">工具篇</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#开发工具"><span class="nav-number">1.1.</span> <span class="nav-text">开发工具</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Sublime_插件"><span class="nav-number">1.1.1.</span> <span class="nav-text">Sublime 插件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Chrome_插件"><span class="nav-number">1.1.2.</span> <span class="nav-text">Chrome 插件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#终端"><span class="nav-number">1.1.3.</span> <span class="nav-text">终端</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#知识管理工具"><span class="nav-number">1.2.</span> <span class="nav-text">知识管理工具</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#爬墙工具"><span class="nav-number">1.3.</span> <span class="nav-text">爬墙工具</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#硬件"><span class="nav-number">1.4.</span> <span class="nav-text">硬件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#资源篇"><span class="nav-number">2.</span> <span class="nav-text">资源篇</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#资讯来源"><span class="nav-number">2.1.</span> <span class="nav-text">资讯来源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何查资料"><span class="nav-number">2.2.</span> <span class="nav-text">如何查资料</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Go_语言相关资源"><span class="nav-number">3.</span> <span class="nav-text">Go 语言相关资源</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#推荐"><span class="nav-number">3.1.</span> <span class="nav-text">推荐</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#图书"><span class="nav-number">3.2.</span> <span class="nav-text">图书</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码"><span class="nav-number">3.3.</span> <span class="nav-text">代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#工具"><span class="nav-number">3.4.</span> <span class="nav-text">工具</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景介绍"><span class="nav-number">1.</span> <span class="nav-text">背景介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何兼容"><span class="nav-number">2.</span> <span class="nav-text">如何兼容</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">3.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">

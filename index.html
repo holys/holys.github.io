@@ -230,6 +230,93 @@
             
               
                 
+                <a class="post-title-link" href="/2017/01/16/go-mysql-driver-and-cobar/" itemprop="url">
+                  让 go-sql-driver/mysql 兼容 cobar 的事务
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2017-01-16T23:10:57+08:00" content="2017-01-16">
+              2017-01-16
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+            背景介绍由于历史原因，我们部门的 MySQL 中间件既有 Mycat, 也有 Cobar。 Cobar 号称支持事务， 但是居然不支持 START TRANSACTION 和 BEGIN 显式地开启事务。
+
+单库事务完全支持，分布式事务不能保持强一致性。  分布式事务采用两阶段执行，即分为执行阶段和
+            ...
+          </span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/01/16/go-mysql-driver-and-cobar/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/01/09/web-interface-solution-for-redis-cli/" itemprop="url">
                   Web 版 redis-cli 折腾记
                 </a>
@@ -998,93 +1085,6 @@ $ go get -v  mygitlab.com/user/repo
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/01/monitor-golang-gc/" itemprop="url">
-                  如何监控 golang 程序的垃圾回收
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            发表于
-            <time itemprop="dateCreated" datetime="2016-07-01T16:50:01+08:00" content="2016-07-01">
-              2016-07-01
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-            说明：本文测试环境 go version go1.6.2 darwin/amd64
-本地开发环境的监控如果是本地开发环境, 可以利用  GODEBUG=gctrace=1 /path/to/binary  的方式输出 GC 信息，然后用 gcvis 作可视化。
-GODEBUG=gctrace=1 会
-            ...
-          </span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/07/01/monitor-golang-gc/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
 
   </section>
 
@@ -1131,7 +1131,7 @@ GODEBUG=gctrace=1 会
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">21</span>
+              <span class="site-state-item-count">22</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

@@ -226,6 +226,93 @@
             
               
                 
+                <a class="post-title-link" href="/2016/07/01/monitor-golang-gc/" itemprop="url">
+                  如何监控 golang 程序的垃圾回收
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2016-07-01T16:50:01+08:00" content="2016-07-01">
+              2016-07-01
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+            说明：本文测试环境 go version go1.6.2 darwin/amd64
+本地开发环境的监控如果是本地开发环境, 可以利用  GODEBUG=gctrace=1 /path/to/binary  的方式输出 GC 信息，然后用 gcvis 作可视化。
+GODEBUG=gctrace=1 会
+            ...
+          </span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/07/01/monitor-golang-gc/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/06/26/inspect-go-binary-date-and-version/" itemprop="url">
                   自动生成 Go 程序版本号
                 </a>
@@ -1004,91 +1091,6 @@ MySQL 5.6 Reference Manual
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2015/06/28/debug-http/" itemprop="url">
-                  HTTP Method
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            发表于
-            <time itemprop="dateCreated" datetime="2015-06-28T12:00:00+08:00" content="2015-06-28">
-              2015-06-28
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-            最近业余时间用 Go 写一个 API 测试工具时， 遇到一个很奇怪的问题。处理请求返回内容的时候， 遇到error malformed HTTP response &quot;&lt;html&gt;&quot;.搜了下 Go 的标准库代码，发现是 net/http ReadResponse函数里面
-            ...
-          </span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/06/28/debug-http/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
 
   </section>
 
@@ -1135,7 +1137,7 @@ MySQL 5.6 Reference Manual
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">21</span>
+              <span class="site-state-item-count">22</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
