@@ -63,7 +63,7 @@
 <meta property="og:description" content="背景介绍由于历史原因，我们部门的 MySQL 中间件既有 Mycat, 也有 Cobar。 Cobar 号称支持事务， 但是居然不支持 START TRANSACTION 和 BEGIN 显式地开启事务。
 
 单库事务完全支持，分布式事务不能保持强一致性。  分布式事务采用两阶段执行，即分为执行阶段和提交阶段  执行阶段：把前端连接上当前事务所使用到的后端连接绑定下来，并执行SQL语句  提交阶段：">
-<meta property="og:updated_time" content="2017-01-19T08:40:02.000Z">
+<meta property="og:updated_time" content="2017-01-20T01:37:35.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="让 go-sql-driver/mysql 兼容 cobar 的事务">
 <meta name="twitter:description" content="背景介绍由于历史原因，我们部门的 MySQL 中间件既有 Mycat, 也有 Cobar。 Cobar 号称支持事务， 但是居然不支持 START TRANSACTION 和 BEGIN 显式地开启事务。
@@ -293,6 +293,7 @@
 <li><a href="http://blog.csdn.net/jiao_fuyou/article/details/14181541" target="_blank" rel="external"> Cobar的使用与心得（持续更新）</a></li>
 <li><a href="https://groups.google.com/forum/#!topic/ali-cobar/Z8394BLSpfw" target="_blank" rel="external">cobar中是怎么支持事务的</a></li>
 <li><a href="http://www.cnblogs.com/in-loading/archive/2012/02/21/2361702.html" target="_blank" rel="external">MYSQL–事务处理</a></li>
+<li><a href="http://ximeng1234.iteye.com/blog/2208059" target="_blank" rel="external">mysql 中间件研究</a></li>
 </ol>
 <p>本文地址 <a href="http://holys.im/2017/01/16/go-mysql-driver-and-cobar/">http://holys.im/2017/01/16/go-mysql-driver-and-cobar/</a> </p>
 </span>
