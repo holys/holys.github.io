@@ -100,6 +100,7 @@ social:
   github: https://github.com/holys
   twitter: https://twitter.com/chendahui007
   douban: http://www.douban.com/people/chendahui007
+  email: mailto:chendahui007@gmail.com
 
 
 # TOC in the Sidebar
@@ -207,7 +208,10 @@ facebook_sdk:
   webmaster:    #true
 
 
-
+# Donate 文章末尾显示打赏按钮
+reward_comment: 给猫咪赏个罐头呗
+wechatpay: /images/wechat_pay.jpg
+#alipay: 此处为支付宝向我付款二维码图片的相对或者是绝对URL
 
 
 

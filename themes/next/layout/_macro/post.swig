@@ -161,6 +161,11 @@
         <span itemprop="articleBody">{{ post.content }}</span>
       {% endif  %}
     </div>
+     <div>
+      {% if not is_index %}
+        {% include 'reward.swig' %}
+      {% endif %}
+    </div>
 
     <footer class="post-footer">
       {% if post.tags and post.tags.length and not is_index %}
