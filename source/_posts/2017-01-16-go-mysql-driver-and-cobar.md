@@ -120,6 +120,7 @@ db, err = sql.Open("mysql_cobar", "YOUR_DSN")
 3. [cobar中是怎么支持事务的](https://groups.google.com/forum/#!topic/ali-cobar/Z8394BLSpfw
 )
 4. [MYSQL--事务处理](http://www.cnblogs.com/in-loading/archive/2012/02/21/2361702.html)
+5. [mysql 中间件研究](http://ximeng1234.iteye.com/blog/2208059)
 
 
 
