@@ -60,7 +60,7 @@
 <meta property="og:site_name" content="holys'">
 <meta property="og:description" content="最近在对我们的网关服务（gateway）进行压力测试时，发现网关服务产生大量的 TIME_WAIT. Gateway 是用 go 实现的，通过 HTTP 方式与后端服务进行通信，也就是说使用了 net/http 包。 在我的理解中，net/http 是默认保持长连接的，按理说不会有这么多 TIME_WAIT 状态的。除非是使用了短连接，每次都是三次握手，然后客户端（gateway）主动关闭连接，进">
 <meta property="og:image" content="http://holys.im/images/14799159319678.jpg">
-<meta property="og:updated_time" content="2016-12-14T06:12:31.000Z">
+<meta property="og:updated_time" content="2017-02-17T09:13:14.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="net/http 与 TIME_WAIT">
 <meta name="twitter:description" content="最近在对我们的网关服务（gateway）进行压力测试时，发现网关服务产生大量的 TIME_WAIT. Gateway 是用 go 实现的，通过 HTTP 方式与后端服务进行通信，也就是说使用了 net/http 包。 在我的理解中，net/http 是默认保持长连接的，按理说不会有这么多 TIME_WAIT 状态的。除非是使用了短连接，每次都是三次握手，然后客户端（gateway）主动关闭连接，进">
@@ -265,7 +265,7 @@
 <p>然后再用 wrk 1000个 长连接去压测时， </p>
 <pre><code>netstat -natpl |<span class="string">grep TIME_WAIT </span>|<span class="string"> wc -l  </span>
 </code></pre><p>发现 TIME_WAIT 数量很小，跟程序 gateway 未启动 保持一致，也就是没有产生额外的 TIME_WAIT.<br>没有大量 TIME_WAIT ，也就是全部都是长连接， 其效果就是， wrk =&gt; gateway =&gt; 后端服务 的 QPS 直接上来了，达到 11934. 而直接压后端服务， 其 QPS 是 13462， 性能只是损耗了 11.3%。  之前是损耗了 33%.  可见，短连接对性能的影响还是蛮大的（并不是说短连接相比长连接的性能下降是20%）。</p>
-<p>小结：在本文环境中， TIME_WAIT 是在客户端产生的，原因是客户端的连接池太小，导致新连接不断创建，然后又主动关闭连接，产生大量 TIME_WAIT。解决办法是调大连接池的数量。</p>
+<p>小结：在本文环境中， TIME_WAIT 是在gateway产生的，原因是gateway的连接池太小，导致新连接不断创建，然后又主动关闭连接，产生大量 TIME_WAIT。解决办法是调大连接池的数量。</p>
 <p>参考：</p>
 <ol>
 <li><a href="http://www.firefoxbug.com/index.php/archives/2795/" target="_blank" rel="external">http://www.firefoxbug.com/index.php/archives/2795/</a>  （对 TIME_WAIT 讲解很透彻，推荐阅读）</li>
@@ -448,7 +448,7 @@
               </span>
             
               <span class="links-of-author-item">
-                <a href="chendahui007@gmail.com" target="_blank">
+                <a href="mailto:chendahui007@gmail.com" target="_blank">
                   
                     <i class="fa fa-globe"></i> email
                   
