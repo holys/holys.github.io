@@ -77,7 +77,7 @@
 
 
 暂时没看到成熟的 thrift 动态 序列化/反序列化 解决方案。目前的 Thrift">
-<meta property="og:updated_time" content="2017-02-18T13:39:23.000Z">
+<meta property="og:updated_time" content="2017-02-20T03:07:05.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="thrift 服务压测工具实现思路">
 <meta name="twitter:description" content="市面上没找到合适的 thrift 服务压测工具，
@@ -193,6 +193,16 @@
         </li>
       
         
+        <li class="menu-item menu-item-booklist">
+          <a href="/booklist" rel="section">
+            
+              <i class="menu-item-icon fa fa-book fa-fw"></i> <br />
+            
+            书单
+          </a>
+        </li>
+      
+        
         <li class="menu-item menu-item-about">
           <a href="/about" rel="section">
             
@@ -285,7 +295,6 @@
 <p>暂时没看到成熟的 thrift 动态 序列化/反序列化 解决方案。目前的 Thrift 序列化/反序列化都是通过<br>生成代码的方式，每个接口的序列化/反序列化的代码是不一样的，无法做到统一。如果有一套统一的<br>序列化/反序列化工具，就可以写成一个通用的工具，使用者需要重新编码，只需要提供 IDL  文件和 相应的参数即可。</p>
 <p>其实，可以参考 wrk 的 lua 脚本 解决方案。不过可行性待确认。<br>而且这种动态解决方案 一般都会用到反射机制，可能性能不会令人满意。</p>
 <p>其实我们内部写过一个动态 thrift 的库，但是在实测过程中发现 当入参和出参 定义的结构体太过于复杂，导致编解码性能太差，就弃用了。不过我倒觉得这个库可以用在</p>
-<p>本文地址 <a href="http://holys.im/2017/02/18/thoughts-on-thrift-service-load-testing/">http://holys.im/2017/02/18/thoughts-on-thrift-service-load-testing/</a> </p>
 </span>
       
     </div>
