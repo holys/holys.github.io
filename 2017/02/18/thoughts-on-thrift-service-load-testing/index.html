@@ -29,7 +29,7 @@
   <link href="//fonts.lug.ustc.edu.cn/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
 
 
-<link rel="canonical" href="http://holys.im/2015/11/13/profiling/" />
+<link rel="canonical" href="http://holys.im/2017/02/18/thoughts-on-thrift-service-load-testing/" />
 
 
 <link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
@@ -37,7 +37,7 @@
 <link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="go,performance,profiling," />
+  <meta name="keywords" content="load-generator,load-test,thrift," />
 
 
 
@@ -53,21 +53,43 @@
 
 
 
-<meta name="description" content="最近比较流行使用姓名首字母作为头像, 而我们的产品也有类似的需求。有同事写了个头像服务，我看了下目前网上还没有 Go 版的 initials avatar 库， 就想着弄个轮子。 原来的代码可能是写的仓促， 看起来并不是很清晰， 于是我剥离了原来的业务需求，写了个简单的库。本以为自己写的还可以， 结构看起来很清晰， 谁知道，压力测试过程中， 各种panic， 惨不忍睹！
-1234567891011">
+<meta name="description" content="市面上没找到合适的 thrift 服务压测工具，
+
+手写工具因为 thrift 能生成 client 的 sdk， 可以调用，整成一个 cmd但是每个服务的传参都得手写，参数调整也不容易
+
+自动生成代码可以对 压测的代码进行抽象，按模板的方式进行生成代码， 就跟避免重复劳动。
+
+动态 thrift 的方式
+
+
+暂时没看到成熟的 thrift 动态 序列化/反序列化 解决方案。目前的 Thrift">
 <meta property="og:type" content="article">
-<meta property="og:title" content="记一次性能调优">
-<meta property="og:url" content="http://holys.im/2015/11/13/profiling/index.html">
+<meta property="og:title" content="thrift 服务压测工具实现思路">
+<meta property="og:url" content="http://holys.im/2017/02/18/thoughts-on-thrift-service-load-testing/index.html">
 <meta property="og:site_name" content="holys'">
-<meta property="og:description" content="最近比较流行使用姓名首字母作为头像, 而我们的产品也有类似的需求。有同事写了个头像服务，我看了下目前网上还没有 Go 版的 initials avatar 库， 就想着弄个轮子。 原来的代码可能是写的仓促， 看起来并不是很清晰， 于是我剥离了原来的业务需求，写了个简单的库。本以为自己写的还可以， 结构看起来很清晰， 谁知道，压力测试过程中， 各种panic， 惨不忍睹！
-1234567891011">
-<meta property="og:image" content="http://holys.im/images/memory_leak.png">
-<meta property="og:image" content="http://holys.im/images/memory.png">
-<meta property="og:updated_time" content="2017-01-19T08:24:05.000Z">
+<meta property="og:description" content="市面上没找到合适的 thrift 服务压测工具，
+
+手写工具因为 thrift 能生成 client 的 sdk， 可以调用，整成一个 cmd但是每个服务的传参都得手写，参数调整也不容易
+
+自动生成代码可以对 压测的代码进行抽象，按模板的方式进行生成代码， 就跟避免重复劳动。
+
+动态 thrift 的方式
+
+
+暂时没看到成熟的 thrift 动态 序列化/反序列化 解决方案。目前的 Thrift">
+<meta property="og:updated_time" content="2017-02-18T13:39:23.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="记一次性能调优">
-<meta name="twitter:description" content="最近比较流行使用姓名首字母作为头像, 而我们的产品也有类似的需求。有同事写了个头像服务，我看了下目前网上还没有 Go 版的 initials avatar 库， 就想着弄个轮子。 原来的代码可能是写的仓促， 看起来并不是很清晰， 于是我剥离了原来的业务需求，写了个简单的库。本以为自己写的还可以， 结构看起来很清晰， 谁知道，压力测试过程中， 各种panic， 惨不忍睹！
-1234567891011">
+<meta name="twitter:title" content="thrift 服务压测工具实现思路">
+<meta name="twitter:description" content="市面上没找到合适的 thrift 服务压测工具，
+
+手写工具因为 thrift 能生成 client 的 sdk， 可以调用，整成一个 cmd但是每个服务的传参都得手写，参数调整也不容易
+
+自动生成代码可以对 压测的代码进行抽象，按模板的方式进行生成代码， 就跟避免重复劳动。
+
+动态 thrift 的方式
+
+
+暂时没看到成熟的 thrift 动态 序列化/反序列化 解决方案。目前的 Thrift">
 
 
 
@@ -79,7 +101,7 @@
   };
 </script>
 
-  <title> 记一次性能调优 | holys' </title>
+  <title> thrift 服务压测工具实现思路 | holys' </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -218,7 +240,7 @@
             
             
               
-                记一次性能调优
+                thrift 服务压测工具实现思路
               
             
           </h1>
@@ -227,8 +249,8 @@
         <div class="post-meta">
           <span class="post-time">
             发表于
-            <time itemprop="dateCreated" datetime="2015-11-13T12:00:00+08:00" content="2015-11-13">
-              2015-11-13
+            <time itemprop="dateCreated" datetime="2017-02-18T21:36:49+08:00" content="2017-02-18">
+              2017-02-18
             </time>
           </span>
 
@@ -251,28 +273,19 @@
       
 
       
-        <span itemprop="articleBody"><p>  最近比较流行使用姓名首字母作为头像, 而我们的<a href="https://drive.wps.cn" target="_blank" rel="external">产品</a>也有类似的需求。有同事写了个头像服务，我看了下目前网上还没有 Go 版的 initials avatar 库， 就想着弄个轮子。 原来的代码可能是写的仓促， 看起来并不是很清晰， 于是我剥离了原来的业务需求，写了个简单的库。本以为自己写的还可以， 结构看起来很清晰， 谁知道，压力测试过程中， 各种panic， 惨不忍睹！</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#第一次benchmark</span></span><br><span class="line">$ wrk -t12 -c400 -d30s http:<span class="comment">//10.20.142.147:3000/avatar/bdsad</span></span><br><span class="line">Running <span class="number">30</span>s test @ http:<span class="comment">//10.20.142.147:3000/avatar/bdsad</span></span><br><span class="line">  <span class="number">12</span> threads and <span class="number">400</span> connections</span><br><span class="line">  Thread Stats   Avg      Stdev     Max   +/- Stdev</span><br><span class="line">    Latency   <span class="number">337.86</span>ms  <span class="number">349.12</span>ms   <span class="number">1.77</span>s    <span class="number">88.22</span>%</span><br><span class="line">    Req/Sec    <span class="number">73.50</span>     <span class="number">36.62</span>   <span class="number">200.00</span>     <span class="number">66.54</span>%</span><br><span class="line">  <span class="number">26954</span> requests in <span class="number">30.03</span>s, <span class="number">57.89</span>MB read</span><br><span class="line">  Socket errors: connect <span class="number">0</span>, read <span class="number">407</span>, write <span class="number">0</span>, timeout <span class="number">1860</span></span><br><span class="line">  Non-<span class="number">2</span>xx or <span class="number">3</span>xx responses: <span class="number">488</span></span><br><span class="line">Requests/sec:    <span class="number">897.54</span></span><br><span class="line">Transfer/sec:      <span class="number">1.93</span>MB</span><br></pre></td></tr></table></figure>
-<p>从上面的数据看来，性能极其低下。 本着好奇心， 我也对同事的代码压测了。 结果数据(见下面)表明，人家的性能就是棒棒哒！居然是我的性能的13倍！</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ wrk -t12 -c400 -d30s http:<span class="comment">//10.20.142.147:11250/avatar/a</span></span><br><span class="line">Running <span class="number">30</span>s test @ http:<span class="comment">//10.20.142.147:11250/avatar/a</span></span><br><span class="line">  <span class="number">12</span> threads and <span class="number">400</span> connections</span><br><span class="line">  Thread Stats   Avg      Stdev     Max   +/- Stdev</span><br><span class="line">    Latency    <span class="number">33.28</span>ms   <span class="number">35.89</span>ms <span class="number">338.68</span>ms   <span class="number">86.76</span>%</span><br><span class="line">    Req/Sec     <span class="number">1.01</span>k   <span class="number">178.65</span>     <span class="number">1.59</span>k    <span class="number">73.75</span>%</span><br><span class="line">  <span class="number">360226</span> requests in <span class="number">30.00</span>s, <span class="number">625.58</span>MB read</span><br><span class="line">  Socket errors: connect <span class="number">0</span>, read <span class="number">206</span>, write <span class="number">0</span>, timeout <span class="number">0</span></span><br><span class="line">Requests/sec:  <span class="number">12007.53</span></span><br><span class="line">Transfer/sec:     <span class="number">20.85</span>MB</span><br></pre></td></tr></table></figure>
-<p>这种情况下，肯定得对代码进行调优。Go 提供了pprof工具可用于性能分析。我选用了 Dave Cheney 提供的更友好的 <a href="https://github.com/davecheney/profile" target="_blank" rel="external">profile</a>工具。关于profile 的使用， 之前有人写过一篇<a href="https://medium.com/code-adventures/profiling-golang-851db2d9ae24" target="_blank" rel="external">教程</a>, 我同事也写过一篇对其项目 <a href="https://github.com/flike/kingshard/blob/master/doc/KingDoc/kingshard_performance_profiling.md" target="_blank" rel="external">kingshard</a> 进行调优的文章，里面也介绍了profile 的使用， 这里不再赘述。</p>
-<p>看了下代码， 发现有两处写搓了。 <a href="https://github.com/holys/initials-avatar/blob/3106e5b0e9845178156bbbee5bc058b31926daa8/cmd/avatar/main.go#L44" target="_blank" rel="external">其一</a> 是每次来请求都要 new 一个对象，这种做法是不科学的，当时我一定是脑残了。<a href="https://github.com/holys/initials-avatar/blob/3106e5b0e9845178156bbbee5bc058b31926daa8/cmd/avatar/main.go#L54" target="_blank" rel="external">其二</a> 是每次都会对 <code>image.Image</code> 进行 Encode， 这本来就是个耗时的操作， 也是脑残了。</p>
-<p><a href="https://github.com/holys/initials-avatar/commit/b941fb4cd4077b244a512acf94d531e91193440a" target="_blank" rel="external">当时</a>的优化策略是选用 <a href="https://en.wikipedia.org/wiki/LRU" target="_blank" rel="external">LRU</a> 作为缓存。 再次压测， 发现虽然慢了点， 但也不至于会panic 造成服务不可用了。性能也稍微提升了点。但是，难道 LRU的作用就这么有限？ 再次 profiling, 发现还是对 <code>image.Image</code> 进行encode时耗时过多， 而且还有内存泄漏的嫌疑（见下图）</p>
-<p><img src="/images/memory_leak.png" alt=""></p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#第二次benchmark， 使用了LRU</span></span><br><span class="line">$ wrk -t12 -c400 -d30s http:<span class="comment">//10.20.142.147:3000/avatar/a</span></span><br><span class="line">Running <span class="number">30</span>s test @ http:<span class="comment">//10.20.142.147:3000/avatar/a</span></span><br><span class="line">  <span class="number">12</span> threads and <span class="number">400</span> connections</span><br><span class="line">  Thread Stats   Avg      Stdev     Max   +/- Stdev</span><br><span class="line">    Latency   <span class="number">212.30</span>ms  <span class="number">278.73</span>ms   <span class="number">2.67</span>s    <span class="number">86.38</span>%</span><br><span class="line">    Req/Sec   <span class="number">120.37</span>     <span class="number">54.38</span>   <span class="number">249.00</span>     <span class="number">60.72</span>%</span><br><span class="line">  <span class="number">36199</span> requests in <span class="number">30.07</span>s, <span class="number">63.83</span>MB read</span><br><span class="line">  Socket errors: connect <span class="number">0</span>, read <span class="number">187</span>, write <span class="number">1</span>, timeout <span class="number">1953</span></span><br><span class="line">  Non-<span class="number">2</span>xx or <span class="number">3</span>xx responses: <span class="number">1</span></span><br><span class="line">Requests/sec:   <span class="number">1204.01</span></span><br><span class="line">Transfer/sec:      <span class="number">2.12</span>MB</span><br></pre></td></tr></table></figure>
-<p><a href="https://github.com/holys/initials-avatar/commit/f25ea56e8863bb86dfd3d8656d65f310c8c626ce" target="_blank" rel="external">这次</a> 我准备改写逻辑， 不再返回 <code>image.Image</code>, 而是返回转换后的 <code>[]byte</code>, 虽然转换过程也会耗时， 但是我把 LRU 逻辑从 <code>draw.go</code> 移出到 <code>avatar.go</code>。至少有 <code>LRU</code>顶着， 不至于性能很差。</p>
-<p>改好后，再跑一次， 效率惊人。 本来本地跑的服务， 一般是<code>毫秒</code>级别，现在已经到了<code>微秒</code>级别，而且内存占用也还理想（见下图）。性能已经是我同事写的那个的两倍了！</p>
-<p><img src="/images/memory.png" alt=""></p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#第三次benchmark， 改进了LRU的使用</span></span><br><span class="line">$ wrk -t12 -c400 -d30s http:<span class="comment">//10.20.142.147:3000/avatar/a</span></span><br><span class="line">Running <span class="number">30</span>s test @ http:<span class="comment">//10.20.142.147:3000/avatar/a</span></span><br><span class="line">  <span class="number">12</span> threads and <span class="number">400</span> connections</span><br><span class="line">  Thread Stats   Avg      Stdev     Max   +/- Stdev</span><br><span class="line">    Latency    <span class="number">13.97</span>ms   <span class="number">19.39</span>ms <span class="number">146.91</span>ms   <span class="number">95.05</span>%</span><br><span class="line">    Req/Sec     <span class="number">1.94</span>k     <span class="number">0.96</span>k    <span class="number">4.74</span>k    <span class="number">67.19</span>%</span><br><span class="line">  <span class="number">686848</span> requests in <span class="number">30.01</span>s, <span class="number">1.18</span>GB read</span><br><span class="line">  Socket errors: connect <span class="number">0</span>, read <span class="number">200</span>, write <span class="number">24</span>, timeout <span class="number">1873</span></span><br><span class="line">  Non-<span class="number">2</span>xx or <span class="number">3</span>xx responses: <span class="number">1</span></span><br><span class="line">Requests/sec:  <span class="number">22889.01</span></span><br><span class="line">Transfer/sec:     <span class="number">40.36</span>MB</span><br></pre></td></tr></table></figure>
-<p>以上的情况都是开了logger的， 如果关掉logger， 性能更猛，又飙升了一倍，可见写日志是多么的影响性能。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor"># 关闭logger</span></span><br><span class="line">$ wrk -t12 -c400 -d30s http:<span class="comment">//10.20.142.147:3000/avatar/a</span></span><br><span class="line">Running <span class="number">30</span>s test @ http:<span class="comment">//10.20.142.147:3000/avatar/a</span></span><br><span class="line">  <span class="number">12</span> threads and <span class="number">400</span> connections</span><br><span class="line">  Thread Stats   Avg      Stdev     Max   +/- Stdev</span><br><span class="line">    Latency     <span class="number">7.53</span>ms   <span class="number">11.28</span>ms <span class="number">195.48</span>ms   <span class="number">96.19</span>%</span><br><span class="line">    Req/Sec     <span class="number">3.66</span>k     <span class="number">2.29</span>k   <span class="number">47.47</span>k    <span class="number">75.96</span>%</span><br><span class="line">  <span class="number">1285314</span> requests in <span class="number">30.00</span>s, <span class="number">589.60</span>MB read</span><br><span class="line">  Socket errors: connect <span class="number">0</span>, read <span class="number">276</span>, write <span class="number">0</span>, timeout <span class="number">1872</span></span><br><span class="line">  Non-<span class="number">2</span>xx or <span class="number">3</span>xx responses: <span class="number">1</span></span><br><span class="line">Requests/sec:  <span class="number">42849.74</span></span><br><span class="line">Transfer/sec:     <span class="number">19.66</span>MB</span><br></pre></td></tr></table></figure>
-<p>最后， 卖个广告：<a href="https://github.com/holys/initials-avatar" target="_blank" rel="external">initials-avatar</a></p>
-<p>总结：</p>
+        <span itemprop="articleBody"><p>市面上没找到合适的 thrift 服务压测工具，</p>
 <ol>
-<li>写代码要严谨；</li>
-<li>性能出问题不要怕，一步步调优。</li>
+<li><p>手写工具<br>因为 thrift 能生成 client 的 sdk， 可以调用，整成一个 cmd<br>但是每个服务的传参都得手写，参数调整也不容易</p>
+</li>
+<li><p>自动生成代码<br>可以对 压测的代码进行抽象，按模板的方式进行生成代码， 就跟<br>避免重复劳动。</p>
+</li>
+<li><p>动态 thrift 的方式</p>
+</li>
 </ol>
-<p>本文地址 <a href="http://holys.im/2015/11/13/profiling/">http://holys.im/2015/11/13/profiling/</a> </p>
+<p>暂时没看到成熟的 thrift 动态 序列化/反序列化 解决方案。目前的 Thrift 序列化/反序列化都是通过<br>生成代码的方式，每个接口的序列化/反序列化的代码是不一样的，无法做到统一。如果有一套统一的<br>序列化/反序列化工具，就可以写成一个通用的工具，使用者需要重新编码，只需要提供 IDL  文件和 相应的参数即可。</p>
+<p>其实，可以参考 wrk 的 lua 脚本 解决方案。不过可行性待确认。<br>而且这种动态解决方案 一般都会用到反射机制，可能性能不会令人满意。</p>
+<p>其实我们内部写过一个动态 thrift 的库，但是在实测过程中发现 当入参和出参 定义的结构体太过于复杂，导致编解码性能太差，就弃用了。不过我倒觉得这个库可以用在</p>
+<p>本文地址 <a href="http://holys.im/2017/02/18/thoughts-on-thrift-service-load-testing/">http://holys.im/2017/02/18/thoughts-on-thrift-service-load-testing/</a> </p>
 </span>
       
     </div>
@@ -302,11 +315,11 @@
       
         <div class="post-tags">
           
-            <a href="/tags/go/" rel="tag">#go</a>
+            <a href="/tags/load-generator/" rel="tag">#load-generator</a>
           
-            <a href="/tags/performance/" rel="tag">#performance</a>
+            <a href="/tags/load-test/" rel="tag">#load-test</a>
           
-            <a href="/tags/profiling/" rel="tag">#profiling</a>
+            <a href="/tags/thrift/" rel="tag">#thrift</a>
           
         </div>
       
@@ -315,17 +328,13 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/08/03/remote-control-solutions/" rel="next" title="远程连接解决方案">
-                <i class="fa fa-chevron-left"></i> 远程连接解决方案
+              <a href="/2017/02/09/thoughts-on-logging/" rel="next" title="关于日志级别的一些想法">
+                <i class="fa fa-chevron-left"></i> 关于日志级别的一些想法
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2015/11/23/deploy-go-app-to-heroku-md/" rel="prev" title="部署 Go 应用到 Heroku">
-                部署 Go 应用到 Heroku <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>

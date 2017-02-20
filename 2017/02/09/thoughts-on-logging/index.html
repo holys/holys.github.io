@@ -71,7 +71,7 @@ trace 很少用
 debug 的话，应该是开发阶段会用到的。 类似单步调试，只是通过 log 的形式 打印出来。如果写了也不用删掉，反正在线上一般也不会开启 debug level.
 
 notice 或者 info(叫法不一)。以 tcp/">
-<meta property="og:updated_time" content="2017-02-18T13:30:59.000Z">
+<meta property="og:updated_time" content="2017-02-18T15:32:31.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="关于日志级别的一些想法">
 <meta name="twitter:description" content="备注：本文讨论的范畴是服务端日志。
@@ -278,7 +278,7 @@ notice 或者 info(叫法不一)。以 tcp/">
 </ol>
 <p>测试环境建议是 Debug 级别，方便排查问题<br>生产环境一般是 Notice, 特殊情况如大型电商活动期间，访问量非常高，如双11那种，则应该开到 warn 甚至 fatal。<br>而且开发管理后台应具备一键切换到 warn/fatal 级别，以快速响应特殊情况的需求。这个功能在实现上，我觉得在日志收集组件上实现会简单些。</p>
 <p>记住一点： 日志是为了排查问题用的。如果关键时候排不上用场，要你何用！</p>
-<p>以上，是我的一些很初级的想法。会不定期更新此文。</p>
+<p>以上，是我的一些不成熟的想法。会不定期更新此文。</p>
 <p>本文地址 <a href="http://holys.im/2017/02/09/thoughts-on-logging/">http://holys.im/2017/02/09/thoughts-on-logging/</a> </p>
 </span>
       
@@ -325,6 +325,10 @@ notice 或者 info(叫法不一)。以 tcp/">
           </div>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/02/18/thoughts-on-thrift-service-load-testing/" rel="prev" title="thrift 服务压测工具实现思路">
+                thrift 服务压测工具实现思路 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -392,7 +396,7 @@ notice 或者 info(叫法不一)。以 tcp/">
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">23</span>
+              <span class="site-state-item-count">24</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -406,7 +410,7 @@ notice 或者 info(叫法不一)。以 tcp/">
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">36</span>
+              <span class="site-state-item-count">39</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>
