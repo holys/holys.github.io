@@ -13,9 +13,9 @@ comments: false
 - [GitHub](https://github.com/holys)
 - [Stack Overflow](http://stackoverflow.com/users/1297203/holys?tab=profile)
 - [LinkedIn](https://cn.linkedin.com/in/chendahui)
-- [Douban](http://www.douban.com/people/chendahui007/)
+- [Douban](https://book.douban.com/people/chendahui007/)
 - [开发者头条](http://toutiao.io/u/124098)
-
+- [Wechat](/images/wechat_me.png)
 
 Open Source in GitHub:
 - [redis-cli](https://github.com/holys/redis-cli) A pure go redis-cli.

@@ -30,7 +30,9 @@ menu:
   #categories: /categories
   archives: /archives
   tags: /tags
+  booklist: /booklist
   about: /about
+  
   #commonweal: /404.html
 
 
@@ -48,6 +50,7 @@ menu_icons:
   tags: tags
   archives: archive
   commonweal: heartbeat
+  booklist: book
 
 
 
