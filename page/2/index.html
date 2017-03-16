@@ -236,6 +236,100 @@
             
               
                 
+                <a class="post-title-link" href="/2016/09/20/why-rabbitmq-message-not-consumed/" itemprop="url">
+                  记一次 RabbitMQ 消息堆积分析
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            发表于
+            <time itemprop="dateCreated" datetime="2016-09-20T11:39:19+08:00" content="2016-09-20">
+              2016-09-20
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+            背景：
+service_event 服务，是下文提到的消费者服务，会消费 rabbitmq 里面的消息。每个服务起 10 个消费者线程去消费消息，如果连接断开，隔 1秒后会重连。
+
+service_event用到的线上环境的rabbitmq  一览：
+
+
+（A机房的 rabbitmq 是两两节点一个
+            ...
+          </span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/09/20/why-rabbitmq-message-not-consumed/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+     <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/09/20/go-get-in-gitlab/" itemprop="url">
                   如何使用 go get 下载 gitlab 私有项目
                 </a>
@@ -1035,100 +1129,6 @@ CentOS 6, 64 bit
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2015/08/03/remote-control-solutions/" itemprop="url">
-                  远程连接解决方案
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            发表于
-            <time itemprop="dateCreated" datetime="2015-08-03T12:00:00+08:00" content="2015-08-03">
-              2015-08-03
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-            如果需要远程连接， 目的地无外乎两种：
-
-字符终端
-图形终端
-
-如果是字符终端，一般使用 SSH；如果是图形终端，一般是 VNC。二者有个共同点， 即连接方与被连接方需处于同一网络内（比如局域网？），或者被连接方具有公网IP。
-问题来了， 如果上述连接条件都达不到呢？比如你在家里希望连接上公司的网络
-            ...
-          </span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/08/03/remote-control-solutions/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-     <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
 
   </section>
 
@@ -1175,7 +1175,7 @@ CentOS 6, 64 bit
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">23</span>
+              <span class="site-state-item-count">24</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1189,7 +1189,7 @@ CentOS 6, 64 bit
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">39</span>
+              <span class="site-state-item-count">40</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>
