@@ -6,7 +6,9 @@ comments: false
 
 - graduated@GDUFS
 - worked@KINGSOFT 
-- working@XIAOMI
+- worked@XIAOMI
+- working@PingCAP
+
 
 ---
 

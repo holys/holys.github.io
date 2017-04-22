@@ -177,7 +177,7 @@ mathjax:
 #disqus_shortname: holysblog
 
 # Share
-#jiathis:
+jiathis: true
 
 # Share
 #duoshuo_share: true
