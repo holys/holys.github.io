@@ -98,7 +98,7 @@ func watch(kapi *client.KeysAPI, node string, stopChan chan struct{}) error {
 Loop:
 	for {
 	// Next 方法会一直阻塞，直到有事件触发。
-		resp, err := watcher.Next()
+		resp, err := watcher.Next(ctx)
 		if err != nil {
 		// 当 cancel() 被调用，会返回 context.Canceled 错误。
 			if err == context.Canceled {

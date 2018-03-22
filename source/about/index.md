@@ -4,9 +4,11 @@ date: 2015-11-23 14:56:30
 comments: false
 ---
 
+- born@GuangDong
+- living@Beijing
 - graduated@GDUFS
-- worked@KINGSOFT 
-- worked@XIAOMI
+- worked@Kingsoft
+- worked@Xiaomi
 - working@PingCAP
 
 
@@ -30,6 +32,8 @@ Open Source in GitHub:
 
 Contributions in GitHub:
 
+
+- [TiDB](https://github.com/pingcap/tidb/commits?author=holys) TiDB is a distributed HTAP database compatible with the MySQL protocol.
 - [LedisDB](https://github.com/siddontang/ledisdb/commits?author=holys) A high performance NoSQL powered by Go.
 - [Kingshard](https://github.com/flike/kingshard/commits?author=holys) A high-performance MySQL proxy.
 - [goaccess](https://github.com/allinurl/goaccess/commits?author=holys) GoAccess is a real-time web log analyzer and interactive viewer that runs in a terminal in *nix systems.
