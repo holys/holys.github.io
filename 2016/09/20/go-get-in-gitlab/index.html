@@ -37,7 +37,7 @@
 <link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="gitlab,go,tips," />
+  <meta name="keywords" content="go,gitlab,tips," />
 
 
 
@@ -53,31 +53,18 @@
 
 
 
-<meta name="description" content="据此 issue，gitlab 7.8 就开始支持 go get private repo。
-假设 gitlab 服务是： mygitlab.com
-使用方式：
-$ go get -v  mygitlab.com/user/repo
-如果 mygitlab.com 不支持 https, 还得加上 -insecure 参数
-$ go get -v  -insecure  mygitlab.com/u">
+<meta name="description" content="据此 issue，gitlab 7.8 就开始支持 go get private repo。 假设 gitlab 服务是： mygitlab.com 使用方式： $ go get -v  mygitlab.com/user/repo 如果 mygitlab.com 不支持 https, 还得加上 -insecure 参数 $ go get -v  -insecure  mygitlab.com/u">
+<meta name="keywords" content="go,gitlab,tips">
 <meta property="og:type" content="article">
 <meta property="og:title" content="如何使用 go get 下载 gitlab 私有项目">
 <meta property="og:url" content="http://holys.im/2016/09/20/go-get-in-gitlab/index.html">
-<meta property="og:site_name" content="holys'">
-<meta property="og:description" content="据此 issue，gitlab 7.8 就开始支持 go get private repo。
-假设 gitlab 服务是： mygitlab.com
-使用方式：
-$ go get -v  mygitlab.com/user/repo
-如果 mygitlab.com 不支持 https, 还得加上 -insecure 参数
-$ go get -v  -insecure  mygitlab.com/u">
+<meta property="og:site_name" content="holys&#39;">
+<meta property="og:description" content="据此 issue，gitlab 7.8 就开始支持 go get private repo。 假设 gitlab 服务是： mygitlab.com 使用方式： $ go get -v  mygitlab.com/user/repo 如果 mygitlab.com 不支持 https, 还得加上 -insecure 参数 $ go get -v  -insecure  mygitlab.com/u">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2017-01-19T08:23:35.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何使用 go get 下载 gitlab 私有项目">
-<meta name="twitter:description" content="据此 issue，gitlab 7.8 就开始支持 go get private repo。
-假设 gitlab 服务是： mygitlab.com
-使用方式：
-$ go get -v  mygitlab.com/user/repo
-如果 mygitlab.com 不支持 https, 还得加上 -insecure 参数
-$ go get -v  -insecure  mygitlab.com/u">
+<meta name="twitter:description" content="据此 issue，gitlab 7.8 就开始支持 go get private repo。 假设 gitlab 服务是： mygitlab.com 使用方式： $ go get -v  mygitlab.com/user/repo 如果 mygitlab.com 不支持 https, 还得加上 -insecure 参数 $ go get -v  -insecure  mygitlab.com/u">
 
 
 
@@ -271,7 +258,7 @@ $ go get -v  -insecure  mygitlab.com/u">
       
 
       
-        <span itemprop="articleBody"><p>据此 <a href="https://github.com/gitlabhq/gitlabhq/pull/7693" target="_blank" rel="external">issue</a>，gitlab 7.8 就开始支持 go get private repo。</p>
+        <span itemprop="articleBody"><p>据此 <a href="https://github.com/gitlabhq/gitlabhq/pull/7693" target="_blank" rel="noopener">issue</a>，gitlab 7.8 就开始支持 go get private repo。</p>
 <p>假设 gitlab 服务是： mygitlab.com</p>
 <p>使用方式：</p>
 <pre><code>$ <span class="keyword">go</span> <span class="built_in">get</span> -<span class="keyword">v</span>  mygitlab.<span class="keyword">com</span>/user/repo
@@ -286,14 +273,14 @@ $ cat ~/<span class="class">.gitconfig</span>
 
 [url <span class="string">"git@mygitlab.com:"</span>]
     insteadOf = http:<span class="comment">//mygitlab.com/</span>
-</code></pre><p>注意： git@mygitlab.com: 后面有个冒号 <code>:</code>, 且 <a href="http://mygitlab.com" target="_blank" rel="external">http://mygitlab.com</a> 后面有 <code>/</code></p>
+</code></pre><p>注意： <a href="mailto:git@mygitlab.com" target="_blank" rel="noopener">git@mygitlab.com</a>: 后面有个冒号 <code>:</code>, 且 <a href="http://mygitlab.com" target="_blank" rel="noopener">http://mygitlab.com</a> 后面有 <code>/</code></p>
 <p>另外： url.”aaa”.insteadOf “bbb” 是个相当有用的技巧，对 github 同样适用。</p>
 <pre><code>$ git config --global url.<span class="string">"git@github.com:"</span><span class="class">.insteadOf</span> <span class="string">"https://github.com/"</span>
 
 $ cat ~/<span class="class">.gitconfig</span>
 [url <span class="string">"git@github.com:"</span>]
     insteadOf = https:<span class="comment">//github.com/</span>
-</code></pre><p>这样 git clone <a href="https://github.com/golang/go.git" target="_blank" rel="external">https://github.com/golang/go.git</a> 就变成 git clone git@github.com:golang/go.git , 免去输入账号密码的烦恼。</p>
+</code></pre><p>这样 git clone <a href="https://github.com/golang/go.git" target="_blank" rel="noopener">https://github.com/golang/go.git</a> 就变成 git clone <a href="mailto:git@github.com" target="_blank" rel="noopener">git@github.com</a>:golang/go.git , 免去输入账号密码的烦恼。</p>
 <p>总结：</p>
 <ol>
 <li>gitlab &gt;= 7.8</li>
@@ -302,9 +289,9 @@ $ cat ~/<span class="class">.gitconfig</span>
 </ol>
 <p>参考：</p>
 <ol>
-<li><a href="https://gist.github.com/shurcooL/6927554" target="_blank" rel="external">https://gist.github.com/shurcooL/6927554</a></li>
-<li><a href="https://github.com/golang/go/issues/9637" target="_blank" rel="external">https://github.com/golang/go/issues/9637</a></li>
-<li><a href="https://github.com/golang/go/issues/6968" target="_blank" rel="external">https://github.com/golang/go/issues/6968</a></li>
+<li><a href="https://gist.github.com/shurcooL/6927554" target="_blank" rel="noopener">https://gist.github.com/shurcooL/6927554</a></li>
+<li><a href="https://github.com/golang/go/issues/9637" target="_blank" rel="noopener">https://github.com/golang/go/issues/9637</a></li>
+<li><a href="https://github.com/golang/go/issues/6968" target="_blank" rel="noopener">https://github.com/golang/go/issues/6968</a></li>
 </ol>
 <p>本文地址 <a href="http://holys.im/2016/09/20/go-get-in-gitlab/">http://holys.im/2016/09/20/go-get-in-gitlab/</a> </p>
 </span>
@@ -336,9 +323,9 @@ $ cat ~/<span class="class">.gitconfig</span>
       
         <div class="post-tags">
           
-            <a href="/tags/gitlab/" rel="tag">#gitlab</a>
-          
             <a href="/tags/go/" rel="tag">#go</a>
+          
+            <a href="/tags/gitlab/" rel="tag">#gitlab</a>
           
             <a href="/tags/tips/" rel="tag">#tips</a>
           

@@ -53,40 +53,18 @@
 
 
 
-<meta name="description" content="记录下如何部署应用到 Heroku。
-注意: 本文只关注如何部署自己的 GitHub 代码到 Heroku。
-先参考 Heroku 提供的 Demo 了解大概情况。
-
-依赖 godep;
-生成 godep 依赖。 godep save ./… 。不要用 -r 参数;
-包括那些依赖包， 一并提交到github;
-需要Procfile，  web:   app_name  （二进制名称）;
-安装her">
+<meta name="description" content="记录下如何部署应用到 Heroku。 注意: 本文只关注如何部署自己的 GitHub 代码到 Heroku。 先参考 Heroku 提供的 Demo 了解大概情况。  依赖 godep; 生成 godep 依赖。 godep save ./… 。不要用 -r 参数; 包括那些依赖包， 一并提交到github; 需要Procfile，  web:   app_name  （二进制名称）; 安装her">
+<meta name="keywords" content="go,heroku">
 <meta property="og:type" content="article">
 <meta property="og:title" content="部署 Go 应用到 Heroku">
 <meta property="og:url" content="http://holys.im/2015/11/23/deploy-go-app-to-heroku-md/index.html">
-<meta property="og:site_name" content="holys'">
-<meta property="og:description" content="记录下如何部署应用到 Heroku。
-注意: 本文只关注如何部署自己的 GitHub 代码到 Heroku。
-先参考 Heroku 提供的 Demo 了解大概情况。
-
-依赖 godep;
-生成 godep 依赖。 godep save ./… 。不要用 -r 参数;
-包括那些依赖包， 一并提交到github;
-需要Procfile，  web:   app_name  （二进制名称）;
-安装her">
+<meta property="og:site_name" content="holys&#39;">
+<meta property="og:description" content="记录下如何部署应用到 Heroku。 注意: 本文只关注如何部署自己的 GitHub 代码到 Heroku。 先参考 Heroku 提供的 Demo 了解大概情况。  依赖 godep; 生成 godep 依赖。 godep save ./… 。不要用 -r 参数; 包括那些依赖包， 一并提交到github; 需要Procfile，  web:   app_name  （二进制名称）; 安装her">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2017-01-19T08:24:01.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="部署 Go 应用到 Heroku">
-<meta name="twitter:description" content="记录下如何部署应用到 Heroku。
-注意: 本文只关注如何部署自己的 GitHub 代码到 Heroku。
-先参考 Heroku 提供的 Demo 了解大概情况。
-
-依赖 godep;
-生成 godep 依赖。 godep save ./… 。不要用 -r 参数;
-包括那些依赖包， 一并提交到github;
-需要Procfile，  web:   app_name  （二进制名称）;
-安装her">
+<meta name="twitter:description" content="记录下如何部署应用到 Heroku。 注意: 本文只关注如何部署自己的 GitHub 代码到 Heroku。 先参考 Heroku 提供的 Demo 了解大概情况。  依赖 godep; 生成 godep 依赖。 godep save ./… 。不要用 -r 参数; 包括那些依赖包， 一并提交到github; 需要Procfile，  web:   app_name  （二进制名称）; 安装her">
 
 
 
@@ -280,22 +258,22 @@
       
 
       
-        <span itemprop="articleBody"><p>记录下如何部署应用到 <a href="https://www.heroku.com" target="_blank" rel="external">Heroku</a>。</p>
+        <span itemprop="articleBody"><p>记录下如何部署应用到 <a href="https://www.heroku.com" target="_blank" rel="noopener">Heroku</a>。</p>
 <p><strong>注意</strong>: 本文只关注如何部署自己的 GitHub 代码到 Heroku。</p>
-<p>先参考 Heroku 提供的 <a href="https://github.com/heroku/go-getting-started" target="_blank" rel="external">Demo</a> 了解大概情况。</p>
+<p>先参考 Heroku 提供的 <a href="https://github.com/heroku/go-getting-started" target="_blank" rel="noopener">Demo</a> 了解大概情况。</p>
 <ol>
-<li>依赖 <a href="https://github.com/tools/godep" target="_blank" rel="external">godep</a>;</li>
+<li>依赖 <a href="https://github.com/tools/godep" target="_blank" rel="noopener">godep</a>;</li>
 <li>生成 godep 依赖。 godep save ./… 。不要用 -r 参数;</li>
 <li>包括那些依赖包， 一并提交到github;</li>
 <li>需要Procfile，  web:   app_name  （二进制名称）;</li>
-<li>安装<a href="https://toolbelt.heroku.com/" target="_blank" rel="external">heroku cli</a>，  可以看log。</li>
+<li>安装<a href="https://toolbelt.heroku.com/" target="_blank" rel="noopener">heroku cli</a>，  可以看log。</li>
 </ol>
 <p>调整代码， 主要是调整启动服务的端口。</p>
-<figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">port</span> := <span class="keyword">os</span>.Getenv(<span class="string">"PORT"</span>)</span><br><span class="line">if <span class="keyword">port</span> == <span class="string">""</span> &#123;</span><br><span class="line">		<span class="keyword">log</span>.Fatal(<span class="string">"$PORT must be set"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">port := os.Getenv(<span class="string">"PORT"</span>)</span><br><span class="line"><span class="keyword">if</span><span class="built_in"> port </span>== <span class="string">""</span> &#123;</span><br><span class="line">		log.Fatal(<span class="string">"<span class="variable">$PORT</span> must be set"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>先在本地试试能不能启动。如果本地都不能正常运行， 在 Heroku上也是会失败的。</p>
 <figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">heroku <span class="keyword">local</span></span><br></pre></td></tr></table></figure>
 <p>正常启动会看到类似下面的信息）：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">forego | starting web<span class="number">.1</span> on port <span class="number">5000</span></span><br><span class="line">web<span class="number">.1</span>  | starting at :<span class="number">5000</span> ...</span><br></pre></td></tr></table></figure>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">forego | starting web.1 on<span class="built_in"> port </span>5000</span><br><span class="line">web.1  | starting at :5000 <span class="built_in">..</span>.</span><br></pre></td></tr></table></figure>
 <p>Heroku 默认使用 <code>5000</code> 端口。 <code>heroku</code> 命令行工具会自动提供 <code>$PORT</code> 环境变量，不用手动设置。</p>
 <p>上述操作都是调整程序本身， 下面去 heroku 的 dashboard 创建应用。</p>
 <ol>
@@ -314,17 +292,19 @@
 <p>TIPS: 看日志往往能解决 99% 的问题。</p>
 </blockquote>
 <p>如果发现是 </p>
-<figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">at=error code=<span class="type">H14</span> desc=<span class="string">"No web processes running"</span> <span class="keyword">method</span>=<span class="type">GET</span> path=<span class="string">"/favicon.ico"</span> host=initials.herokuapp.com request_id=<span class="number">4</span>eea4848-<span class="number">47</span>e9-<span class="number">4</span>c78-baf2-<span class="number">1</span>c90c1c98980 fwd=<span class="string">"120.31.68.166"</span> dyno= connect= service= status=<span class="number">503</span> bytes=</span><br></pre></td></tr></table></figure>
-<p>查询<a href="https://devcenter.heroku.com/articles/error-codes#h14-no-web-dynos-running" target="_blank" rel="external">文档</a>， 发现是 </p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">at</span>=error <span class="attribute">code</span>=H14 <span class="attribute">desc</span>=<span class="string">"No web processes running"</span> <span class="attribute">method</span>=GET <span class="attribute">path</span>=<span class="string">"/favicon.ico"</span> <span class="attribute">host</span>=initials.herokuapp.com <span class="attribute">request_id</span>=4eea4848-47e9-4c78-baf2-1c90c1c98980 <span class="attribute">fwd</span>=<span class="string">"120.31.68.166"</span> dyno= connect= service= <span class="attribute">status</span>=503 bytes=</span><br></pre></td></tr></table></figure>
+<p>查询<a href="https://devcenter.heroku.com/articles/error-codes#h14-no-web-dynos-running" target="_blank" rel="noopener">文档</a>， 发现是 </p>
 <blockquote>
 <h3 id="H14_-_No_web_dynos_running">H14 - No web dynos running</h3><p>This is most likely the result of scaling your web dynos down to 0 dynos. To fix it, scale your web dynos to 1 or more dynos:</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ heroku ps:scale web=<span class="number">1</span></span><br></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ heroku ps:scale <span class="attribute">web</span>=1</span><br></pre></td></tr></table></figure>
 </blockquote>
 <p>执行上面的命令修复即可。    </p>
 <p>参考：</p>
 <ol>
-<li><a href="http://blog.anthonyringoet.be/heroku-no-web-processes-running/" target="_blank" rel="external">http://blog.anthonyringoet.be/heroku-no-web-processes-running/</a></li>
-<li><a href="https://devcenter.heroku.com/articles/log-runtime-metrics#enabl" target="_blank" rel="external">https://devcenter.heroku.com/articles/log-runtime-metrics#enabl</a></li>
+<li><a href="http://blog.anthonyringoet.be/heroku-no-web-processes-running/" target="_blank" rel="noopener">http://blog.anthonyringoet.be/heroku-no-web-processes-running/</a></li>
+<li><a href="https://devcenter.heroku.com/articles/log-runtime-metrics#enabl" target="_blank" rel="noopener">https://devcenter.heroku.com/articles/log-runtime-metrics#enabl</a></li>
 </ol>
 <p>本文地址 <a href="http://holys.im/2015/11/23/deploy-go-app-to-heroku-md/">http://holys.im/2015/11/23/deploy-go-app-to-heroku-md/</a> </p>
 </span>

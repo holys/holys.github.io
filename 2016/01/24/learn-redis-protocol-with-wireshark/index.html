@@ -54,11 +54,13 @@
 
 
 <meta name="description" content="如果想要和 redis 打交道， 譬如实现某种语言的 redis 的客户端， 实现 redis 的 proxy，都得懂 redis 的数据序列化协议 REdis Serialization Protocol(RESP)(MySQL 同理). Redis使用 TCP 作为其数据传输协议，而分析 TCP 包就不得不祭出 wireshark 这个神器了。 虽然wireshark 可以分析 TCP 包，">
+<meta name="keywords" content="redis,wireshark">
 <meta property="og:type" content="article">
 <meta property="og:title" content="使用 wireshark 分析 redis 协议">
 <meta property="og:url" content="http://holys.im/2016/01/24/learn-redis-protocol-with-wireshark/index.html">
-<meta property="og:site_name" content="holys'">
+<meta property="og:site_name" content="holys&#39;">
 <meta property="og:description" content="如果想要和 redis 打交道， 譬如实现某种语言的 redis 的客户端， 实现 redis 的 proxy，都得懂 redis 的数据序列化协议 REdis Serialization Protocol(RESP)(MySQL 同理). Redis使用 TCP 作为其数据传输协议，而分析 TCP 包就不得不祭出 wireshark 这个神器了。 虽然wireshark 可以分析 TCP 包，">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://holys.im/images/wireshark.png">
 <meta property="og:image" content="http://holys.im/images/C745546B-D7AD-42E1-863A-43A8141B460B.png">
 <meta property="og:image" content="http://holys.im/images/F145FAE4-FBB8-4E05-869D-42A379B47420.png">
@@ -68,6 +70,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用 wireshark 分析 redis 协议">
 <meta name="twitter:description" content="如果想要和 redis 打交道， 譬如实现某种语言的 redis 的客户端， 实现 redis 的 proxy，都得懂 redis 的数据序列化协议 REdis Serialization Protocol(RESP)(MySQL 同理). Redis使用 TCP 作为其数据传输协议，而分析 TCP 包就不得不祭出 wireshark 这个神器了。 虽然wireshark 可以分析 TCP 包，">
+<meta name="twitter:image" content="http://holys.im/images/wireshark.png">
 
 
 
@@ -261,7 +264,7 @@
       
 
       
-        <span itemprop="articleBody"><p>如果想要和 redis 打交道， 譬如实现某种语言的 redis 的客户端， 实现 redis 的 proxy，都得懂 redis 的数据序列化协议 <a href="http://redis.io/topics/protocol" target="_blank" rel="external">REdis Serialization Protocol(RESP)</a>(MySQL 同理). Redis使用 TCP 作为其数据传输协议，而分析 TCP 包就不得不祭出 wireshark 这个神器了。 虽然wireshark 可以分析 TCP 包， 但是直接看 TCP 包不是那么直观的看出与 redis 的关系的。此时，我们将借助 <a href="https://github.com/jzwinck/redis-wireshark" target="_blank" rel="external">Redis-wireshark</a> 这个wireshark 插件来分析协议。</p>
+        <span itemprop="articleBody"><p>如果想要和 redis 打交道， 譬如实现某种语言的 redis 的客户端， 实现 redis 的 proxy，都得懂 redis 的数据序列化协议 <a href="http://redis.io/topics/protocol" target="_blank" rel="noopener">REdis Serialization Protocol(RESP)</a>(MySQL 同理). Redis使用 TCP 作为其数据传输协议，而分析 TCP 包就不得不祭出 wireshark 这个神器了。 虽然wireshark 可以分析 TCP 包， 但是直接看 TCP 包不是那么直观的看出与 redis 的关系的。此时，我们将借助 <a href="https://github.com/jzwinck/redis-wireshark" target="_blank" rel="noopener">Redis-wireshark</a> 这个wireshark 插件来分析协议。</p>
 <h2 id="备注">备注</h2><ol>
 <li>我当前所用的 redis 版本是 2.8。</li>
 <li>本文只是分析 C-S 模型的 redis server 的协议。redis cluster 是另一套二进制协议。</li>
@@ -269,7 +272,9 @@
 <h2 id="Tips">Tips</h2><p>如果redis-server 和 redis-cli 都是运行在本机, wireshark 应该使用 <code>loopback</code>这个虚拟接口来查看数据。至于原因， wireshark 的文档是这么解释的：</p>
 <blockquote>
 <p>If you are trying to capture traffic from a machine to itself, that traffic will not be sent over a real network interface, even if it’s being sent to an address on one of the machine’s network adapters. This means that you will not see it if you are trying to capture on, for example, the interface device for the adapter to which the destination address is assigned. You will only see it if you capture on the “loopback interface”, if there is such an interface and it is possible to capture on it; </p>
-<p><a href="https://wiki.wireshark.org/CaptureSetup/Loopback" target="_blank" rel="external">https://wiki.wireshark.org/CaptureSetup/Loopback</a></p>
+</blockquote>
+<blockquote>
+<p><a href="https://wiki.wireshark.org/CaptureSetup/Loopback" target="_blank" rel="noopener">https://wiki.wireshark.org/CaptureSetup/Loopback</a></p>
 </blockquote>
 <p><img src="/images/wireshark.png" alt="wireshark"></p>
 <h2 id="分析过程">分析过程</h2><p>redis 使用第一个字符来区分不同的数据类型</p>
@@ -283,13 +288,13 @@
 <p>使用<code>\r\n</code> CRLF 字符来表示结尾</p>
 <p>举例：</p>
 <p>1、 Simple string</p>
-<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">+OK<span class="command">\r</span><span class="command">\n</span></span><br><span class="line">+PONG<span class="command">\r</span><span class="command">\n</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight taggerscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">+OK<span class="symbol">\r</span><span class="symbol">\n</span></span><br><span class="line">+PONG<span class="symbol">\r</span><span class="symbol">\n</span></span><br></pre></td></tr></table></figure>
 <p><img src="/images/C745546B-D7AD-42E1-863A-43A8141B460B.png" alt="C745546B-D7AD-42E1-863A-43A8141B460B"></p>
 <p>2、 error</p>
-<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-ERR unknown <span class="command"><span class="keyword">command</span> ‘<span class="title">ada</span>’\<span class="title">r</span>\<span class="title">n</span></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-ERR unknown <span class="keyword">command</span> ‘<span class="title">ada</span>’\<span class="title">r</span>\<span class="title">n</span></span><br></pre></td></tr></table></figure>
 <p><img src="/images/F145FAE4-FBB8-4E05-869D-42A379B47420.png" alt="F145FAE4-FBB8-4E05-869D-42A379B47420"></p>
 <p>3、 integer<br>删除一个不存在的key, 返回了下面的内容</p>
-<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:0<span class="command">\r</span><span class="command">\n</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight taggerscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:0<span class="symbol">\r</span><span class="symbol">\n</span></span><br></pre></td></tr></table></figure>
 <p><img src="/images/229DCAA5-60D7-4EBD-9842-4E601818D1F4.png" alt="229DCAA5-60D7-4EBD-9842-4E601818D1F4"></p>
 <p>4、 bulk srting<br>bulk string 用来表示一个<code>二进制安全</code>的字符。<br>其编码结构是：</p>
 <ol>
@@ -305,7 +310,7 @@
 <li>多个用 bulk string 表示元素</li>
 </ol>
 <p>客户端发送的内容 都是用 array 表示<br>如：发送 ping 命令</p>
-<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">*1<span class="command">\r</span><span class="command">\n</span><span class="formula">$4<span class="command">\r</span><span class="command">\nping</span><span class="command">\r</span><span class="command">\n</span></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight taggerscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">*1<span class="symbol">\r</span><span class="symbol">\n</span>$4<span class="symbol">\r</span><span class="symbol">\n</span>ping<span class="symbol">\r</span><span class="symbol">\n</span></span><br></pre></td></tr></table></figure>
 <p><img src="/images/2CCA3B72-CD20-4B8F-BA83-E9BF4E925986.png" alt="2CCA3B72-CD20-4B8F-BA83-E9BF4E925986"></p>
 <h2 id="小结">小结</h2><p>明白了 redis 的协议之后，我们就可以尝试编写一个 redis client 了。下篇我会尝试去讲述如何写一个简单的 redis client。其实写 client 只需要关心如何encode， decode 是服务端需要做的事情。当然 client 还需要关心连接池等问题。敬请期待！</p>
 <p>本文地址 <a href="http://holys.im/2016/01/24/learn-redis-protocol-with-wireshark/">http://holys.im/2016/01/24/learn-redis-protocol-with-wireshark/</a> </p>

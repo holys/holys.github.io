@@ -37,7 +37,7 @@
 <link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="charles,chrome,tool," />
+  <meta name="keywords" content="tool,charles,chrome," />
 
 
 
@@ -53,30 +53,21 @@
 
 
 
-<meta name="description" content="我之前一直用 Charles 这个抓包软件来分析 HTTP 请求。而对于浏览器（这里特指Chrome）的抓包， 我通常使用 Proxy-SwitchySharp 这款插件来辅助。
-突然有一天，上面这个搭配没法工作了（提供 HTTPS 的网站才会这样）！浏览器提示：
-Server has a weak ephemeral Diffie-Hellman public key
-
-看样子是服务端的 HTT">
+<meta name="description" content="我之前一直用 Charles 这个抓包软件来分析 HTTP 请求。而对于浏览器（这里特指Chrome）的抓包， 我通常使用 Proxy-SwitchySharp 这款插件来辅助。 突然有一天，上面这个搭配没法工作了（提供 HTTPS 的网站才会这样）！浏览器提示： Server has a weak ephemeral Diffie-Hellman public key  看样子是服务端的 HTT">
+<meta name="keywords" content="tool,charles,chrome">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Charles Work Around">
 <meta property="og:url" content="http://holys.im/2015/11/29/charles-work-around/index.html">
-<meta property="og:site_name" content="holys'">
-<meta property="og:description" content="我之前一直用 Charles 这个抓包软件来分析 HTTP 请求。而对于浏览器（这里特指Chrome）的抓包， 我通常使用 Proxy-SwitchySharp 这款插件来辅助。
-突然有一天，上面这个搭配没法工作了（提供 HTTPS 的网站才会这样）！浏览器提示：
-Server has a weak ephemeral Diffie-Hellman public key
-
-看样子是服务端的 HTT">
+<meta property="og:site_name" content="holys&#39;">
+<meta property="og:description" content="我之前一直用 Charles 这个抓包软件来分析 HTTP 请求。而对于浏览器（这里特指Chrome）的抓包， 我通常使用 Proxy-SwitchySharp 这款插件来辅助。 突然有一天，上面这个搭配没法工作了（提供 HTTPS 的网站才会这样）！浏览器提示： Server has a weak ephemeral Diffie-Hellman public key  看样子是服务端的 HTT">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://holys.im/images/chrome.png">
 <meta property="og:image" content="http://holys.im/images/confirm.png">
 <meta property="og:updated_time" content="2016-10-20T16:52:29.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Charles Work Around">
-<meta name="twitter:description" content="我之前一直用 Charles 这个抓包软件来分析 HTTP 请求。而对于浏览器（这里特指Chrome）的抓包， 我通常使用 Proxy-SwitchySharp 这款插件来辅助。
-突然有一天，上面这个搭配没法工作了（提供 HTTPS 的网站才会这样）！浏览器提示：
-Server has a weak ephemeral Diffie-Hellman public key
-
-看样子是服务端的 HTT">
+<meta name="twitter:description" content="我之前一直用 Charles 这个抓包软件来分析 HTTP 请求。而对于浏览器（这里特指Chrome）的抓包， 我通常使用 Proxy-SwitchySharp 这款插件来辅助。 突然有一天，上面这个搭配没法工作了（提供 HTTPS 的网站才会这样）！浏览器提示： Server has a weak ephemeral Diffie-Hellman public key  看样子是服务端的 HTT">
+<meta name="twitter:image" content="http://holys.im/images/chrome.png">
 
 
 
@@ -270,23 +261,23 @@ Server has a weak ephemeral Diffie-Hellman public key
       
 
       
-        <span itemprop="articleBody"><p>我之前一直用 <a href="https://www.charlesproxy.com/" target="_blank" rel="external">Charles</a> 这个抓包软件来分析 HTTP 请求。而对于浏览器（这里特指Chrome）的抓包， 我通常使用 <a href="https://chrome.google.com/webstore/detail/proxy-switchysharp/dpplabbmogkhghncfbfdeeokoefdjegm" target="_blank" rel="external">Proxy-SwitchySharp</a> 这款插件来辅助。</p>
+        <span itemprop="articleBody"><p>我之前一直用 <a href="https://www.charlesproxy.com/" target="_blank" rel="noopener">Charles</a> 这个抓包软件来分析 HTTP 请求。而对于浏览器（这里特指Chrome）的抓包， 我通常使用 <a href="https://chrome.google.com/webstore/detail/proxy-switchysharp/dpplabbmogkhghncfbfdeeokoefdjegm" target="_blank" rel="noopener">Proxy-SwitchySharp</a> 这款插件来辅助。</p>
 <p>突然有一天，上面这个搭配没法工作了（提供 HTTPS 的网站才会这样）！浏览器提示：</p>
 <p>Server has a weak ephemeral Diffie-Hellman public key</p>
 <p><img src="/images/chrome.png" alt=""></p>
 <p>看样子是服务端的 HTTPS 安全级别不够高，被浏览器禁止访问了。</p>
-<p>于是我按图索骥， Google 了一下，发现很多人也遇到<a href="http://stackoverflow.com/questions/30942288/server-has-a-weak-ephemeral-diffie-hellman-public-key-how-to-by-pass-it" target="_blank" rel="external">类似问题</a>。别人的出发点也跟我一样， 就是 bypass it。 毕竟花时间研究代码比折腾这种东西有意义多了。</p>
+<p>于是我按图索骥， Google 了一下，发现很多人也遇到<a href="http://stackoverflow.com/questions/30942288/server-has-a-weak-ephemeral-diffie-hellman-public-key-how-to-by-pass-it" target="_blank" rel="noopener">类似问题</a>。别人的出发点也跟我一样， 就是 bypass it。 毕竟花时间研究代码比折腾这种东西有意义多了。</p>
 <p>很显然，最简单暴力的方式就是通过给浏览器添加启动参数来绕过检查。</p>
 <p>Mac 下面是这样处理：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">open /Applications/Google\ Chrome.app --args --cipher-suite-blacklist=<span class="number">0x0088</span>,<span class="number">0x0087</span>,<span class="number">0x0039</span>,<span class="number">0x0038</span>,<span class="number">0x0044</span>,<span class="number">0x0045</span>,<span class="number">0x0066</span>,<span class="number">0x0032</span>,<span class="number">0x0033</span>,<span class="number">0x0016</span>,<span class="number">0x0013</span></span><br></pre></td></tr></table></figure>
-<p>其他平台的解决方案请参考 SO 上面的<a href="http://stackoverflow.com/questions/30942288/server-has-a-weak-ephemeral-diffie-hellman-public-key-how-to-by-pass-it/" target="_blank" rel="external">回答</a>。</p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">open /Applications/Google\ Chrome.app --args --cipher-suite-blacklist=<span class="number">0x0088</span>,<span class="number">0x0087</span>,<span class="number">0x0039</span>,<span class="number">0x0038</span>,<span class="number">0x0044</span>,<span class="number">0x0045</span>,<span class="number">0x0066</span>,<span class="number">0x0032</span>,<span class="number">0x0033</span>,<span class="number">0x0016</span>,<span class="number">0x0013</span></span><br></pre></td></tr></table></figure>
+<p>其他平台的解决方案请参考 SO 上面的<a href="http://stackoverflow.com/questions/30942288/server-has-a-weak-ephemeral-diffie-hellman-public-key-how-to-by-pass-it/" target="_blank" rel="noopener">回答</a>。</p>
 <p>但是每次这么启动浏览器， 不太方便吧。 我找到 Chrome的安装目录。修改下启动 App的方式，让其自动带上参数。</p>
 <p>Chrome 的安装目录通常是： </p>
-<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="regexp">/Applications/G</span>oogle\ Chrome.app</span><br></pre></td></tr></table></figure>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="regexp">/Applications/</span>Google\ Chrome.app</span><br></pre></td></tr></table></figure>
 <p>而我的是通过 brew cask install google-chrome 来安装的。 </p>
 <p>通过 brew cask info google-chrome 得知我的 Chrome 目录是： /opt/homebrew-cask/Caskroom/google-chrome/latest。 真正的二进制文件在 /opt/homebrew-cask/Caskroom/google-chrome/latest/Google Chrome.app/Contents/MacOS/Google\ Chrome。</p>
 <p>我将其重命名为 Google\ Chrome.real （随意起个名字），然后用一个 shell 脚本来代替之前的二进制， 并赋予执行权限。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ cat Google\ Chrome</span><br><span class="line"><span class="preprocessor">#!/bin/bash</span></span><br><span class="line">/opt/homebrew-cask/Caskroom/google-chrome/latest/Google\ Chrome.app/Contents/MacOS/Google\ Chrome.real -a -D --args --cipher-suite-blacklist=<span class="number">0x0088</span>,<span class="number">0x0087</span>,<span class="number">0x0039</span>,<span class="number">0x0038</span>,<span class="number">0x0044</span>,<span class="number">0x0045</span>,<span class="number">0x0066</span>,<span class="number">0x0032</span>,<span class="number">0x0033</span>,<span class="number">0x0016</span>,<span class="number">0x0013</span></span><br><span class="line"></span><br><span class="line">$ chmod +x Google\ Chrome</span><br></pre></td></tr></table></figure>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ cat Google\ Chrome</span><br><span class="line">#!/bin/bash</span><br><span class="line">/opt/homebrew-cask/Caskroom/google-chrome/latest/Google\ Chrome.app/Contents/MacOS/Google\ Chrome.real -a -D --args --cipher-suite-blacklist=<span class="number">0x0088</span>,<span class="number">0x0087</span>,<span class="number">0x0039</span>,<span class="number">0x0038</span>,<span class="number">0x0044</span>,<span class="number">0x0045</span>,<span class="number">0x0066</span>,<span class="number">0x0032</span>,<span class="number">0x0033</span>,<span class="number">0x0016</span>,<span class="number">0x0013</span></span><br><span class="line"></span><br><span class="line">$ chmod +x Google\ Chrome</span><br></pre></td></tr></table></figure>
 <p>不过， 还是不够完美，因为会弹窗：</p>
 <p><img src="/images/confirm.png" alt=""></p>
 <p>先这样吧。</p>
@@ -320,11 +311,11 @@ Server has a weak ephemeral Diffie-Hellman public key
       
         <div class="post-tags">
           
+            <a href="/tags/tool/" rel="tag">#tool</a>
+          
             <a href="/tags/charles/" rel="tag">#charles</a>
           
             <a href="/tags/chrome/" rel="tag">#chrome</a>
-          
-            <a href="/tags/tool/" rel="tag">#tool</a>
           
         </div>
       

@@ -37,7 +37,7 @@
 <link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="dlite,docker," />
+  <meta name="keywords" content="docker,dlite," />
 
 
 
@@ -53,22 +53,18 @@
 
 
 
-<meta name="description" content="前方高能提醒：如果你的系统小于 OS X Yosemite (10.10.3)，且不准备升级到符合条件的版本，就不用往下看了。
-Dlite 是什么？早在2013年底，笔者实习的时候就开始玩 docker，只是那时 docker 还是 dotCloud(现已卖掉，改名为 Docker.Inc)员工的业余项目，还很不成熟。转眼间到了2016年，又准备重新捡起来。
-使用 Mac OSX 系统的同学应该都">
+<meta name="description" content="前方高能提醒：如果你的系统小于 OS X Yosemite (10.10.3)，且不准备升级到符合条件的版本，就不用往下看了。 Dlite 是什么？早在2013年底，笔者实习的时候就开始玩 docker，只是那时 docker 还是 dotCloud(现已卖掉，改名为 Docker.Inc)员工的业余项目，还很不成熟。转眼间到了2016年，又准备重新捡起来。 使用 Mac OSX 系统的同学应该都">
+<meta name="keywords" content="docker,dlite">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Simplifying Docker on OS X With Dlite">
 <meta property="og:url" content="http://holys.im/2016/02/22/run-docker-on-osx-with-dlite/index.html">
-<meta property="og:site_name" content="holys'">
-<meta property="og:description" content="前方高能提醒：如果你的系统小于 OS X Yosemite (10.10.3)，且不准备升级到符合条件的版本，就不用往下看了。
-Dlite 是什么？早在2013年底，笔者实习的时候就开始玩 docker，只是那时 docker 还是 dotCloud(现已卖掉，改名为 Docker.Inc)员工的业余项目，还很不成熟。转眼间到了2016年，又准备重新捡起来。
-使用 Mac OSX 系统的同学应该都">
+<meta property="og:site_name" content="holys&#39;">
+<meta property="og:description" content="前方高能提醒：如果你的系统小于 OS X Yosemite (10.10.3)，且不准备升级到符合条件的版本，就不用往下看了。 Dlite 是什么？早在2013年底，笔者实习的时候就开始玩 docker，只是那时 docker 还是 dotCloud(现已卖掉，改名为 Docker.Inc)员工的业余项目，还很不成熟。转眼间到了2016年，又准备重新捡起来。 使用 Mac OSX 系统的同学应该都">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2017-01-07T03:39:49.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Simplifying Docker on OS X With Dlite">
-<meta name="twitter:description" content="前方高能提醒：如果你的系统小于 OS X Yosemite (10.10.3)，且不准备升级到符合条件的版本，就不用往下看了。
-Dlite 是什么？早在2013年底，笔者实习的时候就开始玩 docker，只是那时 docker 还是 dotCloud(现已卖掉，改名为 Docker.Inc)员工的业余项目，还很不成熟。转眼间到了2016年，又准备重新捡起来。
-使用 Mac OSX 系统的同学应该都">
+<meta name="twitter:description" content="前方高能提醒：如果你的系统小于 OS X Yosemite (10.10.3)，且不准备升级到符合条件的版本，就不用往下看了。 Dlite 是什么？早在2013年底，笔者实习的时候就开始玩 docker，只是那时 docker 还是 dotCloud(现已卖掉，改名为 Docker.Inc)员工的业余项目，还很不成熟。转眼间到了2016年，又准备重新捡起来。 使用 Mac OSX 系统的同学应该都">
 
 
 
@@ -264,14 +260,14 @@ Dlite 是什么？早在2013年底，笔者实习的时候就开始玩 docker，
       
         <span itemprop="articleBody"><p><em>前方高能提醒</em>：如果你的系统小于 OS X Yosemite (10.10.3)，且不准备升级到符合条件的版本，就不用往下看了。</p>
 <h2 id="Dlite_是什么？">Dlite 是什么？</h2><p>早在2013年底，笔者实习的时候就开始玩 docker，只是那时 docker 还是 dotCloud(现已卖掉，改名为 Docker.Inc)员工的业余项目，还很不成熟。转眼间到了2016年，又准备重新捡起来。</p>
-<p>使用 Mac OSX 系统的同学应该都知道，docker 是没有原生支持 OS X 系统的，要么通过 <a href="https://github.com/boot2docker/boot2docker" target="_blank" rel="external">boot2docker</a>, 要么通过 <a href="https://docs.docker.com/machine/" target="_blank" rel="external">docker-machine</a>， 二者有个共同点：依赖 VM（如 virtualbox）来运行一个 linux 虚拟机， 然后虚拟机跑着 docker daemon。然而 virtualbox 并不是个轻量级的虚拟化方案，对于我这种使用乞丐版 MBP的人来说，不太方便。用着15寸高配 Macbook Pro 的土豪请随意 :)</p>
-<p>今天我们要介绍的主角是：<a href="https://github.com/nlf/dlite" target="_blank" rel="external">Dlite</a>。Dlite 是什么呢? 这里直接引用 Dlite 项目文档的介绍：</p>
+<p>使用 Mac OSX 系统的同学应该都知道，docker 是没有原生支持 OS X 系统的，要么通过 <a href="https://github.com/boot2docker/boot2docker" target="_blank" rel="noopener">boot2docker</a>, 要么通过 <a href="https://docs.docker.com/machine/" target="_blank" rel="noopener">docker-machine</a>， 二者有个共同点：依赖 VM（如 virtualbox）来运行一个 linux 虚拟机， 然后虚拟机跑着 docker daemon。然而 virtualbox 并不是个轻量级的虚拟化方案，对于我这种使用乞丐版 MBP的人来说，不太方便。用着15寸高配 Macbook Pro 的土豪请随意 :)</p>
+<p>今天我们要介绍的主角是：<a href="https://github.com/nlf/dlite" target="_blank" rel="noopener">Dlite</a>。Dlite 是什么呢? 这里直接引用 Dlite 项目文档的介绍：</p>
 <blockquote>
 <p>DLite leverages xhyve through the libxhyve Go bindings for virtualization.</p>
 </blockquote>
-<p>大意是： 得益于 <a href="https://github.com/mist64/xhyve" target="_blank" rel="external">xhyve</a> 和基于go封装后的 <a href="https://github.com/TheNewNormal/libxhyve" target="_blank" rel="external">libxhyve</a> 两个项目才有了 Dlite 的诞生（妹子帮我译的 😄）。</p>
+<p>大意是： 得益于 <a href="https://github.com/mist64/xhyve" target="_blank" rel="noopener">xhyve</a> 和基于go封装后的 <a href="https://github.com/TheNewNormal/libxhyve" target="_blank" rel="noopener">libxhyve</a> 两个项目才有了 Dlite 的诞生（妹子帮我译的 😄）。</p>
 <p>xhyve, 是 OSX 下一种轻量级的虚拟化解决方案，建立在 OSX 10.10 Yosemite 的 Hypervisor.framework 之上，完全运行在用户空间内，没有其他任何依赖。它可以运行 FreeBSD 系统和 使用 Linux 内核的发行版。其实 xhyve 是 bhyve 的 OS X 移植版本。而bhyve ，即 BSD hypervisor，是在 FreeBSD 上开发的虚拟机管理器（hypervisor/virtual machine manager）。</p>
-<p>那么 Dlite 是什么呢？ 聪明的读者应该想到：既然有了xhyve 这个虚拟化解决方案，肯定还得需要一个 linux 虚拟机来运行 docker。这个 linux 发行版是 DhyveOS, 是 Dlite 作者为了此项目创建的一个超轻量级 Linux OS：<a href="https://github.com/nlf/dhyve-os" target="_blank" rel="external">DhyveOS</a>。 </p>
+<p>那么 Dlite 是什么呢？ 聪明的读者应该想到：既然有了xhyve 这个虚拟化解决方案，肯定还得需要一个 linux 虚拟机来运行 docker。这个 linux 发行版是 DhyveOS, 是 Dlite 作者为了此项目创建的一个超轻量级 Linux OS：<a href="https://github.com/nlf/dhyve-os" target="_blank" rel="noopener">DhyveOS</a>。 </p>
 <p>即 <code>Dlite = xhyve + DhyveOS</code></p>
 <p>Dlite 通过 libxhyve 来调用xhyve，然后xhyve运行着 DhyveOS， DhyveOS 运行着 docker。 对于 Mac 用户来说，只需要安装 Dlite，就可以拥有 docker。</p>
 <h2 id="如何安装_Dlite">如何安装 Dlite</h2><p>有三种方式安装Dlite：</p>
@@ -288,7 +284,7 @@ Dlite 是什么？早在2013年底，笔者实习的时候就开始玩 docker，
 <li>创建一个固定大小的空文件 <code>disk.img</code>（默认是20GB）来作为DhyveOS虚拟机的磁盘空间；</li>
 <li>下载构建DhyveOS 所需的两个文件， <code>bzImage</code> 和 <code>rootfs.cpio.xz</code>（DhyveOS 的 release 页面提供了这两个文件）</li>
 <li><p>创建配置文件，如没有指定则使用默认配置，<br>样例：</p>
- <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="string">"uuid"</span>:<span class="string">"d93a1a37-d47c-11e5-92af-60f81da97a72"</span>,<span class="string">"cpu_count"</span>:<span class="number">1</span>,<span class="string">"memory"</span>:<span class="number">2</span>,<span class="string">"hostname"</span>:<span class="string">"local.docker"</span>,<span class="string">"share"</span>:<span class="string">"/Users"</span>&#125;%</span><br></pre></td></tr></table></figure>
+ <figure class="highlight erlang-repl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="string">"uuid"</span>:<span class="string">"d93a1a37-d47c-11e5-92af-60f81da97a72"</span>,<span class="string">"cpu_count"</span>:<span class="number">1</span>,<span class="string">"memory"</span>:<span class="number">2</span>,<span class="string">"hostname"</span>:<span class="string">"local.docker"</span>,<span class="string">"share"</span>:<span class="string">"/Users"</span>&#125;<span class="comment">%</span></span><br></pre></td></tr></table></figure>
 </li>
 <li><p>创建 launchd agent</p>
 </li>
@@ -313,17 +309,17 @@ dlite <span class="keyword">start</span></span>
 </code></pre><p>由于docker 是个 C/S 模型的应用，可以直接在 OS X 这一层来使用 docker 客户端，就不用登录到 DhyveOS 里面再使用 docker 这么麻烦啦，前提是你已经在 OS X 系统安装了 docker 客户端（注: docker 的 client 和 server 都在同一个二进制文件内）。</p>
 <h2 id="Dlite_的不足">Dlite 的不足</h2><p>由于 Dlite 是建立在 xhyve 之上，其不足也会与 dlite 相随。<br>即 OS X系统版本需要在 <code>10.10.3</code> 以上，还需要比较新的配置（需要是近几年的 Mac 硬件，黑苹果估计不行吧）。可以通过 <code>sysctl kern.hv_support</code> 来确认是否满足要求。如果看到 <code>kern.hv_support: 1</code> 返回，那就是满足咯。</p>
 <h2 id="其他">其他</h2><p>如果你需要给 docker 配置加速器（赵国的网络你懂的），你需要知道 dlite 下的docker 服务是如何启动的。docker 启动参数位于 DhyveOS 虚拟机系统的 <code>/etc/default/docker</code></p>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker<span class="variable">@dlite</span><span class="symbol">:~</span><span class="variable">$ </span>cat /etc/default/docker</span><br><span class="line"><span class="constant">DOCKER_ARGS=</span><span class="string">"-H unix:///var/run/docker.sock -H tcp://0.0.0.0:2375 -s btrfs --registry-mirror=http://yours.m.daocloud.io"</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker<span class="variable">@dlite</span><span class="symbol">:~</span><span class="variable">$ </span>cat /etc/default/docker</span><br><span class="line">DOCKER_ARGS=<span class="string">"-H unix:///var/run/docker.sock -H tcp://0.0.0.0:2375 -s btrfs --registry-mirror=http://yours.m.daocloud.io"</span></span><br></pre></td></tr></table></figure>
 <h2 id="总结">总结</h2><p>刚接触 dlite 不久，暂时还没遇到什么大坑，用起来还是蛮方便的，值得推荐！如果读者在使用过程遇到问题，欢迎留言探讨，共同学习提高 😄</p>
-<h2 id="更新">更新</h2><p>2016.02.24<br>今天早上打开电脑，发现莫名奇妙关机了，得强制重启。联想起前几天也遇到这种问题，也是这么处理。怀疑是 Dlite 问题，去 Dlite 的 issues 搜索发现有<a href="https://github.com/nlf/dlite/issues/60" target="_blank" rel="external">类似情况</a>, 但是作者说这是 xhyve 的问题，然后去 xhyve 的 issue 搜索，发现真有<a href="https://github.com/mist64/xhyve/issues/86" target="_blank" rel="external">这种问题</a>，而且不少人遇到。暂时没看到解决办法。自己决定用不用吧。个人觉得是电脑休眠才会遇到这种问题，但是 MacBook 不合上怎么带回家呀？可能每天晚上睡觉前把 Dlite 进程关闭，不失为一个折中的办法 😄</p>
+<h2 id="更新">更新</h2><p>2016.02.24<br>今天早上打开电脑，发现莫名奇妙关机了，得强制重启。联想起前几天也遇到这种问题，也是这么处理。怀疑是 Dlite 问题，去 Dlite 的 issues 搜索发现有<a href="https://github.com/nlf/dlite/issues/60" target="_blank" rel="noopener">类似情况</a>, 但是作者说这是 xhyve 的问题，然后去 xhyve 的 issue 搜索，发现真有<a href="https://github.com/mist64/xhyve/issues/86" target="_blank" rel="noopener">这种问题</a>，而且不少人遇到。暂时没看到解决办法。自己决定用不用吧。个人觉得是电脑休眠才会遇到这种问题，但是 MacBook 不合上怎么带回家呀？可能每天晚上睡觉前把 Dlite 进程关闭，不失为一个折中的办法 😄</p>
 <p>2017.01.07</p>
 <p>最近得知，docker 官方已经开始使用 HyperKit 作为 macOS 原生虚拟解决方案，和 dlite 应该是同一个套路，但是有docker 官方的支持，使用起来应该会更舒服，推荐这个方案。</p>
 <blockquote>
-<p>Docker for Mac does not use VirtualBox, but rather HyperKit, a lightweight macOS virtualization solution built on top of Hypervisor.framework in macOS 10.10 Yosemite and higher.<br><a href="https://docs.docker.com/docker-for-mac/docker-toolbox/" target="_blank" rel="external">https://docs.docker.com/docker-for-mac/docker-toolbox/</a></p>
+<p>Docker for Mac does not use VirtualBox, but rather HyperKit, a lightweight macOS virtualization solution built on top of Hypervisor.framework in macOS 10.10 Yosemite and higher.<br><a href="https://docs.docker.com/docker-for-mac/docker-toolbox/" target="_blank" rel="noopener">https://docs.docker.com/docker-for-mac/docker-toolbox/</a></p>
 </blockquote>
 <p>references:</p>
 <ol>
-<li><a href="https://blog.andyet.com/2016/01/25/easy-docker-on-osx/" target="_blank" rel="external">Simplifying Docker on OS X</a></li>
+<li><a href="https://blog.andyet.com/2016/01/25/easy-docker-on-osx/" target="_blank" rel="noopener">Simplifying Docker on OS X</a></li>
 </ol>
 <p>本文地址 <a href="http://holys.im/2016/02/22/run-docker-on-osx-with-dlite/">http://holys.im/2016/02/22/run-docker-on-osx-with-dlite/</a> </p>
 </span>
@@ -355,9 +351,9 @@ dlite <span class="keyword">start</span></span>
       
         <div class="post-tags">
           
-            <a href="/tags/dlite/" rel="tag">#dlite</a>
-          
             <a href="/tags/docker/" rel="tag">#docker</a>
+          
+            <a href="/tags/dlite/" rel="tag">#dlite</a>
           
         </div>
       

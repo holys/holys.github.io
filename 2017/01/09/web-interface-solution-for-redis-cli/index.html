@@ -37,7 +37,7 @@
 <link href="/css/main.css?v=0.4.5.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="gotty,hterm,redis,xterm," />
+  <meta name="keywords" content="redis,gotty,xterm,hterm," />
 
 
 
@@ -53,21 +53,21 @@
 
 
 
-<meta name="description" content="缘起最近整了个 Go 版 redis-cli， 完了之后给同事分享了下。TL 问能否整个 web 版的 redis-cli， 即在网页上命令行式地操作 redis。 回想起有个工具叫 gotty, 能让命令行工具运行在网页上。 网页和后端通过 websocket 的方式实时通信，效果能媲美原生终端操作，非常赞。 至于 gotty 的实现原理，有时间我会单写一篇，这里不展开了。
-折腾过程如果是用 G">
+<meta name="description" content="缘起最近整了个 Go 版 redis-cli， 完了之后给同事分享了下。TL 问能否整个 web 版的 redis-cli， 即在网页上命令行式地操作 redis。 回想起有个工具叫 gotty, 能让命令行工具运行在网页上。 网页和后端通过 websocket 的方式实时通信，效果能媲美原生终端操作，非常赞。 至于 gotty 的实现原理，有时间我会单写一篇，这里不展开了。 折腾过程如果是用 G">
+<meta name="keywords" content="redis,gotty,xterm,hterm">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Web 版 redis-cli 折腾记">
 <meta property="og:url" content="http://holys.im/2017/01/09/web-interface-solution-for-redis-cli/index.html">
-<meta property="og:site_name" content="holys'">
-<meta property="og:description" content="缘起最近整了个 Go 版 redis-cli， 完了之后给同事分享了下。TL 问能否整个 web 版的 redis-cli， 即在网页上命令行式地操作 redis。 回想起有个工具叫 gotty, 能让命令行工具运行在网页上。 网页和后端通过 websocket 的方式实时通信，效果能媲美原生终端操作，非常赞。 至于 gotty 的实现原理，有时间我会单写一篇，这里不展开了。
-折腾过程如果是用 G">
+<meta property="og:site_name" content="holys&#39;">
+<meta property="og:description" content="缘起最近整了个 Go 版 redis-cli， 完了之后给同事分享了下。TL 问能否整个 web 版的 redis-cli， 即在网页上命令行式地操作 redis。 回想起有个工具叫 gotty, 能让命令行工具运行在网页上。 网页和后端通过 websocket 的方式实时通信，效果能媲美原生终端操作，非常赞。 至于 gotty 的实现原理，有时间我会单写一篇，这里不展开了。 折腾过程如果是用 G">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://holys.im/images/14839785801360.jpg">
 <meta property="og:image" content="http://holys.im/images/14839787857878.jpg">
 <meta property="og:updated_time" content="2017-01-09T16:43:47.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Web 版 redis-cli 折腾记">
-<meta name="twitter:description" content="缘起最近整了个 Go 版 redis-cli， 完了之后给同事分享了下。TL 问能否整个 web 版的 redis-cli， 即在网页上命令行式地操作 redis。 回想起有个工具叫 gotty, 能让命令行工具运行在网页上。 网页和后端通过 websocket 的方式实时通信，效果能媲美原生终端操作，非常赞。 至于 gotty 的实现原理，有时间我会单写一篇，这里不展开了。
-折腾过程如果是用 G">
+<meta name="twitter:description" content="缘起最近整了个 Go 版 redis-cli， 完了之后给同事分享了下。TL 问能否整个 web 版的 redis-cli， 即在网页上命令行式地操作 redis。 回想起有个工具叫 gotty, 能让命令行工具运行在网页上。 网页和后端通过 websocket 的方式实时通信，效果能媲美原生终端操作，非常赞。 至于 gotty 的实现原理，有时间我会单写一篇，这里不展开了。 折腾过程如果是用 G">
+<meta name="twitter:image" content="http://holys.im/images/14839785801360.jpg">
 
 
 
@@ -261,29 +261,29 @@
       
 
       
-        <span itemprop="articleBody"><h2 id="缘起">缘起</h2><p>最近整了个 Go 版 <a href="http://holys.im/2017/01/02/a-pure-go-implementation-of-redis-cli/">redis-cli</a>， 完了之后给同事分享了下。TL 问能否整个 web 版的 redis-cli， 即在网页上命令行式地操作 redis。 回想起有个工具叫 <a href="https://github.com/yudai/gotty" target="_blank" rel="external">gotty</a>, 能让命令行工具运行在网页上。 网页和后端通过 websocket 的方式实时通信，效果能媲美原生终端操作，非常赞。 至于 gotty 的实现原理，有时间我会单写一篇，这里不展开了。</p>
+        <span itemprop="articleBody"><h2 id="缘起">缘起</h2><p>最近整了个 Go 版 <a href="http://holys.im/2017/01/02/a-pure-go-implementation-of-redis-cli/">redis-cli</a>， 完了之后给同事分享了下。TL 问能否整个 web 版的 redis-cli， 即在网页上命令行式地操作 redis。 回想起有个工具叫 <a href="https://github.com/yudai/gotty" target="_blank" rel="noopener">gotty</a>, 能让命令行工具运行在网页上。 网页和后端通过 websocket 的方式实时通信，效果能媲美原生终端操作，非常赞。 至于 gotty 的实现原理，有时间我会单写一篇，这里不展开了。</p>
 <h2 id="折腾过程">折腾过程</h2><p>如果是用 Gotty 来实现这个方案的话，那么只需要一条命令即可。</p>
 <pre><code>$ gotty -w redis-<span class="keyword">cli</span> 
 </code></pre><p><code>-w</code> 参数表示允许写操作。</p>
 <p>但是仅仅这样是不够的。</p>
 <p>当你打开浏览器，输入 <code>http://localhost:8080</code> (默认是8080端口)， 然后不断刷新当前页面。每次刷新页面，gotty 都会产生一个子进程来执行 redis-cli。而之前的 redis-cli 子进程没有机会再访问到了，但是一直在占用资源。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ pstree <span class="number">20722</span></span><br><span class="line">-+= <span class="number">20722</span> holys gotty -w redis-cli</span><br><span class="line"> |--= <span class="number">20773</span> holys redis-cli</span><br><span class="line"> |--= <span class="number">20808</span> holys redis-cli</span><br><span class="line"> |--= <span class="number">20810</span> holys redis-cli</span><br><span class="line"> |--= <span class="number">20811</span> holys redis-cli</span><br><span class="line"> |--= <span class="number">20822</span> holys redis-cli</span><br><span class="line"> \--= <span class="number">20828</span> holys redis-cli</span><br></pre></td></tr></table></figure>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ pstree <span class="number">20722</span></span><br><span class="line">-+= <span class="number">20722</span> holys gotty -w redis-cli</span><br><span class="line"> |--= <span class="number">20773</span> holys redis-cli</span><br><span class="line"> |--= <span class="number">20808</span> holys redis-cli</span><br><span class="line"> |--= <span class="number">20810</span> holys redis-cli</span><br><span class="line"> |--= <span class="number">20811</span> holys redis-cli</span><br><span class="line"> |--= <span class="number">20822</span> holys redis-cli</span><br><span class="line"> \--= <span class="number">20828</span> holys redis-cli</span><br></pre></td></tr></table></figure>
 <p>如果没有限制，理论上会产生 N 多子进程，直至耗尽系统资源。基于这点考虑，我们需要限制客户端连接数，即 max-connections。 除此之外，我们还需要让每个客户端超时断开并结束子进程， 避免子进程一直“占坑不拉屎”，得到释放系统资源的目的。</p>
-<p>但是！在我写此文的前几天， gotty 还不支持 timeout 功能，只支持了 max-connections 功能。于是我浏览了一遍它的 issues 和 pull requests ，发现别人也有<a href="https://github.com/yudai/gotty/issues/78" target="_blank" rel="external">这个需求</a>, 而且还提交了 <a href="https://github.com/yudai/gotty/pull/115" target="_blank" rel="external">pull request</a>， 但是作者好像很忙，一直没有空处理。 这都是大半年的 PR 了。于是我按图索骥，用了那人的  <a href="https://github.com/zyfdegh/gotty" target="_blank" rel="external">fork 版本</a>。</p>
-<p>有了这两个功能还不够。web 版 redis-cli 是作为一个守护进程一直运行在后台的，基本不会重启的。一般复杂点的业务都有不同的 redis 实例，也就是可能需要来回切换不同的 redis 实例。而且 web版 redis-cli 是作为一个公共工具存在的，连任何的 redis 实例都有可能。 原生的 redis-cli 没有提供在 <a href="https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop" target="_blank" rel="external">REPL</a> 内切换 redis 实例的功能，于是我给我的轮子加了个 <code>CONNECT</code> 命令。</p>
+<p>但是！在我写此文的前几天， gotty 还不支持 timeout 功能，只支持了 max-connections 功能。于是我浏览了一遍它的 issues 和 pull requests ，发现别人也有<a href="https://github.com/yudai/gotty/issues/78" target="_blank" rel="noopener">这个需求</a>, 而且还提交了 <a href="https://github.com/yudai/gotty/pull/115" target="_blank" rel="noopener">pull request</a>， 但是作者好像很忙，一直没有空处理。 这都是大半年的 PR 了。于是我按图索骥，用了那人的  <a href="https://github.com/zyfdegh/gotty" target="_blank" rel="noopener">fork 版本</a>。</p>
+<p>有了这两个功能还不够。web 版 redis-cli 是作为一个守护进程一直运行在后台的，基本不会重启的。一般复杂点的业务都有不同的 redis 实例，也就是可能需要来回切换不同的 redis 实例。而且 web版 redis-cli 是作为一个公共工具存在的，连任何的 redis 实例都有可能。 原生的 redis-cli 没有提供在 <a href="https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop" target="_blank" rel="noopener">REPL</a> 内切换 redis 实例的功能，于是我给我的轮子加了个 <code>CONNECT</code> 命令。</p>
 <pre><code><span class="type">CONNECT</span> host <span class="foreign"><span class="keyword">port</span> [auth]</span>
 </code></pre><p><code>auth</code> 参数可选。 </p>
 <p>效果如下：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ ./redis-cli</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span>&gt; connect <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span> <span class="number">6380</span></span><br><span class="line">connected <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6380</span> successfully</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6380</span>&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ ./redis-<span class="keyword">cli</span></span><br><span class="line"><span class="number">127.0</span><span class="meta">.0</span><span class="meta">.1</span>:<span class="number">6379</span>&gt; connect <span class="number">127.0</span><span class="meta">.0</span><span class="meta">.1</span> <span class="number">6380</span></span><br><span class="line">connected <span class="number">127.0</span><span class="meta">.0</span><span class="meta">.1</span>:<span class="number">6380</span> successfully</span><br><span class="line"><span class="number">127.0</span><span class="meta">.0</span><span class="meta">.1</span>:<span class="number">6380</span>&gt;</span><br></pre></td></tr></table></figure>
 <p>这样就满足切换 redis 实例的需求了。 其实我很早就渴望这个功能了。</p>
 <p>我还锦上添花加了个 <code>MODE</code> 命令。 有时候用户可能需要默认的输出，也可能想换为 <code>raw</code> 输出。前面也提到了， web 版 redis-cli 是没有机会退出重来换参数的，所以得在 REPL 里面完成 mode 的切换。</p>
 <p>这个命令使用方式如下：</p>
 <pre><code>MODE [std<span class="string">|raw]</span>
 </code></pre><p>即 MODE std 或者 MODE raw. </p>
 <p>效果展示：</p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>./redis-cli</span><br><span class="line"><span class="prompt">127.0.0.1:6379&gt;</span> set json <span class="string">'&#123;"name": "chendahui"&#125;'</span></span><br><span class="line"><span class="constant">OK</span></span><br><span class="line"><span class="prompt">127.0.0.1:6379&gt;</span> get json</span><br><span class="line"><span class="string">"&#123;\"name\": \"chendahui\"&#125;"</span></span><br><span class="line"><span class="prompt">127.0.0.1:6379&gt;</span> mode raw</span><br><span class="line">switch output mode successfully</span><br><span class="line"><span class="prompt">127.0.0.1:6379&gt;</span> get json</span><br><span class="line">&#123;<span class="string">"name"</span><span class="symbol">:</span> <span class="string">"chendahui"</span>&#125;</span><br><span class="line"><span class="prompt">127.0.0.1:6379&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ ./redis-cli</span><br><span class="line"><span class="meta">127.0.0.1:6379&gt;</span> set json <span class="string">'&#123;"name": "chendahui"&#125;'</span></span><br><span class="line">OK</span><br><span class="line"><span class="meta">127.0.0.1:6379&gt;</span> get json</span><br><span class="line"><span class="string">"&#123;\"name\": \"chendahui\"&#125;"</span></span><br><span class="line"><span class="meta">127.0.0.1:6379&gt;</span> mode raw</span><br><span class="line">switch output mode successfully</span><br><span class="line"><span class="meta">127.0.0.1:6379&gt;</span> get json</span><br><span class="line">&#123;<span class="string">"name"</span>: <span class="string">"chendahui"</span>&#125;</span><br><span class="line"><span class="meta">127.0.0.1:6379&gt;</span></span><br></pre></td></tr></table></figure>
 <p>是不是很方便呢？</p>
-<p>搞完后，发现gotty 这玩意儿不支持中文输入，换点专业的说法就是，不支持 <a href="https://www.google.co.jp/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=2&amp;cad=rja&amp;uact=8&amp;ved=0ahUKEwiQgsjrt7XRAhUHa7wKHcIrALYQFggiMAE&amp;url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FCJK_characters&amp;usg=AFQjCNGNY4t4CuknACIiA7I1avIM6DMA1A" target="_blank" rel="external">CJK</a> 和 <a href="https://en.wikipedia.org/wiki/Input_method" target="_blank" rel="external">IME</a> 。 Google 一番，原来 gotty 用了 <a href="https://chromium.googlesource.com/apps/libapps/+/master/hterm" target="_blank" rel="external">hterm.js</a>，这货是不支持 CJK 和 IME的。 查资料的过程中，我还顺带发现有人用 C 重写了 gotty（嵌入式设备的需求），即 <a href="https://github.com/tsl0922/ttyd" target="_blank" rel="external">ttyd</a>。 让人欣喜的是，ttyd 是支持 CJK 和 IME 的，我发现它用的不是 hterm.js, 而是 <a href="https://github.com/sourcelair/xterm.js" target="_blank" rel="external">xterm.js</a>. Xterm.js 应该是个和 hterm.js 功能类似的库，但是作者挺勤快的，持续更新，而且我最近的新宠 Visual Studio Code 也用了 xterm.js， 看起来挺有前景的。</p>
+<p>搞完后，发现gotty 这玩意儿不支持中文输入，换点专业的说法就是，不支持 <a href="https://www.google.co.jp/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=2&amp;cad=rja&amp;uact=8&amp;ved=0ahUKEwiQgsjrt7XRAhUHa7wKHcIrALYQFggiMAE&amp;url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FCJK_characters&amp;usg=AFQjCNGNY4t4CuknACIiA7I1avIM6DMA1A" target="_blank" rel="noopener">CJK</a> 和 <a href="https://en.wikipedia.org/wiki/Input_method" target="_blank" rel="noopener">IME</a> 。 Google 一番，原来 gotty 用了 <a href="https://chromium.googlesource.com/apps/libapps/+/master/hterm" target="_blank" rel="noopener">hterm.js</a>，这货是不支持 CJK 和 IME的。 查资料的过程中，我还顺带发现有人用 C 重写了 gotty（嵌入式设备的需求），即 <a href="https://github.com/tsl0922/ttyd" target="_blank" rel="noopener">ttyd</a>。 让人欣喜的是，ttyd 是支持 CJK 和 IME 的，我发现它用的不是 hterm.js, 而是 <a href="https://github.com/sourcelair/xterm.js" target="_blank" rel="noopener">xterm.js</a>. Xterm.js 应该是个和 hterm.js 功能类似的库，但是作者挺勤快的，持续更新，而且我最近的新宠 Visual Studio Code 也用了 xterm.js， 看起来挺有前景的。</p>
 <p>既然 ttyd 是个 C 版的 gotty, 想必前端那一块都是差不多的，于是费了点力气搬运过来了，像我这种不懂前端的后端码农，居然搞成功了。</p>
 <p><img src="/images/14839785801360.jpg" alt=""></p>
 <p>最后总结下可以放到生产环境的 gotty 的参数（起码满足了我的需求）：</p>
@@ -291,12 +291,12 @@
 </code></pre><p><code>--show</code> 也是我加的，纯问候语，用户体验好些（效果见下图）。</p>
 <p>备注： </p>
 <ol>
-<li>gotty 用的是我 fork 的 那份. <a href="https://github.com/holys/gotty" target="_blank" rel="external">https://github.com/holys/gotty</a></li>
-<li>redis-cli 是我的轮子，不是官方那份。 <a href="https://github.com/holys/redis-cli" target="_blank" rel="external">https://github.com/holys/redis-cli</a></li>
+<li>gotty 用的是我 fork 的 那份. <a href="https://github.com/holys/gotty" target="_blank" rel="noopener">https://github.com/holys/gotty</a></li>
+<li>redis-cli 是我的轮子，不是官方那份。 <a href="https://github.com/holys/redis-cli" target="_blank" rel="noopener">https://github.com/holys/redis-cli</a></li>
 <li><code>./redis-cli</code> 建议用绝对路径吧 或者加入了 PATH 的命令</li>
 </ol>
 <p><img src="/images/14839787857878.jpg" alt=""></p>
-<h2 id="后记">后记</h2><p>在写此文的这一天，gotty 的作者居然合并了那个 timeout 功能的 <a href="https://github.com/yudai/gotty/pull/115" target="_blank" rel="external">PR</a>. 不过目前的 gotty 依然不支持 CJK 和 IME， 如果需要这个功能的，可以考虑用我那个 fork version. </p>
+<h2 id="后记">后记</h2><p>在写此文的这一天，gotty 的作者居然合并了那个 timeout 功能的 <a href="https://github.com/yudai/gotty/pull/115" target="_blank" rel="noopener">PR</a>. 不过目前的 gotty 依然不支持 CJK 和 IME， 如果需要这个功能的，可以考虑用我那个 fork version. </p>
 <p>还有一些涉及安全的功能没有加进去，如只允许 read-only 的命令。如果有人不小心手抖，敲了个 flushdb 进去咋办？</p>
 <p>本文地址 <a href="http://holys.im/2017/01/09/web-interface-solution-for-redis-cli/">http://holys.im/2017/01/09/web-interface-solution-for-redis-cli/</a> </p>
 </span>
@@ -328,13 +328,13 @@
       
         <div class="post-tags">
           
-            <a href="/tags/gotty/" rel="tag">#gotty</a>
-          
-            <a href="/tags/hterm/" rel="tag">#hterm</a>
-          
             <a href="/tags/redis/" rel="tag">#redis</a>
           
+            <a href="/tags/gotty/" rel="tag">#gotty</a>
+          
             <a href="/tags/xterm/" rel="tag">#xterm</a>
+          
+            <a href="/tags/hterm/" rel="tag">#hterm</a>
           
         </div>
       

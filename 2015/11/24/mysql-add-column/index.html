@@ -53,58 +53,18 @@
 
 
 
-<meta name="description" content="总的来说，这是一次草率的升级行为。
-备注： 
-
-MySQL 5.6.23-72.1 innodb, 非SSD盘;
-CentOS 6, 64 bit
-
-作死特征:
-
-在线更新，不停服；
-大白天。上午10点左右，属于我们业务的高峰期；
-表数据量大， ～2800w 行；
-修改的是 Email 认证表，事关 Email 登录注册。
-
-对应的 SQL 语句是： 
-1ALTER TABLE `emailaut">
+<meta name="description" content="总的来说，这是一次草率的升级行为。 备注：   MySQL 5.6.23-72.1 innodb, 非SSD盘; CentOS 6, 64 bit  作死特征:  在线更新，不停服； 大白天。上午10点左右，属于我们业务的高峰期； 表数据量大， ～2800w 行； 修改的是 Email 认证表，事关 Email 登录注册。  对应的 SQL 语句是：  1ALTER TABLE `emailaut">
+<meta name="keywords" content="mysql">
 <meta property="og:type" content="article">
 <meta property="og:title" content="记一次在线 Alter table 大表操作">
 <meta property="og:url" content="http://holys.im/2015/11/24/mysql-add-column/index.html">
-<meta property="og:site_name" content="holys'">
-<meta property="og:description" content="总的来说，这是一次草率的升级行为。
-备注： 
-
-MySQL 5.6.23-72.1 innodb, 非SSD盘;
-CentOS 6, 64 bit
-
-作死特征:
-
-在线更新，不停服；
-大白天。上午10点左右，属于我们业务的高峰期；
-表数据量大， ～2800w 行；
-修改的是 Email 认证表，事关 Email 登录注册。
-
-对应的 SQL 语句是： 
-1ALTER TABLE `emailaut">
+<meta property="og:site_name" content="holys&#39;">
+<meta property="og:description" content="总的来说，这是一次草率的升级行为。 备注：   MySQL 5.6.23-72.1 innodb, 非SSD盘; CentOS 6, 64 bit  作死特征:  在线更新，不停服； 大白天。上午10点左右，属于我们业务的高峰期； 表数据量大， ～2800w 行； 修改的是 Email 认证表，事关 Email 登录注册。  对应的 SQL 语句是：  1ALTER TABLE `emailaut">
+<meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2016-10-20T16:52:29.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="记一次在线 Alter table 大表操作">
-<meta name="twitter:description" content="总的来说，这是一次草率的升级行为。
-备注： 
-
-MySQL 5.6.23-72.1 innodb, 非SSD盘;
-CentOS 6, 64 bit
-
-作死特征:
-
-在线更新，不停服；
-大白天。上午10点左右，属于我们业务的高峰期；
-表数据量大， ～2800w 行；
-修改的是 Email 认证表，事关 Email 登录注册。
-
-对应的 SQL 语句是： 
-1ALTER TABLE `emailaut">
+<meta name="twitter:description" content="总的来说，这是一次草率的升级行为。 备注：   MySQL 5.6.23-72.1 innodb, 非SSD盘; CentOS 6, 64 bit  作死特征:  在线更新，不停服； 大白天。上午10点左右，属于我们业务的高峰期； 表数据量大， ～2800w 行； 修改的是 Email 认证表，事关 Email 登录注册。  对应的 SQL 语句是：  1ALTER TABLE `emailaut">
 
 
 
@@ -312,7 +272,7 @@ CentOS 6, 64 bit
 <li>修改的是 Email 认证表，事关 Email 登录注册。</li>
 </ol>
 <p>对应的 SQL 语句是： </p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> <span class="string">`emailauth`</span> <span class="keyword">ADD</span> <span class="keyword">COLUMN</span> <span class="string">`status`</span> ENUM(<span class="string">"checked"</span>, <span class="string">"unchecked"</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">"checked"</span>;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ALTER TABLE `emailauth` <span class="builtin-name">ADD</span> COLUMN `status` ENUM(<span class="string">"checked"</span>, <span class="string">"unchecked"</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span><span class="built_in"> DEFAULT </span><span class="string">"checked"</span>;</span><br></pre></td></tr></table></figure>
 <p>就一普通的加字段 sql。但是一旦时机不对，就是作死了。还好没有中断操作，不然后果严重！</p>
 <p>操作的结果：</p>
 <figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Query OK, <span class="number">0</span> rows affected (<span class="number">17</span> <span class="built_in">min</span> <span class="number">1.03</span> sec)</span><br><span class="line">Record<span class="variable">s:</span> <span class="number">0</span> Duplicate<span class="variable">s:</span> <span class="number">0</span> Warning<span class="variable">s:</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
@@ -320,6 +280,8 @@ CentOS 6, 64 bit
 <p>Alter table 到底发生了什么事呢？ 引用别人的文章：</p>
 <blockquote>
 <p>首先要明确alter table操作的流程：</p>
+</blockquote>
+<blockquote>
 <ul>
 <li>旧表加写锁（旧表只读操作）</li>
 <li>依据旧表结构创建临时表</li>
@@ -328,6 +290,8 @@ CentOS 6, 64 bit
 <li>临时表做重命名操作</li>
 <li>刷新数据字典，释放写锁</li>
 </ul>
+</blockquote>
+<blockquote>
 <p>从上面的流程可以知道，如果是千万级别以上的大表，执行创建临时表的步骤将非常缓慢（锁表），而且会消耗大量系统资源（磁盘IO操作）。</p>
 </blockquote>
 <p>总结：</p>
@@ -339,7 +303,7 @@ CentOS 6, 64 bit
 </ol>
 <p>参考：</p>
 <ol>
-<li><a href="http://pottievil.com/mysql%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98%EF%BC%9Aalter-table%E5%A4%A7%E8%A1%A8%E6%93%8D%E4%BD%9C%E7%9A%84%E4%B8%80%E4%BA%9B%E6%84%9F%E5%8F%97/" target="_blank" rel="external">MYSQL性能调优：在线alter table大表操作的一些感受</a></li>
+<li><a href="http://pottievil.com/mysql%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98%EF%BC%9Aalter-table%E5%A4%A7%E8%A1%A8%E6%93%8D%E4%BD%9C%E7%9A%84%E4%B8%80%E4%BA%9B%E6%84%9F%E5%8F%97/" target="_blank" rel="noopener">MYSQL性能调优：在线alter table大表操作的一些感受</a></li>
 </ol>
 <p>本文地址 <a href="http://holys.im/2015/11/24/mysql-add-column/">http://holys.im/2015/11/24/mysql-add-column/</a> </p>
 </span>
