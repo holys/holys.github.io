@@ -31,4 +31,4 @@ Contributions in GitHub:
 
 - [TiDB](https://github.com/pingcap/tidb/commits?author=holys) TiDB is a distributed HTAP database compatible with the MySQL protocol.
 - [LedisDB](https://github.com/siddontang/ledisdb/commits?author=holys) Ledisdb is a high-performance NoSQL database, similar to Redis, written in Go.
-- [go-mysql](https://github.com/siddontang/go-mysql/commits?author=holys) go-mysql is a pure go library to handle MySQL network protocol and replication, used by pingcap syncer and 
+- [go-mysql](https://github.com/siddontang/go-mysql/commits?author=holys) go-mysql is a pure go library to handle MySQL network protocol and replication, used by pingcap/github/shopify/uber.
