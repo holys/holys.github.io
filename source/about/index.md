@@ -17,24 +17,18 @@ comments: false
 - [GitHub](https://github.com/holys)
 - [Stack Overflow](http://stackoverflow.com/users/1297203/holys?tab=profile)
 - [LinkedIn](https://cn.linkedin.com/in/chendahui)
-- [开发者头条](http://toutiao.io/u/124098)
 - [Wechat](/images/wechat_me.png)
 
 Open Source in GitHub:
-- [redis-cli](https://github.com/holys/redis-cli) A pure go redis-cli.
-- [Initials-Avatar](https://github.com/holys/initials-avatar)  Go语言实现的首字母头像 lib/server
-- [Safe](https://github.com/holys/safe) Go 版密码强度检查
-- [baidu-pcs](https://github.com/holys/baidu-pcs) 百度盘 Go client
-- [nslookup](https://github.com/holys/nslookup) 对 nslookup 命令的简单封装
-- [ledis-openresty](https://github.com/holys/ledis-openresty) ledisdb 的 openresty client
-- [ledis-py](https://github.com/holys/ledis-py) ledisdb 的 python client
+- [redis-cli](https://github.com/holys/redis-cli) a pure go redis-cli implementation.
+- [initials-avatar](https://github.com/holys/initials-avatar)  use initials as avatar, lib/server
+- [ledis-openresty](https://github.com/holys/ledis-openresty) an openresty client for ledisdb
+- [ledis-py](https://github.com/holys/ledis-py) a python client for ledisdb
 - [ledisdb website](https://github.com/holys/ledis-website) ledisdb website source code.
 
 Contributions in GitHub:
 
 
 - [TiDB](https://github.com/pingcap/tidb/commits?author=holys) TiDB is a distributed HTAP database compatible with the MySQL protocol.
-- [LedisDB](https://github.com/siddontang/ledisdb/commits?author=holys) A high performance NoSQL powered by Go.
-- [Kingshard](https://github.com/flike/kingshard/commits?author=holys) A high-performance MySQL proxy.
-- [goaccess](https://github.com/allinurl/goaccess/commits?author=holys) GoAccess is a real-time web log analyzer and interactive viewer that runs in a terminal in *nix systems.
-
+- [LedisDB](https://github.com/siddontang/ledisdb/commits?author=holys) Ledisdb is a high-performance NoSQL database, similar to Redis, written in Go.
+- [go-mysql](https://github.com/siddontang/go-mysql/commits?author=holys) go-mysql is a pure go library to handle MySQL network protocol and replication, used by pingcap syncer and 
